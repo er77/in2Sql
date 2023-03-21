@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class svcCsv
+    class sCsv
     {
 
         public struct CloudObjects
@@ -56,7 +56,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "CloudList");
+                sTool.ExpHandler(e, "CloudList");
                 return null;
             }
         } 
@@ -145,7 +145,7 @@ namespace SqlEngine
 
                         vFolderProp.FolderName = vCurrName; 
 
-                        string vCurrRegValue = svcRegistry.getLocalRegValue(vCurrRegKey, name);
+                        string vCurrRegValue = sRegistry.getLocalRegValue(vCurrRegKey, name);
 
                         if (name.Contains("Path"))
                             vFolderProp.Path = vCurrRegValue;

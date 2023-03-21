@@ -16,11 +16,11 @@ namespace SqlEngine
         private Microsoft.Office.Interop.Excel.ListObject vCurrTable;
          
 
-        private svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+        private sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
         public wf04EditQuery()
         {
-            vCTR = svcTool.getCurrentSql();
+            vCTR = sTool.getCurrentSql();
 
             if (vCTR.CurrCloudExTName != "")
              {
@@ -82,7 +82,7 @@ namespace SqlEngine
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))
                 {
-                    vbaEngineCloud.createExTable(
+                    sVbaEngineCloud.createExTable(
                                                          vCTR.CurrCloudName
                                                        , vCTR.TableName
                                                        , SqlEditor.Text

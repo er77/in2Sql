@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    class svcSqlLibrary
+    class sLibrary
     {
         public static string getDBType(string vDataSource, string vDriver)
         {

@@ -27,7 +27,7 @@ namespace SqlEngine
         private void SqlEngine_Shutdown(object sender, System.EventArgs e)
         {
             currExcelApp = null;
-            svcTool.RunGarbageCollector();
+            sTool.RunGarbageCollector();
         }
 
         #region VSTO generated code

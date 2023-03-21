@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace SqlEngine
 {
-    public static class svcRegistry
+    public static class sRegistry
     {
         private const DataProtectionScope Scope = DataProtectionScope.CurrentUser;
 
@@ -55,7 +55,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "in2SQLRegistry.getLocalRegValue");
+                sTool.ExpHandler(e, "in2SQLRegistry.getLocalRegValue");
                 return null;
             }
         }
@@ -78,7 +78,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
+                sTool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
             }
         }
 
@@ -131,7 +131,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
+                sTool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
             }
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    class svcUndoManagment
+    class sUndo
     {
         public struct SqlActionTableList
         {            

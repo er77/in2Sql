@@ -224,7 +224,7 @@ namespace SqlEngine
 
             string vSql = RemoveSqlLimit(vCurrSql);
 
-            string vTypeODBC = svcODBC.getODBCProperties(vODBC, "DBType");
+            string vTypeODBC = sODBC.getODBCProperties(vODBC, "DBType");
             if (vTypeODBC.ToUpper().Contains("VERTICA"))
             {
                 if (vSql.ToUpper().Contains("LIMIT") == false)
@@ -272,7 +272,7 @@ namespace SqlEngine
             var vActivCell = SqlEngine.currExcelApp.ActiveCell;
 
             string vDSN;
-            vDSN = "ODBC;" + svcODBC.getODBCProperties(vODBC, "DSNStr");
+            vDSN = "ODBC;" + sODBC.getODBCProperties(vODBC, "DSNStr");
 
 
             if (vCurrWorkSheet != null & vDSN.Length > 1 & vTableName.Length > 1)
@@ -302,7 +302,7 @@ namespace SqlEngine
                                                        , ReadData: false
                                                        , DefaultVersion: 6);
                 vQT.Name = vODBC + " " + vTableName;
-                svcTool.addSqlLog(vSql);
+                sTool.addSqlLog(vSql);
                 vQT.RefreshTable();
                 GetSelectedTab();
                 return;
@@ -320,7 +320,7 @@ namespace SqlEngine
             SqlEngine.currExcelApp.SheetChange += CurrExcelApp_SheetChange;
 
             string vDSN;
-            vDSN = "ODBC;" + svcODBC.getODBCProperties(vODBC, "DSNStr");
+            vDSN = "ODBC;" + sODBC.getODBCProperties(vODBC, "DSNStr");
 
             if (vActivCell != null & vDSN.Length > 1 & vTableName.Length > 1) {
                 if (vActivCell.Value == null)
@@ -400,7 +400,7 @@ namespace SqlEngine
 
         public static void updateTables(string vDNS = "")
         {
-            svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+            sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
             if (vCTR.TypeConnection.Contains("CLOUD"))
             {
@@ -415,7 +415,7 @@ namespace SqlEngine
             if (vId < 0)
                 return;
             int vRecCount = 0;
-            using (OdbcConnection conn = new OdbcConnection(svcODBC.getODBCProperties(vInsertList[vId].DSNName, "DSNStr")))
+            using (OdbcConnection conn = new OdbcConnection(sODBC.getODBCProperties(vInsertList[vId].DSNName, "DSNStr")))
             {
                 conn.ConnectionTimeout = 5;
                 conn.Open();
@@ -425,7 +425,7 @@ namespace SqlEngine
                     vRecCount = vRecCount + 1;
                     if ((vInsert == "") == false)
                     {
-                        svcTool.addSqlLog(conn.ToString(), vInsert);
+                        sTool.addSqlLog(conn.ToString(), vInsert);
                         using (OdbcCommand cmnd = new OdbcCommand(vInsert, conn))
                             try
                             {
@@ -489,7 +489,7 @@ namespace SqlEngine
             var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
             var vActivCell = SqlEngine.currExcelApp.ActiveCell;
 
-            svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+            sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
             if (vActivCell != null)
 
@@ -512,7 +512,7 @@ namespace SqlEngine
             var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
             var vActivCell = SqlEngine.currExcelApp.ActiveCell;
 
-            svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+            sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
             if (vActivCell != null)
             { 
@@ -539,7 +539,7 @@ namespace SqlEngine
                 {
                     foreach (Microsoft.Office.Interop.Excel.ListObject vTable in vCurrWorkSheet.ListObjects)
                     {
-                        svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+                        sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
                         if (vCTR.TypeConnection.Contains("ODBC"))
                         {
                             objRefreshHistory(vTable);
@@ -548,7 +548,7 @@ namespace SqlEngine
 
                         if (vCTR.TypeConnection.Contains("CLOUD"))
                         {
-                            vbaEngineCloud.createExTable(
+                            sVbaEngineCloud.createExTable(
                                              vCTR.CurrCloudName
                                            , vCTR.TableName
                                            , vCTR.Sql
@@ -576,11 +576,11 @@ namespace SqlEngine
             // SqlEngine.currExcelApp.EnableEvents = false;
             vCurrObject.QueryTable.CommandText = setSqlLimit(getOdbcNameFromObject(vCurrObject.QueryTable.Connection), vCurrObject.QueryTable.CommandText);
            
-                svcTool.addSqlLog(vCurrObject.QueryTable.CommandText);
+                sTool.addSqlLog(vCurrObject.QueryTable.CommandText);
 
             objRefresh(vCurrObject);
             if (vIsUndoList == 1)
-                svcUndoManagment.addToUndoList(vCurrObject.Name, vCurrObject.QueryTable.CommandText);
+                sUndo.addToUndoList(vCurrObject.Name, vCurrObject.QueryTable.CommandText);
 
         }
 
@@ -592,7 +592,7 @@ namespace SqlEngine
             vCurrObject.TableStyle = "TableStyleLight13";
         }
 
-        public static void tableRefresh(svcTool.CurrentTableRecords vCTR, int vIsUndoList = 1)
+        public static void tableRefresh(sTool.CurrentTableRecords vCTR, int vIsUndoList = 1)
         {
             var vActivCell = SqlEngine.currExcelApp.ActiveCell;
 
@@ -602,22 +602,22 @@ namespace SqlEngine
                 objRefreshHistory(vActivCell.ListObject, vIsUndoList);
 
                 if (vIsUndoList == 1)
-                    svcUndoManagment.addToUndoList(vActivCell.ListObject.Name, vCTR.Sql);
+                    sUndo.addToUndoList(vActivCell.ListObject.Name, vCTR.Sql);
 
             }
 
             if (vCTR.TypeConnection.Contains("CLOUD"))
             {
-                vbaEngineCloud.createExTable(
+                sVbaEngineCloud.createExTable(
                                                      vCTR.CurrCloudName
                                                    , vCTR.TableName
                                                    , vCTR.Sql
                                                    , 1
                                                    , vCTR.CurrCloudExTName);
 
-                svcTool.addSqlLog(vCTR.Sql);
+                sTool.addSqlLog(vCTR.Sql);
                 if (vIsUndoList == 1)
-                    svcUndoManagment.addToUndoList(vCTR.CurrCloudExTName, vCTR.Sql);
+                    sUndo.addToUndoList(vCTR.CurrCloudExTName, vCTR.Sql);
             }
 
         }
@@ -633,9 +633,9 @@ namespace SqlEngine
                     return;
                 }
 
-                svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+                sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
-                string vSql = svcUndoManagment.getLastSqlActionUndo(vActivCell.ListObject.Name);
+                string vSql = sUndo.getLastSqlActionUndo(vActivCell.ListObject.Name);
                     if ((vSql == null) == false)
                     {
                     vCTR.Sql = vSql;
@@ -663,9 +663,9 @@ namespace SqlEngine
                 var vActivCell = SqlEngine.currExcelApp.ActiveCell;
                 if ((vActivCell.ListObject == null) == false)
                 {
-                    svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+                    sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
-                    string vSql = svcUndoManagment.getLastSqlActionRedo(vActivCell.ListObject.Name);
+                    string vSql = sUndo.getLastSqlActionRedo(vActivCell.ListObject.Name);
                     if ((vSql == null) == false)
                     {
                         vCTR.Sql = vSql;
@@ -694,7 +694,7 @@ namespace SqlEngine
 
                 var vActivCell = SqlEngine.currExcelApp.ActiveCell;                
 
-                svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+                sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
                 if (vCTR.TypeConnection.Contains("ODBC"))
                 {
@@ -717,7 +717,7 @@ namespace SqlEngine
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))
                 {
-                    vbaEngineCloud.createExTable(
+                    sVbaEngineCloud.createExTable(
                                      vCTR.CurrCloudName
                                    , vCTR.TableName
                                    , vCTR.Sql
@@ -747,12 +747,12 @@ namespace SqlEngine
                 return;
             }
 
-            svcTool.CurrentTableRecords vCTR = svcTool.getCurrentSql();
+            sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
             if (vCTR.TypeConnection.Contains("ODBC"))
             {
                 string vSql = RemoveSqlLimit(vActivCell.ListObject.QueryTable.CommandText);
-                createPivotTable(getOdbcNameFromCell(), svcTool.GetHash(vSql), vSql);
+                createPivotTable(getOdbcNameFromCell(), sTool.GetHash(vSql), vSql);
             }
 
             if (vCTR.TypeConnection.Contains("CLOUD"))

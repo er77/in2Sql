@@ -4,60 +4,60 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.svcCloud;
+using static SqlEngine.sCloud;
 
 namespace SqlEngine
 {
-    class paneRightTreeTables
+    class wp02RightTreeTables
     {
-        private static void initSQlObjects(ref svcODBC.OdbcProperties vCurrOdbc)
+        private static void initSQlObjects(ref sODBC.OdbcProperties vCurrOdbc)
         {
             try
             {
                 if (vCurrOdbc.Tables == null)
                 {
-                    vCurrOdbc.Tables = new List<svcODBC.SqlObjects>();
+                    vCurrOdbc.Tables = new List<sODBC.SqlObjects>();
                 }
 
                 if (vCurrOdbc.Views == null)
                 {
-                    vCurrOdbc.Views = new List<svcODBC.SqlObjects>();
+                    vCurrOdbc.Views = new List<sODBC.SqlObjects>();
                 }
 
                 if (vCurrOdbc.SQLProgramms == null)
                 {
-                    vCurrOdbc.SQLProgramms = new List<svcODBC.SqlObjects>();
+                    vCurrOdbc.SQLProgramms = new List<sODBC.SqlObjects>();
                 }
 
                 if (vCurrOdbc.SQLFunctions == null)
                 {
-                    vCurrOdbc.SQLFunctions = new List<svcODBC.SqlObjects>();
+                    vCurrOdbc.SQLFunctions = new List<sODBC.SqlObjects>();
                 }
 
                 if (vCurrOdbc.Tables.Count == 0)
                 {
-                    vCurrOdbc.Tables.AddRange(svcODBC.getTableList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.Tables.AddRange(sODBC.getTableList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.Views.Count == 0)
                 {
-                    vCurrOdbc.Views.AddRange(svcODBC.getViewList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.Views.AddRange(sODBC.getViewList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.SQLProgramms.Count == 0)
                 {
-                    vCurrOdbc.SQLProgramms.AddRange(svcODBC.getSQLProgrammsList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.SQLProgramms.AddRange(sODBC.getSQLProgrammsList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.SQLFunctions.Count == 0)
                 {
-                    vCurrOdbc.SQLFunctions.AddRange(svcODBC.getSQLFunctionsList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.SQLFunctions.AddRange(sODBC.getSQLFunctionsList(vCurrOdbc.OdbcName));
                 }
 
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "initSQlObjects");
+                sTool.ExpHandler(er, "initSQlObjects");
             }
         } 
 
@@ -96,7 +96,7 @@ namespace SqlEngine
         {
             try
             {
-                var vCurrODBC = svcODBC.vODBCList.Find(item => item.OdbcName == vCurrvListOdbcName);
+                var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vCurrvListOdbcName);
 
                 if ((vCurrODBC.ConnStatus == 0))
                 {
@@ -168,7 +168,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "setODBCTreeLineComplex");
+                sTool.ExpHandler(er, "setODBCTreeLineComplex");
             }
         }
          
@@ -177,9 +177,9 @@ namespace SqlEngine
         {
             e.Node.Nodes.Clear();
             string vCurrOdbcName = e.Node.Text;
-            svcODBC.checkOdbcStatus(vCurrOdbcName);
+            sODBC.checkOdbcStatus(vCurrOdbcName);
 
-            var vCurrODBC = svcODBC.vODBCList.Find(item => item.OdbcName == vCurrOdbcName);
+            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vCurrOdbcName);
 
             try
             {
@@ -260,7 +260,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
+                sTool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
             }
         }
 
@@ -270,12 +270,12 @@ namespace SqlEngine
             {
 
                 String vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
-                var vCurrObjProp = svcODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
+                var vCurrObjProp = sODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
 
                 if (vCurrObjProp.objColumns == null)
                 {
-                    svcODBC.vObjProp.AddRange(svcODBC.getObjectProperties(e.Node.Parent.Parent.Text, e.Node.Text));
-                    vCurrObjProp = svcODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
+                    sODBC.vObjProp.AddRange(sODBC.getObjectProperties(e.Node.Parent.Parent.Text, e.Node.Text));
+                    vCurrObjProp = sODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
                 }
 
                 if (vCurrObjProp.objColumns != null)
@@ -310,7 +310,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "getColumnsandIndexes ");
+                sTool.ExpHandler(er, "getColumnsandIndexes ");
             }
 
         }

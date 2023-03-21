@@ -14,7 +14,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace SqlEngine
 {
-    class svcTool
+    class sTool
     {
         //  [ThreadStatic]
         public static int isGCrun = 0;
@@ -284,14 +284,14 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "In2SqlSvcTool.writeHttpToFile", vHttpUrl);
+                sTool.ExpHandler(e, "In2SqlSvcTool.writeHttpToFile", vHttpUrl);
                 return null;
             }
         }
 
         public static IEnumerable<String> sqlReadQuery(string vOdbcName, string queryString = "")
         {
-            var vCurrODBC = svcODBC.vODBCList.Find(item => item.OdbcName == vOdbcName);
+            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vOdbcName);
 
             using
                   (OdbcConnection conn = new System.Data.Odbc.OdbcConnection())
@@ -312,7 +312,7 @@ namespace SqlEngine
                     }
                     catch (Exception e)
                     {
-                        svcTool.ExpHandler(e, "In2SqlSvcODBC.ReadData", queryString);
+                        sTool.ExpHandler(e, "In2SqlSvcODBC.ReadData", queryString);
                         conn.Close();
                         conn.Dispose();
                         yield break;
@@ -359,7 +359,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "In2SqlSvcTool.writeSqlToFile", vOdbcName + " # " + queryString);
+                sTool.ExpHandler(e, "In2SqlSvcTool.writeSqlToFile", vOdbcName + " # " + queryString);
                 return null;
             }
 

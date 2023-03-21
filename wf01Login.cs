@@ -34,21 +34,21 @@ namespace SqlEngine
 
         private void WF01BTTest_Click(object sender, EventArgs e)
         {
-            var vCurrODBC = svcODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
+            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
             vCurrODBC.Login = WF01TBLogin.Text;
             vCurrODBC.Password = WF01TBPassword.Text;
-            svcODBC.ChangeOdbcValue(vODBCName, vCurrODBC);
+            sODBC.ChangeOdbcValue(vODBCName, vCurrODBC);
 
-            svcODBC.checkOdbcStatus(vODBCName);
+            sODBC.checkOdbcStatus(vODBCName);
 
-            vCurrODBC = svcODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
+            vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
             DialogResult result;
             if (vCurrODBC.ConnStatus == 1)
             {
                 WF01BTOk.Enabled = true;
                 result = MessageBox.Show("Test passed".ToString());
-                svcRegistry.setLocalValue(vODBCName, "Login", vCurrODBC.Login);
-                svcRegistry.setLocalValue(vODBCName, "Password", vCurrODBC.Password);
+                sRegistry.setLocalValue(vODBCName, "Login", vCurrODBC.Login);
+                sRegistry.setLocalValue(vODBCName, "Password", vCurrODBC.Password);
 
             }
             else
@@ -56,7 +56,7 @@ namespace SqlEngine
                 result = MessageBox.Show(vCurrODBC.ConnErrMsg);
             }
 
-            svcTool.RunGarbageCollector();
+            sTool.RunGarbageCollector();
         }
 
         private void WF01BTOk_Click(object sender, EventArgs e)

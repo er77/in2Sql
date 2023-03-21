@@ -243,22 +243,22 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="svcSqlLibrary.cs" />
-    <Compile Include="svcRegistry.cs" />
+    <Compile Include="sLibrary.cs" />
+    <Compile Include="sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
-    <Compile Include="paneRightTreeCloud.cs" />
-    <Compile Include="svcCloud.cs" />
-    <Compile Include="svcCsv.cs" />
-    <Compile Include="svcUndoManagment.cs" />
+    <Compile Include="wp01RightTreeCloud.cs" />
+    <Compile Include="sCloud.cs" />
+    <Compile Include="sCsv.cs" />
+    <Compile Include="sUndo.cs" />
     <Compile Include="wf03PanelRigtSqlM.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="wf03PanelRigtSqlM.Designer.cs">
       <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </Compile>
-    <Compile Include="paneRightTreeTables.cs" />
-    <Compile Include="svcODBC.cs" />
-    <Compile Include="svcTool.cs" />
+    <Compile Include="wp02RightTreeTables.cs" />
+    <Compile Include="sODBC.cs" />
+    <Compile Include="sTool.cs" />
     <Compile Include="wf01Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -283,7 +283,7 @@
     <Compile Include="wf05SqlEngine.Designer.cs">
       <DependentUpon>wf05SqlEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="vbaEngine.cs" />
+    <Compile Include="sVba.cs" />
     <Compile Include="wf06SqlBuilder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -308,7 +308,7 @@
     <Compile Include="wf09CloudConnectionEditor.Designer.cs">
       <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="vbaEngineCloud.cs" />
+    <Compile Include="sVbaEngineCloud.cs" />
     <Compile Include="wf10CsvEdit.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -31,10 +31,10 @@ namespace SqlEngine
             if (vEditName.Length > 2  )              
                 {
                 RegistryKey vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-                tbURL.Text = svcRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Url");
-                tbLogin.Text = svcRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Login");
-                tbPassword.Text = svcRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Password");
-                tbSQL.Text = svcSqlLibrary.getCloudSqlCheck(vEditName);
+                tbURL.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Url");
+                tbLogin.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Login");
+                tbPassword.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Password");
+                tbSQL.Text = sLibrary.getCloudSqlCheck(vEditName);
                 string[]  vNM = vEditName.Split('.');
                 if (vNM.Count() > 1)
                     tbName.Text = vNM[1];
@@ -57,9 +57,9 @@ namespace SqlEngine
         {
             string vSqlURL;
 
-            vSqlURL = svcCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
+            vSqlURL = sCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
 
-            vSqlURL = svcTool.HttpGet(vSqlURL);
+            vSqlURL = sTool.HttpGet(vSqlURL);
             
             if (vSqlURL.Length < 2)
             {
@@ -72,9 +72,9 @@ namespace SqlEngine
 
             vSqlURL = "Cloud" + vConnType + '.' + tbName.Text;
 
-            svcRegistry.setLocalValue(vSqlURL, "Url" , tbURL.Text) ;
-            svcRegistry.setLocalValue(vSqlURL, "Login", tbLogin.Text);
-            svcRegistry.setLocalValue(vSqlURL, "Password", tbPassword.Text);      
+            sRegistry.setLocalValue(vSqlURL, "Url" , tbURL.Text) ;
+            sRegistry.setLocalValue(vSqlURL, "Login", tbLogin.Text);
+            sRegistry.setLocalValue(vSqlURL, "Password", tbPassword.Text);      
 
         }
 

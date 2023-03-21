@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.svcCloud;
+using static SqlEngine.sCloud;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SqlEngine
 {
-    class vbaEngineCloud
+    class sVbaEngineCloud
     {
 
   
@@ -46,7 +46,7 @@ namespace SqlEngine
             if (vCurrSql == null )
                 vCurrSql = "SELECT \n\t * \n FROM \n\t " + vTableName + "\n where 1=1   "; 
 
-            string vConnURL = svcCloud.prepareCloudQuery(vCurrCloudName, vCurrSql );   
+            string vConnURL = sCloud.prepareCloudQuery(vCurrCloudName, vCurrSql );   
             
             if ( (isReplace ==  0 )  &  ((vActivCell.ListObject !=null) | (vActivCell.Value != null) ) )
                 {
@@ -72,7 +72,7 @@ namespace SqlEngine
 
             if (vActivCell != null & vConnURL.Length > 1 & vTableName.Length > 1)
             {
-                string vTempFile = "TEXT;" + svcTool.writeHttpToFile(vConnURL);
+                string vTempFile = "TEXT;" + sTool.writeHttpToFile(vConnURL);
                 var xlQueryTable = vCurrWorkSheet.QueryTables.Add(
                                                       Connection: vTempFile
                                                     , Destination: vActivCell
@@ -102,7 +102,7 @@ namespace SqlEngine
                 xlQueryTable.Refresh(true);
 
                 vTempFile = vTempFile.Replace("TEXT;", "");
-                svcTool.deleteFile(vTempFile);
+                sTool.deleteFile(vTempFile);
 
 
                 var qtAddress = xlQueryTable.ResultRange.Address;

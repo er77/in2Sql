@@ -170,7 +170,7 @@ namespace SqlEngine
         {
             if (ribbon != null)
                 ribbon.ActivateTab("SqlEngine");
-            svcTool.RunGarbageCollector();
+            sTool.RunGarbageCollector();
         }
 
         public Ribbon()
@@ -238,7 +238,7 @@ namespace SqlEngine
             var vActivCell = SqlEngine.currExcelApp.ActiveCell;
             try
             {
-                svcTool.RunGarbageCollector();
+                sTool.RunGarbageCollector();
 
                 switch (vControl.Id)
                 {
@@ -249,7 +249,7 @@ namespace SqlEngine
 
 
                     case "ODBCManager":
-                        svcTool.RunCmdLauncher("odbcad32");
+                        sTool.RunCmdLauncher("odbcad32");
                         ActivateTab();
                         break;
 
@@ -363,7 +363,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "ExecMenuButton");
+                sTool.ExpHandler(e, "ExecMenuButton");
             }
 
         }
@@ -380,7 +380,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "ExecDropDown");
+                sTool.ExpHandler(e, "ExecDropDown");
             }
 
         }

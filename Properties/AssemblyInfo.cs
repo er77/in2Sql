@@ -12,7 +12,7 @@ using System.Security;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SqlEngine")]
 [assembly: AssemblyCopyright("free under BSD license")]
-[assembly: AssemblyTrademark("er@essbase.ru")]
+[assembly: AssemblyTrademark("erasyuk@gmail.com")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

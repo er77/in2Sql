@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class svcCloud
+    class sCloud
     {
 
         public struct CloudObjects
@@ -51,7 +51,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                svcTool.ExpHandler(e, "CloudList");
+                sTool.ExpHandler(e, "CloudList");
                 return null;
             }
         }
@@ -71,18 +71,18 @@ namespace SqlEngine
             if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                 return "";
 
-            CloudProperties vCurrCloud = svcCloud.vCloudList.Find(item => item.CloudName == vCloudName);
+            CloudProperties vCurrCloud = sCloud.vCloudList.Find(item => item.CloudName == vCloudName);
 
             if (vCurrCloud.CloudName == null)
                 return "";
 
-            vCurrSql = vbaEngineCloud.setSqlLimit(vCurrCloud.CloudType, vCurrSql);
+            vCurrSql = sVbaEngineCloud.setSqlLimit(vCurrCloud.CloudType, vCurrSql);
 
             if (vCurrCloud.CloudType.Contains("CloudCH"))
                 vCurrSql = vCurrSql.Replace("FORMAT CSVWithNames", "") + " FORMAT CSVWithNames";
 
             
-            svcTool.addSqlLog(vCloudName, vCurrSql);                       
+            sTool.addSqlLog(vCloudName, vCurrSql);                       
 
             return prepareCloudQuery_int(vCurrCloud.Url, vCurrSql, vCurrCloud.Login, vCurrCloud.Password) ;
         }
@@ -92,8 +92,8 @@ namespace SqlEngine
 
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
 
-            string vSqlURL  = prepareCloudQuery(vCurrCloudName, svcSqlLibrary.getCloudSqlCheck(vCurrCloud.CloudType) );
-            vSqlURL = svcTool.HttpGet(vSqlURL);
+            string vSqlURL  = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlCheck(vCurrCloud.CloudType) );
+            vSqlURL = sTool.HttpGet(vSqlURL);
 
             if (vSqlURL.Length < 2)
             {                 
@@ -115,7 +115,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, svcSqlLibrary.getCloudSqlTable(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlTable(vCurrCloud.CloudType));
 
              return getCloudObjectList(vSqlURL);
                
@@ -126,7 +126,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, svcSqlLibrary.getCloudSqlView(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlView(vCurrCloud.CloudType));
 
             return getCloudObjectList(vSqlURL);
 
@@ -136,7 +136,7 @@ namespace SqlEngine
         {
              
             List<String> vObjects = new List<String>();
-            vObjects.AddRange(svcTool.HttpGetArray(vSqlURL));
+            vObjects.AddRange(sTool.HttpGetArray(vSqlURL));
             int i = 0;
             foreach (var vCurrObj in vObjects)
             {
@@ -158,7 +158,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, svcSqlLibrary.getCloudColumns(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudColumns(vCurrCloud.CloudType));
             var vTb1 = vObjName.Split('.');
 
             vSqlURL = vSqlURL.Replace("%TNAME%", vTb1[1]);
@@ -169,7 +169,7 @@ namespace SqlEngine
             vObject.objColumns = new List<string>(); 
 
             List<String> vObjects = new List<String>();
-            vObjects.AddRange(svcTool.HttpGetArray(vSqlURL));
+            vObjects.AddRange(sTool.HttpGetArray(vSqlURL));
             int i = 0;
             foreach (var vCurrObj in vObjects)
             {
@@ -220,7 +220,7 @@ namespace SqlEngine
                         vCloudProperties.CloudName = vCurrName;
                         vCloudProperties.CloudType = vNameDetails[0];
 
-                        string vCurrRegValue = svcRegistry.getLocalRegValue(vCurrRegKey, name);
+                        string vCurrRegValue = sRegistry.getLocalRegValue(vCurrRegKey, name);
 
                         if (name.Contains("Url"))
                             vCloudProperties.Url = vCurrRegValue;

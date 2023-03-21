@@ -45,7 +45,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "PopulateOdbcTreeView");
+                sTool.ExpHandler(er, "PopulateOdbcTreeView");
             }
         }
 
@@ -208,7 +208,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "treeExcelOtl_MouseClick 2 ");
+                sTool.ExpHandler(er, "treeExcelOtl_MouseClick 2 ");
             }
 
         }

@@ -140,7 +140,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "in2SqlRightPane");
+                sTool.ExpHandler(er, "in2SqlRightPane");
             }
         }
 
@@ -181,7 +181,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "PopulateOdbcTreeView");
+                sTool.ExpHandler(er, "PopulateOdbcTreeView");
             }
         }
 
@@ -190,18 +190,18 @@ namespace SqlEngine
         {
             try
             {
-                svcCloud.vCloudList = svcCloud.CloudList();
+                sCloud.vCloudList = sCloud.CloudList();
 
-                foreach (var vCurrCloudList in svcCloud.vCloudList)
+                foreach (var vCurrCloudList in sCloud.vCloudList)
                 {
                     if (vCurrCloudList.CloudType.Contains(vCloudType))
-                        paneRightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrCloudList.CloudName, vCloudType + '$');
+                        wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrCloudList.CloudName, vCloudType + '$');
                 }
                 return;
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "GetCloudRecords");
+                sTool.ExpHandler(er, "GetCloudRecords");
             }
         } 
 
@@ -209,17 +209,17 @@ namespace SqlEngine
         {
             try
             {
-                svcCsv.vFolderList = svcCsv.FolderList();
+                sCsv.vFolderList = sCsv.FolderList();
 
-                foreach (var vCurrFolder in svcCsv.vFolderList)
+                foreach (var vCurrFolder in sCsv.vFolderList)
                 {
-                      paneRightTreeTables.setCSVTreeLineSimple(nodeToAddTo, vCurrFolder.FolderName,   "CSV$");
+                      wp02RightTreeTables.setCSVTreeLineSimple(nodeToAddTo, vCurrFolder.FolderName,   "CSV$");
                 }
                 return;
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "GetCloudRecords");
+                sTool.ExpHandler(er, "GetCloudRecords");
             }
         }
 
@@ -229,7 +229,7 @@ namespace SqlEngine
             try
             {
 
-                foreach (var vCurrCloudList in svcCloud.vCloudList)
+                foreach (var vCurrCloudList in sCloud.vCloudList)
                 {
                     string vv = vCurrCloudList.CloudName;
                 }
@@ -237,26 +237,26 @@ namespace SqlEngine
 
                 if (vIsUI == 0)
                 {
-                    foreach (var vCurrvODBCList in svcODBC.vODBCList)
+                    foreach (var vCurrvODBCList in sODBC.vODBCList)
                     {
-                        paneRightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrvODBCList.OdbcName);
+                        wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrvODBCList.OdbcName);
                     }
                     return;
                 }
                 if (vIsUI == 1)
                 {
 
-                    foreach (var vCurrvODBCList in svcODBC.vODBCList)
+                    foreach (var vCurrvODBCList in sODBC.vODBCList)
                     {
-                        svcODBC.checkOdbcStatus(vCurrvODBCList.OdbcName);
-                        paneRightTreeTables.setODBCTreeLineComplex(nodeToAddTo, vCurrvODBCList.OdbcName, vCurrvODBCList.OdbcName);
+                        sODBC.checkOdbcStatus(vCurrvODBCList.OdbcName);
+                        wp02RightTreeTables.setODBCTreeLineComplex(nodeToAddTo, vCurrvODBCList.OdbcName, vCurrvODBCList.OdbcName);
                     }
                     return;
                 }
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "GetODbcRecords");
+                sTool.ExpHandler(er, "GetODbcRecords");
             }
         } 
       
@@ -282,7 +282,7 @@ namespace SqlEngine
         private void rootMenu_Click(object sender, EventArgs e)
         {
             if (sender.ToString().Contains("Edit"))
-               svcTool.RunCmdLauncher("odbcad32");
+               sTool.RunCmdLauncher("odbcad32");
 
             else if (sender.ToString().Contains("Refresh"))
             {
@@ -349,7 +349,7 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("Delete"))
             {
-                svcRegistry.delLocalValue(miSelectNode.Tag + "." + miSelectNode.Text);
+                sRegistry.delLocalValue(miSelectNode.Tag + "." + miSelectNode.Text);
 
                 miSelectNode.Text = "";
                 miSelectNode.Tag = "";
@@ -439,17 +439,17 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("Table"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().Contains("Cloud"))
-                    vbaEngineCloud.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
+                    sVbaEngineCloud.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
 
                 else
                      intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             /* fix me */
             else if (sender.ToString().Contains("generate CSV"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().ToUpper().Contains("ODBC"))
-                    svcODBC.dumpOdbctoCsv(
+                    sODBC.dumpOdbctoCsv(
                                      miSelectNode.Parent.Parent.Text
                                    , "select * from  " + miSelectNode.Text
-                                   , svcCsv.getFirstFolder() + miSelectNode.Text + ".csv");                 
+                                   , sCsv.getFirstFolder() + miSelectNode.Text + ".csv");                 
 
             else if (sender.ToString().Contains("Chart"))
                 MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
@@ -568,34 +568,34 @@ namespace SqlEngine
 
             if (  (e.Node.Tag.ToString().ToUpper().Contains("CLOUD")) & (e.Node.Tag.ToString().Contains("$")))
                 {
-                    paneRightTreeCloud.getCloudTablesAndViews(e);
+                    wp01RightTreeCloud.getCloudTablesAndViews(e);
                     return;
                 }
             
                 if ( (e.Node.Tag.ToString().Contains("ODBC$")))
                 {
-                    paneRightTreeTables.getTablesAndViews(e);
+                    wp02RightTreeTables.getTablesAndViews(e);
                     sqlBuild.setLblConnectionName(e.Node.Text, "ODBC");
                     return;
                 }
 
                 if ( (e.Node.Tag.ToString().ToUpper().Contains("CSV")) & (e.Node.Tag.ToString().Contains("$")) & (e.Node.Parent.Text.ToString().ToUpper().Contains("CSV")))
                 {
-                    paneRightTreeCloud.getCsvFilesList(e);
+                    wp01RightTreeCloud.getCsvFilesList(e);
                     sqlBuild.setLblConnectionName(e.Node.Text, "CSV");
                     return;
                 }
 
                 if (  (e.Node.Tag.ToString().ToUpper().Contains("CSV")) & (e.Node.Tag.ToString().Contains("$")) & (e.Node.Parent.Text.ToString().ToUpper().Contains("CSV")))
                 {
-                    paneRightTreeCloud.getCsvFilesList(e);
+                    wp01RightTreeCloud.getCsvFilesList(e);
                     sqlBuild.setLblConnectionName(e.Node.Text, "CSV");
                     return;
                 }
 
                 if ( (e.Node.Tag.ToString().ToUpper().Contains("$FILE_CSV$")))
                 {
-                    paneRightTreeCloud.getCsvHeaders(e);
+                    wp01RightTreeCloud.getCsvHeaders(e);
                     return;
                 }
 
@@ -605,12 +605,12 @@ namespace SqlEngine
                     {
                         if (e.Node.Tag.ToString().Contains("CLD") | e.Node.Parent.Parent.Tag.ToString().Contains("Cloud"))
                         {
-                            paneRightTreeCloud.getColumnsAndIndexes(e);
+                            wp01RightTreeCloud.getColumnsAndIndexes(e);
                             return;
                         }                       
                         else
                         {
-                            paneRightTreeTables.getColumnsandIndexes(e);
+                            wp02RightTreeTables.getColumnsandIndexes(e);
                             return;
 
                         }
@@ -635,7 +635,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "treeODBC_NodeMouseClick  ");
+                sTool.ExpHandler(er, "treeODBC_NodeMouseClick  ");
             }
 
         }
@@ -650,7 +650,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "treeODBC_AfterSelect");
+                sTool.ExpHandler(er, "treeODBC_AfterSelect");
             }
         }
 
@@ -662,7 +662,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "treeODBC_AfterSelect");
+                sTool.ExpHandler(er, "treeODBC_AfterSelect");
             }
         }
 

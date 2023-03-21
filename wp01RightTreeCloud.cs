@@ -4,73 +4,73 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.svcCloud;
-using static SqlEngine.svcCsv;
+using static SqlEngine.sCloud;
+using static SqlEngine.sCsv;
 
 namespace SqlEngine
 {
-    class paneRightTreeCloud
+    class wp01RightTreeCloud
     {
       
-            private static void initCloudObjects(ref svcCloud.CloudProperties vCurrCloudObj)
+            private static void initCloudObjects(ref sCloud.CloudProperties vCurrCloudObj)
             {
                 try
                 {
                     if (vCurrCloudObj.Tables == null)
                     {
-                        vCurrCloudObj.Tables = new List<svcCloud.CloudObjects>();
+                        vCurrCloudObj.Tables = new List<sCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.Views == null)
                     {
-                        vCurrCloudObj.Views = new List<svcCloud.CloudObjects>();
+                        vCurrCloudObj.Views = new List<sCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.SQLProgramms == null)
                     {
-                        vCurrCloudObj.SQLProgramms = new List<svcCloud.CloudObjects>();
+                        vCurrCloudObj.SQLProgramms = new List<sCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.SQLFunctions == null)
                     {
-                        vCurrCloudObj.SQLFunctions = new List<svcCloud.CloudObjects>();
+                        vCurrCloudObj.SQLFunctions = new List<sCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.Tables.Count == 0)
                     {
-                        vCurrCloudObj.Tables.AddRange(svcCloud.getCloudTableList(vCurrCloudObj.CloudName));
+                        vCurrCloudObj.Tables.AddRange(sCloud.getCloudTableList(vCurrCloudObj.CloudName));
                     }
 
                     if (vCurrCloudObj.Views.Count == 0)
                     {
-                        vCurrCloudObj.Views.AddRange(svcCloud.getCloudViewList(vCurrCloudObj.CloudName));
+                        vCurrCloudObj.Views.AddRange(sCloud.getCloudViewList(vCurrCloudObj.CloudName));
                     }                     
 
                 }
                 catch (Exception er)
                 {
-                    svcTool.ExpHandler(er, "initCloudObjects");
+                    sTool.ExpHandler(er, "initCloudObjects");
                 }
             }
 
 
-        private static void initCsvObjects(ref svcCsv.FolderProperties vCurrCloudObj)
+        private static void initCsvObjects(ref sCsv.FolderProperties vCurrCloudObj)
         {
             try
             {
                 if (vCurrCloudObj.Files == null)
                 {
-                    vCurrCloudObj.Files = new List<svcCsv.CloudObjects>();
+                    vCurrCloudObj.Files = new List<sCsv.CloudObjects>();
                 } 
 
                 if (vCurrCloudObj.Files.Count == 0)
                 {
-                    vCurrCloudObj.Files.AddRange(svcCsv.getFileList(vCurrCloudObj.FolderName));
+                    vCurrCloudObj.Files.AddRange(sCsv.getFileList(vCurrCloudObj.FolderName));
                 }                 
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "initCloudObjects");
+                sTool.ExpHandler(er, "initCloudObjects");
             }
         }
 
@@ -79,7 +79,7 @@ namespace SqlEngine
             e.Node.Nodes.Clear();
             string vCurrFolderName = e.Node.Text;
              
-            FolderProperties vCurrFolder = svcCsv.vFolderList.Find(item => item.FolderName == vCurrFolderName);
+            FolderProperties vCurrFolder = sCsv.vFolderList.Find(item => item.FolderName == vCurrFolderName);
 
             try
             {
@@ -107,7 +107,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "getCsvFilesList 1 ");
+                sTool.ExpHandler(er, "getCsvFilesList 1 ");
             }
         }
 
@@ -116,11 +116,11 @@ namespace SqlEngine
                 e.Node.Nodes.Clear();
                 string vCurrCloudName = e.Node.Text; 
 
-                CloudProperties vCurrCloud = svcCloud.vCloudList.Find(item => item.CloudName == vCurrCloudName);
+                CloudProperties vCurrCloud = sCloud.vCloudList.Find(item => item.CloudName == vCurrCloudName);
 
                 try
                 {
-                    if ((svcCloud.checkCloudState(vCurrCloudName) < 0))
+                    if ((sCloud.checkCloudState(vCurrCloudName) < 0))
                     {
                         return;
                     }
@@ -161,7 +161,7 @@ namespace SqlEngine
                 }
                 catch (Exception er)
                 {
-                    svcTool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
+                    sTool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
                 }
             }
 
@@ -171,12 +171,12 @@ namespace SqlEngine
             {
                 String vNodeTag = e.Node.Parent.Text + '.' + e.Node.Text;
 
-                FilesAndProperties vCurrObjProp = svcCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag); 
+                FilesAndProperties vCurrObjProp = sCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag); 
 
                 if (vCurrObjProp.objColumns == null)
                 {
-                    svcCsv.vFileObjProp.AddRange(svcCsv.getCsvFileColumn(e.Node.Parent.Text, e.Node.Text));
-                    vCurrObjProp = svcCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag);
+                    sCsv.vFileObjProp.AddRange(sCsv.getCsvFileColumn(e.Node.Parent.Text, e.Node.Text));
+                    vCurrObjProp = sCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag);
                 }
 
                 if (vCurrObjProp.objColumns != null)
@@ -194,7 +194,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                svcTool.ExpHandler(er, "getColumnsandIndexes ");
+                sTool.ExpHandler(er, "getColumnsandIndexes ");
             }
 
         }
@@ -205,12 +205,12 @@ namespace SqlEngine
                 try
                 {
                     String vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
-                    var vCurrObjProp = svcCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
+                    var vCurrObjProp = sCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
 
                     if (vCurrObjProp.objColumns == null)
                     {
-                    svcCloud.vCloudObjProp.AddRange(svcCloud.getObjectProperties(e.Node.Parent.Parent.Text , e.Node.Text  ));
-                        vCurrObjProp = svcCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
+                    sCloud.vCloudObjProp.AddRange(sCloud.getObjectProperties(e.Node.Parent.Parent.Text , e.Node.Text  ));
+                        vCurrObjProp = sCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
                     }
 
                     if (vCurrObjProp.objColumns != null)
@@ -245,7 +245,7 @@ namespace SqlEngine
                 }
                 catch (Exception er)
                 {
-                    svcTool.ExpHandler(er, "getColumnsandIndexes ");
+                    sTool.ExpHandler(er, "getColumnsandIndexes ");
                 }
 
             }

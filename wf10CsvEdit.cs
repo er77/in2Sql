@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.svcCsv;
+using static SqlEngine.sCsv;
 
 namespace SqlEngine
 {
@@ -32,15 +32,15 @@ namespace SqlEngine
 
         private void button2_Click(object sender, EventArgs e)
         {
-            svcCsv.vFolderList = svcCsv.FolderList();
+            sCsv.vFolderList = sCsv.FolderList();
             this.Close();
         }
 
         private void refreshList ()
         {
-            svcCsv.vFolderList = svcCsv.FolderList();
+            sCsv.vFolderList = sCsv.FolderList();
             CMBoxConnection.Items.Clear();
-            foreach (var vCurrFolder in svcCsv.vFolderList)
+            foreach (var vCurrFolder in sCsv.vFolderList)
             {
                 CMBoxConnection.Items.Add(vCurrFolder.FolderName);
             }
@@ -50,7 +50,7 @@ namespace SqlEngine
         private void wf10Create_Click(object sender, EventArgs e)
         {
 
-            svcRegistry.setLocalValue("Csv." + CsvName.Text,"Path", CsvPath.Text);
+            sRegistry.setLocalValue("Csv." + CsvName.Text,"Path", CsvPath.Text);
             refreshList();
 
         }
@@ -64,7 +64,7 @@ namespace SqlEngine
         {
             if (vCurrConnection.Length > 2)
             {
-                svcRegistry.delLocalValue("Csv." + vCurrConnection);
+                sRegistry.delLocalValue("Csv." + vCurrConnection);
                 vCurrConnection = "";
 
                 CsvName.Text = ""; 

@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.svcCloud;
+using static SqlEngine.sCloud;
 
 namespace SqlEngine
 {
@@ -30,7 +30,7 @@ namespace SqlEngine
         {
             contextMenuSqlConnections.Items.Clear();
 
-            foreach (var vCurrvODBCList in svcODBC.vODBCList)
+            foreach (var vCurrvODBCList in sODBC.vODBCList)
             {
                 ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvODBCList.OdbcName + " | odbc"  );
                 vCurrConnMenu.Click += Connection_Click;
@@ -38,7 +38,7 @@ namespace SqlEngine
             }
             SqlConnectionsToolStripDropDown.DropDown = contextMenuSqlConnections;
 
-            foreach (var vCurrvCloud in svcCloud.vCloudList)
+            foreach (var vCurrvCloud in sCloud.vCloudList)
             {
                 ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvCloud.CloudName + " | cloud");
                 vCurrConnMenu.Click += Connection_Click;
@@ -111,7 +111,7 @@ namespace SqlEngine
 
         private void EditTollMenu_Click(object sender, EventArgs e)
         {
-            svcTool.RunGarbageCollector();
+            sTool.RunGarbageCollector();
 
             SqlDocument.ReadOnly = true;
             string qstr = getSql(); 
@@ -172,7 +172,7 @@ namespace SqlEngine
         {
             try
             {
-                string DsnConn = svcODBC.getODBCProperties(vOdbcName, "DSNStr"); 
+                string DsnConn = sODBC.getODBCProperties(vOdbcName, "DSNStr"); 
 
                 if (DsnConn == null | DsnConn == "")
                 {
@@ -182,7 +182,7 @@ namespace SqlEngine
                 }
 
                 intSqlVBAEngine.setSqlLimit(vOdbcName, vSqlCommand);
-                svcTool.addSqlLog(vOdbcName, vSqlCommand);
+                sTool.addSqlLog(vOdbcName, vSqlCommand);
 
                 using
                         (OdbcConnection conn = new System.Data.Odbc.OdbcConnection(DsnConn))
@@ -196,7 +196,7 @@ namespace SqlEngine
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    svcTool.ExpHandler(e, "OdbcGrid");
+                    sTool.ExpHandler(e, "OdbcGrid");
             }
         }
 
@@ -207,7 +207,7 @@ namespace SqlEngine
                 if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                     return;              
                  
-                string vConnURL = svcCloud.prepareCloudQuery(vCloudName, vCurrSql );
+                string vConnURL = sCloud.prepareCloudQuery(vCloudName, vCurrSql );
 
                 if (vConnURL == null | vConnURL == "")
                 {
@@ -216,15 +216,15 @@ namespace SqlEngine
                     return;
                 }
 
-                string vTempFile = svcTool.writeHttpToFile(vConnURL);
+                string vTempFile = sTool.writeHttpToFile(vConnURL);
 
-                this.SqlDataResult.DataSource = svcTool.ConvertCSVtoDataTable(vTempFile,',');
-                 svcTool.deleteFile(vTempFile);
+                this.SqlDataResult.DataSource = sTool.ConvertCSVtoDataTable(vTempFile,',');
+                 sTool.deleteFile(vTempFile);
                 
             }
             catch (Exception e)
             { 
-                    svcTool.ExpHandler(e, "CloudGrid");
+                    sTool.ExpHandler(e, "CloudGrid");
             }
         }
 
@@ -255,7 +255,7 @@ namespace SqlEngine
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    svcTool.ExpHandler(e, "sqlExecuteandDataGrid");                    
+                    sTool.ExpHandler(e, "sqlExecuteandDataGrid");                    
             } 
         }
 
@@ -276,16 +276,16 @@ namespace SqlEngine
                 qstr = "select * from ( " + qstr + " ) df where 1=1 ";
                 if (vTempName.Count() > 1)
                     if (vTempName[1].ToUpper().Contains("ODBC"))
-                         intSqlVBAEngine.createExTable(ConnName.Text, svcTool.GetHash(qstr), qstr);
+                         intSqlVBAEngine.createExTable(ConnName.Text, sTool.GetHash(qstr), qstr);
                     
                     else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
-                         vbaEngineCloud.createExTable(vOdbcName, svcTool.GetHash(qstr), qstr);
+                         sVbaEngineCloud.createExTable(vOdbcName, sTool.GetHash(qstr), qstr);
                     
             }
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    svcTool.ExpHandler(e, "sqlExecuteandDataGrid");
+                    sTool.ExpHandler(e, "sqlExecuteandDataGrid");
             }
         }
 
@@ -303,7 +303,7 @@ namespace SqlEngine
 
         private void SqlDocument_Load(object sender, EventArgs e)
         {
-            SqlDocument.Text = " Free Sql  Manager \n\r  https://t.me/in2sql  \n\r https://sourceforge.net/projects/in2sql/ \n\r er@essbase.ru ";
+            SqlDocument.Text = "Free Sql Manager \n\r  https://t.me/in2sql  \n\r https://sourceforge.net/projects/in2sql/ \n\r erasyuk@gmail.com ";
         }
 
         private void SaveToExTable_ButtonClick(object sender, EventArgs e)

@@ -16,7 +16,7 @@ namespace SqlEngine
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
         {
-            return new In2SqlRibbon();
+            return new Ribbon();
         }
 
         private void SqlEngine_Startup(object sender, System.EventArgs e)
@@ -27,7 +27,7 @@ namespace SqlEngine
         private void SqlEngine_Shutdown(object sender, System.EventArgs e)
         {
             currExcelApp = null;
-            In2SqlSvcTool.RunGarbageCollector();
+            svcTool.RunGarbageCollector();
         }
 
         #region VSTO generated code

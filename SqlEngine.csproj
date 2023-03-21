@@ -26,7 +26,7 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <RootNamespace>SqlEngine</RootNamespace>
     <AssemblyName>SqlEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <TargetFrameworkProfile />
@@ -52,6 +52,11 @@
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -128,28 +133,31 @@
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>packages\CsvHelper.15.0.5\lib\net47\CsvHelper.dll</HintPath>
+      <HintPath>packages\CsvHelper.15.0.10\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
     <Reference Include="FastColoredTextBox, Version=2.16.24.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
       <HintPath>packages\FCTB.2.16.24\lib\FastColoredTextBox.dll</HintPath>
     </Reference>
-    <Reference Include="K4os.Compression.LZ4, Version=1.1.11.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
-      <HintPath>packages\K4os.Compression.LZ4.1.1.11\lib\net45\K4os.Compression.LZ4.dll</HintPath>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.1.2.6\lib\net46\K4os.Compression.LZ4.dll</HintPath>
     </Reference>
-    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.1.11.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
-      <HintPath>packages\K4os.Compression.LZ4.Streams.1.1.11\lib\net45\K4os.Compression.LZ4.Streams.dll</HintPath>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
     </Reference>
     <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
       <HintPath>packages\K4os.Hash.xxHash.1.0.6\lib\net45\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
@@ -162,28 +170,26 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.SQLite.Core.1.0.113.1\lib\net46\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.5.0.0\lib\net461\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -237,110 +243,110 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="in2SqlLibrary.cs" />
-    <Compile Include="in2SqlRegistry.cs" />
-    <Compile Include="In2SqlRibbon.cs" />
-    <Compile Include="in2SqlRightPaneTreeCloud.cs" />
-    <Compile Include="in2sqlSvcCloud.cs" />
-    <Compile Include="In2SqlSvcCsv.cs" />
-    <Compile Include="In2SqlSvcUndoManagment.cs" />
-    <Compile Include="in2SqlWF03PanelRigtSqlM.cs">
+    <Compile Include="svcSqlLibrary.cs" />
+    <Compile Include="svcRegistry.cs" />
+    <Compile Include="Ribbon.cs" />
+    <Compile Include="paneRightTreeCloud.cs" />
+    <Compile Include="svcCloud.cs" />
+    <Compile Include="svcCsv.cs" />
+    <Compile Include="svcUndoManagment.cs" />
+    <Compile Include="wf03PanelRigtSqlM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="in2SqlWF03PanelRigtSqlM.Designer.cs">
-      <DependentUpon>in2SqlWF03PanelRigtSqlM.cs</DependentUpon>
+    <Compile Include="wf03PanelRigtSqlM.Designer.cs">
+      <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlRightPaneTreeTables.cs" />
-    <Compile Include="In2SqlSvcODBC.cs" />
-    <Compile Include="In2SqlSvcTool.cs" />
-    <Compile Include="in2SqlWF01Login.cs">
+    <Compile Include="paneRightTreeTables.cs" />
+    <Compile Include="svcODBC.cs" />
+    <Compile Include="svcTool.cs" />
+    <Compile Include="wf01Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF01Login.Designer.cs">
-      <DependentUpon>in2SqlWF01Login.cs</DependentUpon>
+    <Compile Include="wf01Login.Designer.cs">
+      <DependentUpon>wf01Login.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlWF02PaneLeftOtline.cs">
+    <Compile Include="wf02PaneLeftOtline.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="in2SqlWF02PaneLeftOtline.Designer.cs">
-      <DependentUpon>in2SqlWF02PaneLeftOtline.cs</DependentUpon>
+    <Compile Include="wf02PaneLeftOtline.Designer.cs">
+      <DependentUpon>wf02PaneLeftOtline.cs</DependentUpon>
     </Compile>
-    <Compile Include="In2SqlWF04EditQuery.cs">
+    <Compile Include="wf04EditQuery.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="In2SqlWF04EditQuery.Designer.cs">
-      <DependentUpon>In2SqlWF04EditQuery.cs</DependentUpon>
+    <Compile Include="wf04EditQuery.Designer.cs">
+      <DependentUpon>wf04EditQuery.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlWF05SqlEngine.cs">
+    <Compile Include="wf05SqlEngine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF05SqlEngine.Designer.cs">
-      <DependentUpon>in2SqlWF05SqlEngine.cs</DependentUpon>
+    <Compile Include="wf05SqlEngine.Designer.cs">
+      <DependentUpon>wf05SqlEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="In2SqlVBAEngine.cs" />
-    <Compile Include="in2SqlWF06SqlBuilder.cs">
+    <Compile Include="vbaEngine.cs" />
+    <Compile Include="wf06SqlBuilder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF06SqlBuilder.Designer.cs">
-      <DependentUpon>in2SqlWF06SqlBuilder.cs</DependentUpon>
+    <Compile Include="wf06SqlBuilder.Designer.cs">
+      <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlWF07OdbcProperties.cs">
+    <Compile Include="wf07OdbcProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF07OdbcProperties.Designer.cs">
-      <DependentUpon>in2SqlWF07OdbcProperties.cs</DependentUpon>
+    <Compile Include="wf07OdbcProperties.Designer.cs">
+      <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlWF08About.cs">
+    <Compile Include="wf08About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF08About.Designer.cs">
-      <DependentUpon>in2SqlWF08About.cs</DependentUpon>
+    <Compile Include="wf08About.Designer.cs">
+      <DependentUpon>wf08About.cs</DependentUpon>
     </Compile>
-    <Compile Include="in2SqlWF09CloudConnectionEditor.cs">
+    <Compile Include="wf09CloudConnectionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF09CloudConnectionEditor.Designer.cs">
-      <DependentUpon>in2SqlWF09CloudConnectionEditor.cs</DependentUpon>
+    <Compile Include="wf09CloudConnectionEditor.Designer.cs">
+      <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="In2SqlVBAEngineCloud.cs" />
-    <Compile Include="in2SqlWF10CsvEdit.cs">
+    <Compile Include="vbaEngineCloud.cs" />
+    <Compile Include="wf10CsvEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="in2SqlWF10CsvEdit.Designer.cs">
-      <DependentUpon>in2SqlWF10CsvEdit.cs</DependentUpon>
+    <Compile Include="wf10CsvEdit.Designer.cs">
+      <DependentUpon>wf10CsvEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="in2SqlWF03PanelRigtSqlM.resx">
-      <DependentUpon>in2SqlWF03PanelRigtSqlM.cs</DependentUpon>
+    <EmbeddedResource Include="wf03PanelRigtSqlM.resx">
+      <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF01Login.resx">
-      <DependentUpon>in2SqlWF01Login.cs</DependentUpon>
+    <EmbeddedResource Include="wf01Login.resx">
+      <DependentUpon>wf01Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF02PaneLeftOtline.resx">
-      <DependentUpon>in2SqlWF02PaneLeftOtline.cs</DependentUpon>
+    <EmbeddedResource Include="wf02PaneLeftOtline.resx">
+      <DependentUpon>wf02PaneLeftOtline.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="In2SqlWF04EditQuery.resx">
-      <DependentUpon>In2SqlWF04EditQuery.cs</DependentUpon>
+    <EmbeddedResource Include="wf04EditQuery.resx">
+      <DependentUpon>wf04EditQuery.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF05SqlEngine.resx">
-      <DependentUpon>in2SqlWF05SqlEngine.cs</DependentUpon>
+    <EmbeddedResource Include="wf05SqlEngine.resx">
+      <DependentUpon>wf05SqlEngine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF06SqlBuilder.resx">
-      <DependentUpon>in2SqlWF06SqlBuilder.cs</DependentUpon>
+    <EmbeddedResource Include="wf06SqlBuilder.resx">
+      <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF07OdbcProperties.resx">
-      <DependentUpon>in2SqlWF07OdbcProperties.cs</DependentUpon>
+    <EmbeddedResource Include="wf07OdbcProperties.resx">
+      <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF08About.resx">
-      <DependentUpon>in2SqlWF08About.cs</DependentUpon>
+    <EmbeddedResource Include="wf08About.resx">
+      <DependentUpon>wf08About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF09CloudConnectionEditor.resx">
-      <DependentUpon>in2SqlWF09CloudConnectionEditor.cs</DependentUpon>
+    <EmbeddedResource Include="wf09CloudConnectionEditor.resx">
+      <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="in2SqlWF10CsvEdit.resx">
-      <DependentUpon>in2SqlWF10CsvEdit.cs</DependentUpon>
+    <EmbeddedResource Include="wf10CsvEdit.resx">
+      <DependentUpon>wf10CsvEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -375,12 +381,9 @@
       <DependentUpon>SqlEngine.Designer.xml</DependentUpon>
     </Compile>
     <AppDesigner Include="Properties\" />
-    <None Include="SqlEngine_1_TemporaryKey.pfx" />
-    <None Include="SqlEngine_2_TemporaryKey.pfx" />
-    <None Include="SqlEngine_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="In2SqlRibbon.xml" />
+    <EmbeddedResource Include="Ribbon.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ico.ico" />
@@ -439,11 +442,4 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets'))" />
-  </Target>
 </Project>

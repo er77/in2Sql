@@ -27,7 +27,7 @@ namespace SqlEngine
         {
 
         }
-
+         
         private void setSQlEdit ()
         {
             /*

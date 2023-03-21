@@ -9,7 +9,7 @@ namespace SqlEngine
     class sLibrary
     {
         public static string getDBType(string vDataSource, string vDriver)
-        {
+        { 
             string vDBType = "";
             if (vDataSource.ToUpper().Contains("MSSQL")) vDBType = "MSSQL";
             else if (vDriver.ToUpper().Contains("SQLSRV")) vDBType = "MSSQL";

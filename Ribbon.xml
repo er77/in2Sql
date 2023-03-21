@@ -6,7 +6,7 @@
       <!-- erasyuk@gmail.com   Free Under BSD license   
       https://www.vi-tek.cz/imagemso/
       -->       
-      
+       
       <tab id="SqlEngine" label="in2Sql"   visible="true"  keytip="YQA" >
         <group id="grp_Main0" label="v0.6(beta)"   >
           <button id="ExecConnManager" label="Object Explorer"  onAction="ExecMenuButton"  imageMso="ObjectsGroup"  size = "large"   enabled="1"   />

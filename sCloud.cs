@@ -36,7 +36,7 @@ namespace SqlEngine
             public List<CloudObjects> SQLProgramms;
             public List<CloudObjects> SQLFunctions;
         }
-
+         
         public static List<CloudProperties> vCloudList = CloudList();
 
         public static List<ObjectsAndProperties> vCloudObjProp = new List<ObjectsAndProperties>();

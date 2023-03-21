@@ -35,7 +35,7 @@ namespace SqlEngine
             return Encoding.Unicode.GetString(decrypted);
         }
 
-
+         
 
         public static string getLocalRegValue(RegistryKey vCurrRegKey, string vValue)
         {

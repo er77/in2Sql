@@ -26,7 +26,7 @@ namespace SqlEngine
              
             return vSql;
         }
-
+         
 
         public static void createExTable(string vCurrCloudName, string vTableName, string vCurrSql = null, int isReplace=0, string vOldTableName="")
         {

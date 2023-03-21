@@ -241,7 +241,7 @@ namespace SqlEngine
                     vSql = rgx.Replace(vSql, "SELECT /*`*/ TOP(" + Ribbon.vRowCount + ") /*`*/ ", 1);
                 }
             }
-
+             
             return vSql;
         }
 

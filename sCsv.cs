@@ -12,7 +12,7 @@ namespace SqlEngine
 {
     class sCsv
     {
-
+         
         public struct CloudObjects
         {
             public String Name;

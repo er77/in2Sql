@@ -91,7 +91,7 @@ namespace SqlEngine
             }
             svf = null;
         }
-
+         
         BackgroundWorker bw  = new BackgroundWorker();  
         
         private string getSql ()

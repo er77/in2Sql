@@ -14,7 +14,7 @@ namespace SqlEngine
       
             private static void initCloudObjects(ref sCloud.CloudProperties vCurrCloudObj)
             {
-                try
+                try 
                 {
                     if (vCurrCloudObj.Tables == null)
                     {

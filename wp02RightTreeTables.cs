@@ -70,7 +70,7 @@ namespace SqlEngine
             TreeNode vNodeTable = new TreeNode(" ".ToString(), 100, 100); // vNodeTable.Tag = vCurrTable.Name;
             vNodeDatabase.Nodes.Add(vNodeTable);
         }
-
+         
         public static void setCSVTreeLineSimple(TreeNode nodeToAddTo, string vOdbcName, string vOdbcType = "CSV$")
         {
             TreeNode vNodeDatabase = new TreeNode(vOdbcName, 21, 21);

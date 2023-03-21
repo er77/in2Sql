@@ -17,7 +17,7 @@ namespace SqlEngine
         public static List<SqlActionTableList> vUndoTableList  = new List<SqlActionTableList>();
         public static List<SqlActionTableList> vRedoTableList = new List<SqlActionTableList>();
 
-
+         
         public static List<String>  getUndoList (String vTableName )
         {    
             int vind = vUndoTableList.FindIndex(item => item.TableName == vTableName);

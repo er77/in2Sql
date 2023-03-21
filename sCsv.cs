@@ -123,6 +123,8 @@ namespace SqlEngine
         //, it splits the name into an array and checks if the array has two elements. If it does, it yields the folder properties. It then sets the folder name and retrie
         //ves the registry value for the current name. If the path is not null, it yields the folder properties and sets the previous name to an empty string. Otherwise, it
         // sets the previous name to an empty string if the previous name is greater than two characters.
+        //Optimized
+
         public static IEnumerable<FolderProperties> getCsvList()
         {
             RegistryKey vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
@@ -179,7 +181,7 @@ namespace SqlEngine
 
                 }
             }
-        }
-        //Bug: The if statement should use .Length instead of .Count() to compare the length of the array.
+        } 
+
     }
 }

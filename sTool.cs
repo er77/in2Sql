@@ -446,7 +446,7 @@ namespace SqlEngine
                 vCTR.Sql = vCurrTable.QueryTable.CommandText;
             }
 
-            vCTR.Sql = intSqlVBAEngine.RemoveBetween(vCTR.Sql, '`', '`');
+            vCTR.Sql = sSqlVba.RemoveBetween(vCTR.Sql, '`', '`');
             vCTR.Sql = vCTR.Sql.Replace("/**/", "");
 
             return vCTR;

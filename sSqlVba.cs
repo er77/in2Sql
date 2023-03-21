@@ -15,7 +15,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace SqlEngine
 {
-    class intSqlVBAEngine
+    class sSqlVba
     {
 
         public static bool isRefresh = false;

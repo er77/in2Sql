@@ -246,6 +246,7 @@
     <Compile Include="sLibrary.cs" />
     <Compile Include="sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
+    <Compile Include="sRibbon.cs" />
     <Compile Include="wp01RightTreeCloud.cs" />
     <Compile Include="sCloud.cs" />
     <Compile Include="sCsv.cs" />
@@ -283,7 +284,7 @@
     <Compile Include="wf05SqlEngine.Designer.cs">
       <DependentUpon>wf05SqlEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="sVba.cs" />
+    <Compile Include="sSqlVba.cs" />
     <Compile Include="wf06SqlBuilder.cs">
       <SubType>Form</SubType>
     </Compile>

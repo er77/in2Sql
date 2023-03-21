@@ -12,7 +12,7 @@ namespace SqlEngine
 {
     class sCsv
     {
-         
+
         public struct CloudObjects
         {
             public String Name;
@@ -29,7 +29,7 @@ namespace SqlEngine
 
         public struct FolderProperties
         {
-            public string FolderName, Path ; 
+            public string FolderName, Path;
             public List<CloudObjects> Files;
 
         }
@@ -38,10 +38,10 @@ namespace SqlEngine
 
         public static List<FilesAndProperties> vFileObjProp = new List<FilesAndProperties>();
 
-        public static string getFirstFolder ()
+        public static string getFirstFolder()
         {
-            if (vFolderList != null )
-              return vFolderList[0].Path + "\\";
+            if (vFolderList != null)
+                return vFolderList[0].Path + "\\";
 
             return "c:\\Temp\\";
         }
@@ -59,20 +59,25 @@ namespace SqlEngine
                 sTool.ExpHandler(e, "CloudList");
                 return null;
             }
-        } 
+        }
+        //Bug: The method does not have a return statement in the catch block. If an exception is thrown, the method will return null, which may not be the desired behavior
+        //.
 
         public static IEnumerable<CloudObjects> getFileList(string vCurrFolderName)
         {
-            FolderProperties vCurrFolderN = vFolderList.Find(item => item.FolderName == vCurrFolderName);       
+            FolderProperties vCurrFolderN = vFolderList.Find(item => item.FolderName == vCurrFolderName);
 
-            return getFiesinFolderList(vCurrFolderN.Path);
+            return getFilesinFolderList(vCurrFolderN.Path);
 
-        } 
+        }
 
-        private static IEnumerable<CloudObjects> getFiesinFolderList(string vFolderPath)
+        //This code snippet is a method that returns a list of files in a given folder path. It uses the DirectoryInfo class to get the list of files in the folder path, and
+        // then iterates through the list of files using a foreach loop. For each file, it creates a CloudObjects object and assigns the file name to the Name property of the
+        // object. It also assigns a unique idTbl value to the object. Finally, it yields the object, which adds it to the list of files.
+        private static IEnumerable<CloudObjects> getFilesinFolderList(string vFolderPath)
         {
             DirectoryInfo d = new DirectoryInfo(@vFolderPath);
-            FileInfo[] Files = d.GetFiles("*.csv"); 
+            FileInfo[] Files = d.GetFiles("*.csv");
             string str = "";
             foreach (FileInfo file in Files)
             {
@@ -82,10 +87,13 @@ namespace SqlEngine
                 vObj.idTbl = vIdtbl;
                 vIdtbl = vIdtbl + 1;
                 yield return vObj;
-            } 
+            }
         }
 
 
+        //This code snippet is a method that reads a CSV file and returns the columns of the file. It takes two parameters, the current folder name and the object name. It
+        // then creates a FolderProperties object and a FilesAndProperties object. It then uses a TextFieldParser to read the fields of the CSV file and adds each column to
+        // the objColumns list of the FilesAndProperties object. Finally, it returns the FilesAndProperties object.
         public static IEnumerable<FilesAndProperties> getCsvFileColumn(string vCurrFolderName, string vObjName)
         {
             FolderProperties vCurrFolderN = vFolderList.Find(item => item.FolderName == vCurrFolderName);
@@ -94,7 +102,7 @@ namespace SqlEngine
             vObject.ObjName = vCurrFolderName + '.' + vObjName;
             vObject.objColumns = new List<string>();
 
-            using (TextFieldParser csvReader = new TextFieldParser( vCurrFolderN.Path + "\\" + vObjName ))
+            using (TextFieldParser csvReader = new TextFieldParser(vCurrFolderN.Path + "\\" + vObjName))
             {
                 csvReader.SetDelimiters(new string[] { "," });
                 csvReader.HasFieldsEnclosedInQuotes = true;
@@ -102,14 +110,19 @@ namespace SqlEngine
                 foreach (string column in colFields)
                 {
                     vObject.objColumns.Add(column.ToString().Replace('"', ' ').Trim());
-                }           
+                }
             }
 
-            yield return vObject; 
+            yield return vObject;
 
         }
+        //Possible bug: The variable vFolderList is not declared or initialized anywhere in the code.
 
 
+        //This code is a method that retrieves a list of CSV files from the registry. It iterates through the registry values and checks if the name contains "Csv". If it does
+        //, it splits the name into an array and checks if the array has two elements. If it does, it yields the folder properties. It then sets the folder name and retrie
+        //ves the registry value for the current name. If the path is not null, it yields the folder properties and sets the previous name to an empty string. Otherwise, it
+        // sets the previous name to an empty string if the previous name is greater than two characters.
         public static IEnumerable<FolderProperties> getCsvList()
         {
             RegistryKey vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
@@ -143,18 +156,18 @@ namespace SqlEngine
 
                         vPrevName = vCurrName;
 
-                        vFolderProp.FolderName = vCurrName; 
+                        vFolderProp.FolderName = vCurrName;
 
                         string vCurrRegValue = sRegistry.getLocalRegValue(vCurrRegKey, name);
 
                         if (name.Contains("Path"))
                             vFolderProp.Path = vCurrRegValue;
 
-                        if (vFolderProp.Path != null) 
-                                {
-                                    vPrevName = "";
-                                    yield return vFolderProp;
-                                }
+                        if (vFolderProp.Path != null)
+                        {
+                            vPrevName = "";
+                            yield return vFolderProp;
+                        }
                     }
                     else
                     {
@@ -167,5 +180,6 @@ namespace SqlEngine
                 }
             }
         }
+        //Bug: The if statement should use .Length instead of .Count() to compare the length of the array.
     }
 }

@@ -48,14 +48,14 @@ namespace SqlEngine
 
                 vSql = vCurrTable.QueryTable.CommandText;
 
-                vSql = intSqlVBAEngine.RemoveBetween(vSql, '`', '`');
+                vSql = sSqlVba.RemoveBetween(vSql, '`', '`');
                 vSql = vSql.Replace("/**/", "");
 
                 SqlEditor.Text = vSql;
             }
 
             else if (sender.ToString().Contains("Save"))
-                vCurrTable.QueryTable.CommandText = intSqlVBAEngine.setSqlLimit(intSqlVBAEngine.getOdbcNameFromCell(), SqlEditor.Text);
+                vCurrTable.QueryTable.CommandText = sSqlVba.setSqlLimit(sSqlVba.getOdbcNameFromCell(), SqlEditor.Text);
 
             else if (sender.ToString().Contains("Cut"))
                 SqlEditor.Cut();
@@ -76,8 +76,8 @@ namespace SqlEngine
                 SQLEditToolStrip.Focus();
 
                 if (vCTR.TypeConnection.Contains("ODBC"))
-                {   vCurrTable.QueryTable.CommandText = intSqlVBAEngine.setSqlLimit(intSqlVBAEngine.getOdbcNameFromObject(vCurrTable), SqlEditor.Text);
-                    intSqlVBAEngine.objRefreshHistory(vCurrTable);                    
+                {   vCurrTable.QueryTable.CommandText = sSqlVba.setSqlLimit(sSqlVba.getOdbcNameFromObject(vCurrTable), SqlEditor.Text);
+                    sSqlVba.objRefreshHistory(vCurrTable);                    
                 }
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))

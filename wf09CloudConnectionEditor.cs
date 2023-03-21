@@ -57,7 +57,7 @@ namespace SqlEngine
         {
             string vSqlURL;
 
-            vSqlURL = sCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
+            vSqlURL = sCloud.prepareCloudQuery_init(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
 
             vSqlURL = sTool.HttpGet(vSqlURL);
             

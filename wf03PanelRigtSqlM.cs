@@ -435,14 +435,14 @@ namespace SqlEngine
         {
 
             if (sender.ToString().Contains("PivotTable"))
-                intSqlVBAEngine.createPivotTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
+                sSqlVba.createPivotTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
 
             else if (sender.ToString().Contains("Table"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().Contains("Cloud"))
                     sVbaEngineCloud.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
 
                 else
-                     intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
+                     sSqlVba.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             /* fix me */
             else if (sender.ToString().Contains("generate CSV"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().ToUpper().Contains("ODBC"))

@@ -181,7 +181,7 @@ namespace SqlEngine
                     return;
                 }
 
-                intSqlVBAEngine.setSqlLimit(vOdbcName, vSqlCommand);
+                sSqlVba.setSqlLimit(vOdbcName, vSqlCommand);
                 sTool.addSqlLog(vOdbcName, vSqlCommand);
 
                 using
@@ -276,7 +276,7 @@ namespace SqlEngine
                 qstr = "select * from ( " + qstr + " ) df where 1=1 ";
                 if (vTempName.Count() > 1)
                     if (vTempName[1].ToUpper().Contains("ODBC"))
-                         intSqlVBAEngine.createExTable(ConnName.Text, sTool.GetHash(qstr), qstr);
+                         sSqlVba.createExTable(ConnName.Text, sTool.GetHash(qstr), qstr);
                     
                     else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
                          sVbaEngineCloud.createExTable(vOdbcName, sTool.GetHash(qstr), qstr);

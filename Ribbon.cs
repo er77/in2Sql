@@ -268,22 +268,22 @@ namespace SqlEngine
                         break;
 
                     case "KeepOnly":
-                        intSqlVBAEngine.RibbonKeepOnly();
+                        sSqlVba.RibbonKeepOnly();
                         ActivateTab();
                         break;
 
                     case "RemoveOnly":
-                        intSqlVBAEngine.RibbonRemoveOnly();
+                        sSqlVba.RibbonRemoveOnly();
                         ActivateTab();
                         break;
 
                     case "Retrieve":
-                        intSqlVBAEngine.RibbonRefresh();
+                        sSqlVba.RibbonRefresh();
                         ActivateTab();
                         break;
 
                     case "RetrieveAll":
-                        intSqlVBAEngine.RibbonRefreshAll();
+                        sSqlVba.RibbonRefreshAll();
                         ActivateTab();
                         break;
                          
@@ -294,45 +294,45 @@ namespace SqlEngine
                         break;
 
                     case "PivotExcel":
-                        intSqlVBAEngine.RibbonPivotExcel();
+                        sSqlVba.RibbonPivotExcel();
                         ActivateTab();
                         break;
 
                     case "Undo":
-                        intSqlVBAEngine.Undo();
+                        sSqlVba.Undo();
                         ActivateTab();
                         break;
 
                     case "Redo":
-                        intSqlVBAEngine.Redo();
+                        sSqlVba.Redo();
                         ActivateTab();
                         break;
 
                     //  ()
                     case "UpdateDataAll":
-                         intSqlVBAEngine.updateTablesAll();
+                         sSqlVba.updateTablesAll();
                         ActivateTab();
                         break;
                     case "UpdateData":
-                        intSqlVBAEngine.updateTables();
+                        sSqlVba.updateTables();
                         ActivateTab();
                         break;
                     //
 
                     case "PowerPivotMM":
-                        intSqlVBAEngine.runPowerPivotM();
+                        sSqlVba.runPowerPivotM();
                         //intSqlVBAEngine.checkTableName();
                         ActivateTab();
                         break;
 
                     case "Options":
-                        intSqlVBAEngine.runSqlProperties();
+                        sSqlVba.runSqlProperties();
                         //intSqlVBAEngine.checkTableName();
                         ActivateTab();
                         break;
 
                     case "TableProp":
-                        intSqlVBAEngine.runTableProperties(); 
+                        sSqlVba.runTableProperties(); 
                         break;
 
                     case "About":

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlPgSql
+    internal class libPgSql
     {
 
         public static string getPgSqlViews()

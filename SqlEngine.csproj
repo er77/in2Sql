@@ -243,15 +243,15 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="s01LibSql\libSqlProxy.cs" />
-    <Compile Include="s01LibSql\SqlCloud.cs" />
-    <Compile Include="s01LibSql\SqlDb2.cs" />
-    <Compile Include="s01LibSql\SqlMsSql.cs" />
-    <Compile Include="s01LibSql\SqlMySql.cs" />
-    <Compile Include="s01LibSql\SqlOracle.cs" />
-    <Compile Include="s01LibSql\SqlPgSql.cs" />
-    <Compile Include="s01LibSql\SqlSnow.cs" />
-    <Compile Include="s01LibSql\SqlVertica.cs" />
+    <Compile Include="s01LibSql\ProxySqlLib.cs" />
+    <Compile Include="s01LibSql\libCHouse.cs" />
+    <Compile Include="s01LibSql\libDb2.cs" />
+    <Compile Include="s01LibSql\libMsSql.cs" />
+    <Compile Include="s01LibSql\libMySql.cs" />
+    <Compile Include="s01LibSql\libOracle.cs" />
+    <Compile Include="s01LibSql\libPgSql.cs" />
+    <Compile Include="s01LibSql\libSnow.cs" />
+    <Compile Include="s01LibSql\libVertica.cs" />
     <Compile Include="sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
     <Compile Include="sRibbon.cs" />
@@ -268,10 +268,10 @@
     <Compile Include="wp02RightTreeTables.cs" />
     <Compile Include="sODBC.cs" />
     <Compile Include="sTool.cs" />
-    <Compile Include="wf01Login.cs">
+    <Compile Include="f01Other\wf01Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf01Login.Designer.cs">
+    <Compile Include="f01Other\wf01Login.Designer.cs">
       <DependentUpon>wf01Login.cs</DependentUpon>
     </Compile>
     <Compile Include="wf02PaneLeftOtline.cs">
@@ -299,29 +299,29 @@
     <Compile Include="wf06SqlBuilder.Designer.cs">
       <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf07OdbcProperties.cs">
+    <Compile Include="f01Other\wf07OdbcProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf07OdbcProperties.Designer.cs">
+    <Compile Include="f01Other\wf07OdbcProperties.Designer.cs">
       <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf08About.cs">
+    <Compile Include="f01Other\wf08About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf08About.Designer.cs">
+    <Compile Include="f01Other\wf08About.Designer.cs">
       <DependentUpon>wf08About.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf09CloudConnectionEditor.cs">
+    <Compile Include="f01Other\wf09CloudConnectionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf09CloudConnectionEditor.Designer.cs">
+    <Compile Include="f01Other\wf09CloudConnectionEditor.Designer.cs">
       <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="sVbaEngineCloud.cs" />
-    <Compile Include="wf10CsvEdit.cs">
+    <Compile Include="f01Other\wf10CsvEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf10CsvEdit.Designer.cs">
+    <Compile Include="f01Other\wf10CsvEdit.Designer.cs">
       <DependentUpon>wf10CsvEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -330,7 +330,7 @@
     <EmbeddedResource Include="wf03PanelRigtSqlM.resx">
       <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf01Login.resx">
+    <EmbeddedResource Include="f01Other\wf01Login.resx">
       <DependentUpon>wf01Login.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="wf02PaneLeftOtline.resx">
@@ -345,16 +345,16 @@
     <EmbeddedResource Include="wf06SqlBuilder.resx">
       <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf07OdbcProperties.resx">
+    <EmbeddedResource Include="f01Other\wf07OdbcProperties.resx">
       <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf08About.resx">
+    <EmbeddedResource Include="f01Other\wf08About.resx">
       <DependentUpon>wf08About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf09CloudConnectionEditor.resx">
+    <EmbeddedResource Include="f01Other\wf09CloudConnectionEditor.resx">
       <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf10CsvEdit.resx">
+    <EmbeddedResource Include="f01Other\wf10CsvEdit.resx">
       <DependentUpon>wf10CsvEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

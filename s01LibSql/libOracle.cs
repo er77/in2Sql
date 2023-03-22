@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlOracle
+    internal class libOracle
     {
 
         public static string getOracleViews()

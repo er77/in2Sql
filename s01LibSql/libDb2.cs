@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlDb2
+    internal class libDb2
     {
         public static string getDb2Indexes()
         {

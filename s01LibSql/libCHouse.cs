@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlCloud
+    internal class libCHouse
     {
 
         public static string getCloudSqlCheck(string vTypeCloudB)

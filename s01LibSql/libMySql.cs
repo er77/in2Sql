@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlMySql
+    internal class libMySql
     {
 
         public static string getMySqlViews()

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlVertica
+    internal class libVertica
     {
         public static string getVerticaTables()
         {

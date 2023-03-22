@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlEngine
 {
-    internal class SqlMsSql
+    internal class libMsSql
     {
         public static string getMsSqlDummy()
         {

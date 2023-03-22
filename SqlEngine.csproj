@@ -243,7 +243,15 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="sLibrary.cs" />
+    <Compile Include="s01LibSql\libSqlProxy.cs" />
+    <Compile Include="s01LibSql\SqlCloud.cs" />
+    <Compile Include="s01LibSql\SqlDb2.cs" />
+    <Compile Include="s01LibSql\SqlMsSql.cs" />
+    <Compile Include="s01LibSql\SqlMySql.cs" />
+    <Compile Include="s01LibSql\SqlOracle.cs" />
+    <Compile Include="s01LibSql\SqlPgSql.cs" />
+    <Compile Include="s01LibSql\SqlSnow.cs" />
+    <Compile Include="s01LibSql\SqlVertica.cs" />
     <Compile Include="sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
     <Compile Include="sRibbon.cs" />

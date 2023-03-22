@@ -102,7 +102,7 @@ namespace SqlEngine
         {
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
 
-            string vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlCheck(vCurrCloud.CloudType));
+            string vSqlURL = prepareCloudQuery(vCurrCloudName, SqlCloud.getCloudSqlCheck(vCurrCloud.CloudType));
             vSqlURL = sTool.HttpGet(vSqlURL);
 
             if (vSqlURL.Length < 2)
@@ -129,7 +129,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlTable(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, SqlCloud.getCloudSqlTable(vCurrCloud.CloudType));
 
             return getCloudObjectList(vSqlURL);
 
@@ -142,7 +142,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlView(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, SqlCloud.getCloudSqlView(vCurrCloud.CloudType));
 
             return getCloudObjectList(vSqlURL);
 
@@ -180,7 +180,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
             string vSqlURL;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudColumns(vCurrCloud.CloudType));
+            vSqlURL = prepareCloudQuery(vCurrCloudName, SqlCloud.getCloudColumns(vCurrCloud.CloudType));
             var vTb1 = vObjName.Split('.');
 
             vSqlURL = vSqlURL.Replace("%TNAME%", vTb1[1]);

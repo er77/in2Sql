@@ -126,7 +126,7 @@ namespace SqlEngine
         private void SqlColored( )
         {
             // getting keywords/functions
-            string keywords = sLibrary.getMsSqlReserved();
+            string keywords = SqlMsSql.getMsSqlReserved();
 
             MatchCollection keywordMatches = Regex.Matches(TBJoiner.Text.ToUpper(), keywords);
 

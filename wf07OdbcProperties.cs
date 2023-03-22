@@ -64,22 +64,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlTables ();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlTables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlColumns ();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlColumns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlIndexes ();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlIndexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlViews();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlFuctions ();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlFuctions ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getMsSqlProcedurees ();
+                            RTBOdbcProp.Text = SqlMsSql.getMsSqlProcedurees ();
                             break;
                     }
                     break;
@@ -88,22 +88,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getOracleTables ();
+                            RTBOdbcProp.Text = SqlOracle.getOracleTables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getOracleColumns ();
+                            RTBOdbcProp.Text = SqlOracle.getOracleColumns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getOracleIndexes ();
+                            RTBOdbcProp.Text = SqlOracle.getOracleIndexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getOracleViews();
+                            RTBOdbcProp.Text = SqlOracle.getOracleViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getOracleFuctions ();
+                            RTBOdbcProp.Text = SqlOracle.getOracleFuctions ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getOracleProcedurees ();
+                            RTBOdbcProp.Text = SqlOracle.getOracleProcedurees ();
                             break;
                     }
                     break; 
@@ -112,22 +112,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getVerticaTables ();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaTables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getVerticaColumns ();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaColumns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getVerticaIndexes ();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaIndexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getVerticaViews();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getVerticaDummy ();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaDummy ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getVerticaDummy ();
+                            RTBOdbcProp.Text = SqlVertica.getVerticaDummy ();
                             break;
                     }
                     break;
@@ -136,22 +136,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlTables ();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlTables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlColumns ();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlColumns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlIndexes ();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlIndexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlViews();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlFuctions ();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlFuctions ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getPgSqlProcedures ();
+                            RTBOdbcProp.Text = SqlPgSql.getPgSqlProcedures ();
                             break;
                     }
                     break;
@@ -160,22 +160,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getMySqlTables ();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlTables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getMySqlColumns ();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlColumns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getMySqlIndexes ();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlIndexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getMySqlViews();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getMySqlFuctions ();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlFuctions ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getMySqlProcedurees ();
+                            RTBOdbcProp.Text = SqlMySql.getMySqlProcedurees ();
                             break;
                     }
                     break;
@@ -184,22 +184,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getDb2Tables ();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Tables ();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getDb2Columns ();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Columns ();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getDb2Indexes ();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Indexes ();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getDb2Views();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Views();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getDb2Fuctions ();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Fuctions ();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getDb2Procedurees ();
+                            RTBOdbcProp.Text = SqlDb2.getDb2Procedurees ();
                             break;
                     }
                     break;
@@ -208,22 +208,22 @@ namespace SqlEngine
                     switch (vCurrAction)
                     {
                         case "01 Tables":
-                            RTBOdbcProp.Text = sLibrary.getSnowTables();
+                            RTBOdbcProp.Text = SqlSnow.getSnowTables();
                             break;
                         case "02 TableColumn":
-                            RTBOdbcProp.Text = sLibrary.getSnowColumns();
+                            RTBOdbcProp.Text = SqlSnow.getSnowColumns();
                             break;
                         case "03 Indexes":
-                            RTBOdbcProp.Text = sLibrary.getSnowIndexes();
+                            RTBOdbcProp.Text = SqlSnow.getSnowIndexes();
                             break;
                         case "04 Views":
-                            RTBOdbcProp.Text = sLibrary.getSnowViews();
+                            RTBOdbcProp.Text = SqlSnow.getSnowViews();
                             break;
                         case "05 Functions":
-                            RTBOdbcProp.Text = sLibrary.getSnowFuctions();
+                            RTBOdbcProp.Text = SqlSnow.getSnowFuctions();
                             break;
                         case "06 Programms":
-                            RTBOdbcProp.Text = sLibrary.getSnowProcedures();
+                            RTBOdbcProp.Text = SqlSnow.getSnowProcedures();
                             break;
                     }
                     break;
@@ -266,7 +266,7 @@ namespace SqlEngine
         private void SqlColored()
         {
             // getting keywords/functions
-            string keywords = sLibrary.getMsSqlReserved();
+            string keywords = SqlMsSql.getMsSqlReserved();
 
             MatchCollection keywordMatches = Regex.Matches(RTBOdbcProp.Text.ToUpper(), keywords);
 

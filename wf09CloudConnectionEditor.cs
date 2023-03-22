@@ -34,7 +34,7 @@ namespace SqlEngine
                 tbURL.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Url");
                 tbLogin.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Login");
                 tbPassword.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Password");
-                tbSQL.Text = sLibrary.getCloudSqlCheck(vEditName);
+                tbSQL.Text = SqlCloud.getCloudSqlCheck(vEditName);
                 string[]  vNM = vEditName.Split('.');
                 if (vNM.Count() > 1)
                     tbName.Text = vNM[1];

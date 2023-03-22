@@ -214,7 +214,7 @@ namespace SqlEngine
                     {
                         vCurrODBC.ConnStatus = 1;
                         vCurrODBC.ConnErrMsg = "";
-                        vCurrODBC.DBType = sLibrary.getDBType(conn.DataSource, conn.Driver);
+                        vCurrODBC.DBType = libSqlProxy.getDBType(conn.DataSource, conn.Driver);
                     }
                 }
             }
@@ -222,14 +222,14 @@ namespace SqlEngine
             {
                 vCurrODBC.ConnStatus = -3;
                 vCurrODBC.ConnErrMsg = e.Message.ToString();
-                vCurrODBC.ConnErrType = sLibrary.getErrConType(e.Message.ToString());
+                vCurrODBC.ConnErrType = libSqlProxy.getErrConType(e.Message.ToString());
             }
             ChangeOdbcValue(vOdbcName, vCurrODBC);
         }
 
         public static IEnumerable<SqlObjects> getViewList(string vOdbcName)
         {
-            var vViews = SqlReadDataValue(vOdbcName, sLibrary.getSqlViews(getODBCProperties(vOdbcName, "DBType")));
+            var vViews = SqlReadDataValue(vOdbcName, libSqlProxy.getSqlViews(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrView in vViews)
             {
                 SqlObjects vView = new SqlObjects();
@@ -242,7 +242,7 @@ namespace SqlEngine
 
         public static IEnumerable<SqlObjects> getTableList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSqlTables(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, libSqlProxy.getSqlTables(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
@@ -256,7 +256,7 @@ namespace SqlEngine
 
         public static IEnumerable<SqlObjects> getSQLProgrammsList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSQLProgramms(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, libSqlProxy.getSQLProgramms(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
@@ -269,7 +269,7 @@ namespace SqlEngine
 
         public static IEnumerable<SqlObjects> getSQLFunctionsList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSQLFunctions(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, libSqlProxy.getSQLFunctions(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
@@ -283,7 +283,7 @@ namespace SqlEngine
         public static IEnumerable<ObjectsAndProperties> getObjectProperties(string vOdbcName, string vObjName)
         {
             string vDBType = getODBCProperties(vOdbcName, "DBType");
-            string vSql = sLibrary.getSQLTableColumn(vDBType);
+            string vSql = libSqlProxy.getSQLTableColumn(vDBType);
 
             var vTb1 = vObjName.Split('.');
 
@@ -311,7 +311,7 @@ namespace SqlEngine
                 vObject.objColumns.Add(vCurrObject);
             }
 
-            vSql = sLibrary.getSQLIndexes(vDBType);
+            vSql = libSqlProxy.getSQLIndexes(vDBType);
 
             if (vDBType.Contains("ORACLE"))
             {
@@ -335,7 +335,7 @@ namespace SqlEngine
             }
 
 
-            vSql = sLibrary.getSQLDependencies(vDBType);
+            vSql = libSqlProxy.getSQLDependencies(vDBType);
             if (vDBType.Contains("ORACLE"))
             {
                 vSql = vSql.Replace("%TOWNER%", vTb1[1]);

@@ -140,7 +140,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "in2SqlRightPane");
+                STool.ExpHandler(er, "in2SqlRightPane");
             }
         }
 
@@ -181,7 +181,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "PopulateOdbcTreeView");
+                STool.ExpHandler(er, "PopulateOdbcTreeView");
             }
         }
 
@@ -195,13 +195,13 @@ namespace SqlEngine
                 foreach (var vCurrCloudList in SCloud.CloudPropertiesList)
                 {
                     if (vCurrCloudList.CloudType.Contains(vCloudType))
-                        wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrCloudList.CloudName, vCloudType + '$');
+                        Wp02RightTreeTables.SetOdbcTreeLineSimple(nodeToAddTo, vCurrCloudList.CloudName, vCloudType + '$');
                 }
                 return;
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "GetCloudRecords");
+                STool.ExpHandler(er, "GetCloudRecords");
             }
         } 
 
@@ -213,13 +213,13 @@ namespace SqlEngine
 
                 foreach (var vCurrFolder in SCsv.FolderPropertiesList)
                 {
-                      wp02RightTreeTables.setCSVTreeLineSimple(nodeToAddTo, vCurrFolder.FolderName,   "CSV$");
+                      Wp02RightTreeTables.SetCsvTreeLineSimple(nodeToAddTo, vCurrFolder.FolderName,   "CSV$");
                 }
                 return;
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "GetCloudRecords");
+                STool.ExpHandler(er, "GetCloudRecords");
             }
         }
 
@@ -237,26 +237,26 @@ namespace SqlEngine
 
                 if (vIsUI == 0)
                 {
-                    foreach (var vCurrvODBCList in SOdbc.vODBCList)
+                    foreach (var vCurrvODBCList in SOdbc.OdbcPropertiesList)
                     {
-                        wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrvODBCList.OdbcName);
+                        Wp02RightTreeTables.SetOdbcTreeLineSimple(nodeToAddTo, vCurrvODBCList.OdbcName);
                     }
                     return;
                 }
                 if (vIsUI == 1)
                 {
 
-                    foreach (var vCurrvODBCList in SOdbc.vODBCList)
+                    foreach (var vCurrvODBCList in SOdbc.OdbcPropertiesList)
                     {
-                        SOdbc.checkOdbcStatus(vCurrvODBCList.OdbcName);
-                        wp02RightTreeTables.setODBCTreeLineComplex(nodeToAddTo, vCurrvODBCList.OdbcName, vCurrvODBCList.OdbcName);
+                        SOdbc.CheckOdbcStatus(vCurrvODBCList.OdbcName);
+                        Wp02RightTreeTables.SetOdbcTreeLineComplex(nodeToAddTo, vCurrvODBCList.OdbcName, vCurrvODBCList.OdbcName);
                     }
                     return;
                 }
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "GetODbcRecords");
+                STool.ExpHandler(er, "GetODbcRecords");
             }
         } 
       
@@ -282,7 +282,7 @@ namespace SqlEngine
         private void rootMenu_Click(object sender, EventArgs e)
         {
             if (sender.ToString().Contains("Edit"))
-               sTool.RunCmdLauncher("odbcad32");
+               STool.RunCmdLauncher("odbcad32");
 
             else if (sender.ToString().Contains("Refresh"))
             {
@@ -349,7 +349,7 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("Delete"))
             {
-                sRegistry.delLocalValue(miSelectNode.Tag + "." + miSelectNode.Text);
+                SRegistry.DelLocalValue(miSelectNode.Tag + "." + miSelectNode.Text);
 
                 miSelectNode.Text = "";
                 miSelectNode.Tag = "";
@@ -399,13 +399,13 @@ namespace SqlEngine
         {  //{ "Create SQLiteDatabase", "Refresh" }
 
             if (sender.ToString().Contains("Create SQLiteDatabase"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                         MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Refresh"))
                 miSelectNode.Nodes.Clear();
 
             else 
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
@@ -414,19 +414,19 @@ namespace SqlEngine
         private void ExTableMenu_Click(object sender, EventArgs e)
         {
             if (sender.ToString().Contains("Rename"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                         MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Edit Sql"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Refresh"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Properties"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Delete"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
         } 
  
@@ -435,30 +435,30 @@ namespace SqlEngine
         {
 
             if (sender.ToString().Contains("PivotTable"))
-                intSqlVBAEngine.createPivotTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
+                IntSqlVbaEngine.CreatePivotTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
 
             else if (sender.ToString().Contains("Table"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().Contains("Cloud"))
                     SVbaEngineCloud.CreateExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
 
                 else
-                     intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
+                     IntSqlVbaEngine.CreateExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             /* fix me */
             else if (sender.ToString().Contains("generate CSV"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().ToUpper().Contains("ODBC"))
-                    SOdbc.dumpOdbctoCsv(
+                    SOdbc.DumpOdbctoCsv(
                                      miSelectNode.Parent.Parent.Text
                                    , "select * from  " + miSelectNode.Text
                                    , SCsv.GetFirstFolder() + miSelectNode.Text + ".csv");                 
 
             else if (sender.ToString().Contains("Chart"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Editor"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
             else if (sender.ToString().Contains("Properties"))
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                          MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -574,7 +574,7 @@ namespace SqlEngine
             
                 if ( (e.Node.Tag.ToString().Contains("ODBC$")))
                 {
-                    wp02RightTreeTables.getTablesAndViews(e);
+                    Wp02RightTreeTables.GetTablesAndViews(e);
                     sqlBuild.setLblConnectionName(e.Node.Text, "ODBC");
                     return;
                 }
@@ -610,7 +610,7 @@ namespace SqlEngine
                         }                       
                         else
                         {
-                            wp02RightTreeTables.getColumnsandIndexes(e);
+                            Wp02RightTreeTables.GetColumnsandIndexes(e);
                             return;
 
                         }
@@ -635,7 +635,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "treeODBC_NodeMouseClick  ");
+                STool.ExpHandler(er, "treeODBC_NodeMouseClick  ");
             }
 
         }
@@ -650,7 +650,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "treeODBC_AfterSelect");
+                STool.ExpHandler(er, "treeODBC_AfterSelect");
             }
         }
 
@@ -662,7 +662,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "treeODBC_AfterSelect");
+                STool.ExpHandler(er, "treeODBC_AfterSelect");
             }
         }
 

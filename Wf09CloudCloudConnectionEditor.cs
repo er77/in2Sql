@@ -25,9 +25,9 @@ namespace SqlEngine
             if (vEditName.Length > 2  )              
             {
                 var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-                tbURL.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Url");
-                tbLogin.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Login");
-                tbPassword.Text = sRegistry.getLocalRegValue(vCurrRegKey, vEditName + ".Password");
+                tbURL.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Url");
+                tbLogin.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Login");
+                tbPassword.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Password");
                 tbSQL.Text = SSqlLibrary.GetCloudSqlCheck(vEditName);
                 var  vNm = vEditName.Split('.');
                 if (vNm.Length > 1)
@@ -51,21 +51,21 @@ namespace SqlEngine
 
             vSqlUrl = SCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
 
-            vSqlUrl = sTool.HttpGet(vSqlUrl);
+            vSqlUrl = STool.HttpGet(vSqlUrl);
             
             if (vSqlUrl.Length < 2)
             {
-                MessageBox.Show("Test Failed");
+                MessageBox.Show(@"Test Failed");
                 return;
             }
-            MessageBox.Show("Test Passed ");
+            MessageBox.Show(@"Test Passed ");
             WF09BTOk.Enabled = true;
 
             vSqlUrl = "Cloud" + vConnType + '.' + tbName.Text;
 
-            sRegistry.setLocalValue(vSqlUrl, "Url" , tbURL.Text) ;
-            sRegistry.setLocalValue(vSqlUrl, "Login", tbLogin.Text);
-            sRegistry.setLocalValue(vSqlUrl, "Password", tbPassword.Text);      
+            SRegistry.SetLocalValue(vSqlUrl, "Url" , tbURL.Text) ;
+            SRegistry.SetLocalValue(vSqlUrl, "Login", tbLogin.Text);
+            SRegistry.SetLocalValue(vSqlUrl, "Password", tbPassword.Text);      
 
         }
 

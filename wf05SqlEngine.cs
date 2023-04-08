@@ -30,7 +30,7 @@ namespace SqlEngine
         {
             contextMenuSqlConnections.Items.Clear();
 
-            foreach (var vCurrvODBCList in SOdbc.vODBCList)
+            foreach (var vCurrvODBCList in SOdbc.OdbcPropertiesList)
             {
                 ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvODBCList.OdbcName + " | odbc"  );
                 vCurrConnMenu.Click += Connection_Click;
@@ -111,7 +111,7 @@ namespace SqlEngine
 
         private void EditTollMenu_Click(object sender, EventArgs e)
         {
-            sTool.RunGarbageCollector();
+            STool.RunGarbageCollector();
 
             SqlDocument.ReadOnly = true;
             string qstr = getSql(); 
@@ -144,7 +144,7 @@ namespace SqlEngine
                 if (bw.IsBusy == false )                                     
                     sqlExecuteandDataGrid(qstr);                          
                 else
-                    MessageBox.Show("This Sql Engine is busy. Please create new one", "sql run event",
+                    MessageBox.Show(@"This Sql Engine is busy. Please create new one", @"sql run event",
                                                                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);             
 
             else if (sender.ToString().Contains("SqlConnections"))
@@ -154,7 +154,7 @@ namespace SqlEngine
                 sqlExecExcel(qstr);
 
             else
-                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",
+                MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
                                                                         MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             SqlDocument.ReadOnly = false;
@@ -172,17 +172,17 @@ namespace SqlEngine
         {
             try
             {
-                string DsnConn = SOdbc.getODBCProperties(vOdbcName, "DSNStr"); 
+                string DsnConn = SOdbc.GetOdbcProperties(vOdbcName, "DSNStr"); 
 
                 if (DsnConn == null | DsnConn == "")
                 {
-                    MessageBox.Show("Please make the connection by expand list on the left pane ", "sql run event",
+                    MessageBox.Show(@"Please make the connection by expand list on the left pane ", @"sql run event",
                                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                intSqlVBAEngine.setSqlLimit(vOdbcName, vSqlCommand);
-                sTool.addSqlLog(vOdbcName, vSqlCommand);
+                IntSqlVbaEngine.SetSqlLimit(vOdbcName, vSqlCommand);
+                STool.AddSqlLog(vOdbcName, vSqlCommand);
 
                 using
                         (OdbcConnection conn = new System.Data.Odbc.OdbcConnection(DsnConn))
@@ -196,7 +196,7 @@ namespace SqlEngine
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    sTool.ExpHandler(e, "OdbcGrid");
+                    STool.ExpHandler(e, "OdbcGrid");
             }
         }
 
@@ -211,20 +211,20 @@ namespace SqlEngine
 
                 if (vConnURL == null | vConnURL == "")
                 {
-                    MessageBox.Show("Please make the connection by expand list on the left pane ", "sql run event",
+                    MessageBox.Show(@"Please make the connection by expand list on the left pane ", @"sql run event",
                                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                string vTempFile = sTool.writeHttpToFile(vConnURL);
+                string vTempFile = STool.WriteHttpToFile(vConnURL);
 
-                this.SqlDataResult.DataSource = sTool.ConvertCSVtoDataTable(vTempFile,',');
-                 sTool.deleteFile(vTempFile);
+                this.SqlDataResult.DataSource = STool.ConvertCsVtoDataTable(vTempFile,',');
+                 STool.DeleteFile(vTempFile);
                 
             }
             catch (Exception e)
             { 
-                    sTool.ExpHandler(e, "CloudGrid");
+                    STool.ExpHandler(e, "CloudGrid");
             }
         }
 
@@ -234,7 +234,7 @@ namespace SqlEngine
 
             if (ConnName.Text.Equals("SQL") | ConnName.Text == "")
             {
-                MessageBox.Show("Please select Sql connection on the rigth drop-down menu", "sql run event",
+                MessageBox.Show(@"Please select Sql connection on the rigth drop-down menu", @"sql run event",
                                                                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -255,7 +255,7 @@ namespace SqlEngine
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    sTool.ExpHandler(e, "sqlExecuteandDataGrid");                    
+                    STool.ExpHandler(e, "sqlExecuteandDataGrid");                    
             } 
         }
 
@@ -265,7 +265,7 @@ namespace SqlEngine
 
             if (ConnName.Text.Equals("SQL"))
             {
-                MessageBox.Show("Please select Sql connection on the rigth drop-down menu", "sql run event",
+                MessageBox.Show(@"Please select Sql connection on the rigth drop-down menu", @"sql run event",
                                                                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -276,16 +276,16 @@ namespace SqlEngine
                 qstr = "select * from ( " + qstr + " ) df where 1=1 ";
                 if (vTempName.Count() > 1)
                     if (vTempName[1].ToUpper().Contains("ODBC"))
-                         intSqlVBAEngine.createExTable(ConnName.Text, sTool.GetHash(qstr), qstr);
+                         IntSqlVbaEngine.CreateExTable(ConnName.Text, STool.GetHash(qstr), qstr);
                     
                     else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
-                         SVbaEngineCloud.CreateExTable(vOdbcName, sTool.GetHash(qstr), qstr);
+                         SVbaEngineCloud.CreateExTable(vOdbcName, STool.GetHash(qstr), qstr);
                     
             }
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    sTool.ExpHandler(e, "sqlExecuteandDataGrid");
+                    STool.ExpHandler(e, "sqlExecuteandDataGrid");
             }
         }
 

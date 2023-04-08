@@ -13,14 +13,14 @@ namespace SqlEngine
 {
     public sealed partial class wf04EditQuery : Form
     {
-        private Microsoft.Office.Interop.Excel.ListObject vCurrTable;
+       private Microsoft.Office.Interop.Excel.ListObject vCurrTable;
          
 
-        private sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
+        private STool.CurrentTableRecords vCTR = STool.GetCurrentSql();
 
         public wf04EditQuery()
         {
-            vCTR = sTool.getCurrentSql();
+            vCTR = STool.GetCurrentSql();
 
             if (vCTR.CurrCloudExTName != "")
              {
@@ -48,14 +48,14 @@ namespace SqlEngine
 
                 vSql = vCurrTable.QueryTable.CommandText;
 
-                vSql = intSqlVBAEngine.RemoveBetween(vSql, '`', '`');
+                vSql = IntSqlVbaEngine.RemoveBetween(vSql, '`', '`');
                 vSql = vSql.Replace("/**/", "");
 
                 SqlEditor.Text = vSql;
             }
 
             else if (sender.ToString().Contains("Save"))
-                vCurrTable.QueryTable.CommandText = intSqlVBAEngine.setSqlLimit(intSqlVBAEngine.getOdbcNameFromCell(), SqlEditor.Text);
+                vCurrTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromCell(), SqlEditor.Text);
 
             else if (sender.ToString().Contains("Cut"))
                 SqlEditor.Cut();
@@ -76,8 +76,8 @@ namespace SqlEngine
                 SQLEditToolStrip.Focus();
 
                 if (vCTR.TypeConnection.Contains("ODBC"))
-                {   vCurrTable.QueryTable.CommandText = intSqlVBAEngine.setSqlLimit(intSqlVBAEngine.getOdbcNameFromObject(vCurrTable), SqlEditor.Text);
-                    intSqlVBAEngine.objRefreshHistory(vCurrTable);                    
+                {   vCurrTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromObject(vCurrTable), SqlEditor.Text);
+                    IntSqlVbaEngine.ObjRefreshHistory(vCurrTable);                    
                 }
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))

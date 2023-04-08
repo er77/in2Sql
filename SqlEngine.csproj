@@ -244,21 +244,21 @@
   -->
   <ItemGroup>
     <Compile Include="SSqlLibrary.cs" />
-    <Compile Include="sRegistry.cs" />
+    <Compile Include="SRegistry.cs" />
     <Compile Include="Ribbon.cs" />
     <Compile Include="wp01RightTreeCloud.cs" />
     <Compile Include="SCloud.cs" />
     <Compile Include="SCsv.cs" />
-    <Compile Include="sUndo.cs" />
+    <Compile Include="SUndo.cs" />
     <Compile Include="wf03PanelRigtSqlM.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="wf03PanelRigtSqlM.Designer.cs">
       <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </Compile>
-    <Compile Include="wp02RightTreeTables.cs" />
+    <Compile Include="Wp02RightTreeTables.cs" />
     <Compile Include="SOdbc.cs" />
-    <Compile Include="sTool.cs" />
+    <Compile Include="STool.cs" />
     <Compile Include="wf01Login.cs">
       <SubType>Form</SubType>
     </Compile>

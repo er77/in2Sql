@@ -170,7 +170,7 @@ namespace SqlEngine
         {
             if (ribbon != null)
                 ribbon.ActivateTab("SqlEngine");
-            sTool.RunGarbageCollector();
+            STool.RunGarbageCollector();
         }
 
         public Ribbon()
@@ -203,7 +203,7 @@ namespace SqlEngine
         {
             if (int.TryParse(text, out vRowCount))
             {     if(  vRowCount > 0 & vRowCount < 1000001)
-                    MessageBox.Show("Row limit  is " + vRowCount,   " Row Count");
+                    MessageBox.Show("Row limit  is " + vRowCount,   @" Row Count");
                   else
                     vRowCount = 10000;
             } 
@@ -221,7 +221,7 @@ namespace SqlEngine
             var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             if  (vActivCell.ListObject == null) 
             {
-                MessageBox.Show("Please select table with SQL query");
+                MessageBox.Show(@"Please select table with SQL query");
                 return;
             }
             if ( frmShowSqlEdit == null )
@@ -238,7 +238,7 @@ namespace SqlEngine
             var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             try
             {
-                sTool.RunGarbageCollector();
+                STool.RunGarbageCollector();
 
                 switch (vControl.Id)
                 {
@@ -249,7 +249,7 @@ namespace SqlEngine
 
 
                     case "ODBCManager":
-                        sTool.RunCmdLauncher("odbcad32");
+                        STool.RunCmdLauncher("odbcad32");
                         ActivateTab();
                         break;
 
@@ -268,22 +268,22 @@ namespace SqlEngine
                         break;
 
                     case "KeepOnly":
-                        intSqlVBAEngine.RibbonKeepOnly();
+                        IntSqlVbaEngine.RibbonKeepOnly();
                         ActivateTab();
                         break;
 
                     case "RemoveOnly":
-                        intSqlVBAEngine.RibbonRemoveOnly();
+                        IntSqlVbaEngine.RibbonRemoveOnly();
                         ActivateTab();
                         break;
 
                     case "Retrieve":
-                        intSqlVBAEngine.RibbonRefresh();
+                        IntSqlVbaEngine.RibbonRefresh();
                         ActivateTab();
                         break;
 
                     case "RetrieveAll":
-                        intSqlVBAEngine.RibbonRefreshAll();
+                        IntSqlVbaEngine.RibbonRefreshAll();
                         ActivateTab();
                         break;
                          
@@ -294,45 +294,45 @@ namespace SqlEngine
                         break;
 
                     case "PivotExcel":
-                        intSqlVBAEngine.RibbonPivotExcel();
+                        IntSqlVbaEngine.RibbonPivotExcel();
                         ActivateTab();
                         break;
 
                     case "Undo":
-                        intSqlVBAEngine.Undo();
+                        IntSqlVbaEngine.Undo();
                         ActivateTab();
                         break;
 
                     case "Redo":
-                        intSqlVBAEngine.Redo();
+                        IntSqlVbaEngine.Redo();
                         ActivateTab();
                         break;
 
                     //  ()
                     case "UpdateDataAll":
-                         intSqlVBAEngine.updateTablesAll();
+                         IntSqlVbaEngine.UpdateTablesAll();
                         ActivateTab();
                         break;
                     case "UpdateData":
-                        intSqlVBAEngine.updateTables();
+                        IntSqlVbaEngine.UpdateTables();
                         ActivateTab();
                         break;
                     //
 
                     case "PowerPivotMM":
-                        intSqlVBAEngine.runPowerPivotM();
+                        IntSqlVbaEngine.RunPowerPivotM();
                         //intSqlVBAEngine.checkTableName();
                         ActivateTab();
                         break;
 
                     case "Options":
-                        intSqlVBAEngine.runSqlProperties();
+                        IntSqlVbaEngine.RunSqlProperties();
                         //intSqlVBAEngine.checkTableName();
                         ActivateTab();
                         break;
 
                     case "TableProp":
-                        intSqlVBAEngine.runTableProperties(); 
+                        IntSqlVbaEngine.RunTableProperties(); 
                         break;
 
                     case "About":
@@ -363,7 +363,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "ExecMenuButton");
+                STool.ExpHandler(e, "ExecMenuButton");
             }
 
         }
@@ -380,7 +380,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "ExecDropDown");
+                STool.ExpHandler(e, "ExecDropDown");
             }
 
         }

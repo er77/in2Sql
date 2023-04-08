@@ -206,7 +206,7 @@ namespace SqlEngine
             {
                 if (vtb.Nodes.Count < 2)
                 {
-                    MessageBox.Show("Please expand table columns by clicking on the table name ");
+                    MessageBox.Show(@"Please expand table columns by clicking on the table name ");
                     return;
                 }
 

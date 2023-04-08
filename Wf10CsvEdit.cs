@@ -42,7 +42,7 @@ namespace SqlEngine
         private void wf10Create_Click(object sender, EventArgs e)
         {
 
-            sRegistry.setLocalValue("Csv." + CsvName.Text,"Path", CsvPath.Text);
+            SRegistry.SetLocalValue("Csv." + CsvName.Text,"Path", CsvPath.Text);
             RefreshList();
 
         }
@@ -56,7 +56,7 @@ namespace SqlEngine
         {
             if (vCurrConnection.Length > 2)
             {
-                sRegistry.delLocalValue("Csv." + vCurrConnection);
+                SRegistry.DelLocalValue("Csv." + vCurrConnection);
                 vCurrConnection = "";
 
                 CsvName.Text = ""; 

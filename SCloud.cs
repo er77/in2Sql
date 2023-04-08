@@ -20,7 +20,7 @@ namespace SqlEngine
         public struct ObjectsAndProperties
         {
             public List<String> ObjColumns;
-           // public List<String> ObjIndexes;
+            public List<String> ObjIndexes;
           //  public List<String> objDependencies;
             public String ObjName;
         }
@@ -49,7 +49,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "CloudList");
+                STool.ExpHandler(e, "CloudList");
                 return null;
             }
         }
@@ -80,7 +80,7 @@ namespace SqlEngine
                 vCurrSql = vCurrSql.Replace("FORMAT CSVWithNames", "") + " FORMAT CSVWithNames";
 
             
-            sTool.addSqlLog(vCloudName, vCurrSql);                       
+            STool.AddSqlLog(vCloudName, vCurrSql);                       
 
             return prepareCloudQuery_int(vCurrCloud.Url, vCurrSql, vCurrCloud.Login, vCurrCloud.Password) ;
         }
@@ -91,7 +91,7 @@ namespace SqlEngine
             CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
 
             string sqlUrl  = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlCheck(vCurrCloud.CloudType) );
-            sqlUrl = sTool.HttpGet(sqlUrl);
+            sqlUrl = STool.HttpGet(sqlUrl);
 
             if (sqlUrl.Length < 2)
             {                 
@@ -130,7 +130,7 @@ namespace SqlEngine
         private static IEnumerable<CloudObjects> GetCloudObjectList(string sqlUrl)
         {
             var vObjects = new List<String>();
-            vObjects.AddRange(sTool.HttpGetArray(sqlUrl));
+            vObjects.AddRange(STool.HttpGetArray(sqlUrl));
             var i = 0;
             foreach (var vCurrObj in vObjects)
             {
@@ -163,7 +163,7 @@ namespace SqlEngine
             vObject.ObjColumns = new List<string>(); 
 
             var vObjects = new List<String>();
-            vObjects.AddRange(sTool.HttpGetArray(sqlUrl));
+            vObjects.AddRange(STool.HttpGetArray(sqlUrl));
             var i = 0;
             foreach (var vCurrObj in vObjects)
             {
@@ -194,7 +194,7 @@ namespace SqlEngine
 
                         if (vNameDetails.Count() < 2)
                         {
-                            MessageBox.Show("Error in reading registry getCloudList ");
+                            MessageBox.Show(@"Error in reading registry getCloudList ");
                             yield return new CloudProperties();
                             break;
                         }
@@ -213,7 +213,7 @@ namespace SqlEngine
                         vCloudProperties.CloudName = vCurrName;
                         vCloudProperties.CloudType = vNameDetails[0];
 
-                        string vCurrRegValue = sRegistry.getLocalRegValue(vCurrRegKey, name);
+                        string vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
 
                         if (name.Contains("Url"))
                             vCloudProperties.Url = vCurrRegValue;

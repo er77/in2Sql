@@ -54,7 +54,7 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "CloudList");
+                STool.ExpHandler(e, "CloudList");
                 return null;
             }
         } 
@@ -125,7 +125,7 @@ namespace SqlEngine
 
                         if (vNameDetails.Count() < 2)
                         {
-                            MessageBox.Show("Error in reading registry getCsvList ");
+                            MessageBox.Show(@"Error in reading registry getCsvList ");
                             yield return new FolderProperties();
                             break;
                         }
@@ -143,7 +143,7 @@ namespace SqlEngine
 
                         vFolderProp.FolderName = vCurrName; 
 
-                        string vCurrRegValue = sRegistry.getLocalRegValue(vCurrRegKey, name);
+                        string vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
 
                         if (name.Contains("Path"))
                             vFolderProp.Path = vCurrRegValue;

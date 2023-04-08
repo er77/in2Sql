@@ -9,31 +9,30 @@ using System.IO;
 using System.Net;
 using System.Data.Odbc;
 using System.Data;
-using System.Text.RegularExpressions;
 using Microsoft.VisualBasic.FileIO;
 
 namespace SqlEngine
 {
-    class sTool
+    class STool
     {
         //  [ThreadStatic]
-        public static int isGCrun = 0;
+        public static int IsGCrun;
 
-        private static int isGcRunCount = 0;
+        private static int _isGcRunCount;
 
         public static List<String> SqlHistory = new List<String>();
         public static List<String> LogViewer = new List<String>();
 
 
-        public const string fileEventLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogEvent.log";
-        public const string fileSqlLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogSqlEngine.log";
+        public const string FileEventLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogEvent.log";
+        public const string FileSqlLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogSqlEngine.log";
 
-        private static string getDataTime(string vStr)
+        private static string GetDataTime(string vStr)
         {
             return DateTime.Now.ToString("yyyy.mm.dd HH:mm:ss") + "\n\r" + vStr;
         }
 
-        private static void appendTxtFile(string vFileName, string vStr)
+        private static void AppendTxtFile(string vFileName, string vStr)
         {
             var filePath = Environment.ExpandEnvironmentVariables(vFileName);
             if (!File.Exists(filePath))
@@ -42,40 +41,37 @@ namespace SqlEngine
                 File.AppendAllText(filePath, vStr);
         }
 
-        public static void addSqlLog(string vStr, string vStr2 = "")
+        public static void AddSqlLog(string vStr, string vStr2 = "")
         {
             if (vStr2 != "")
             {
                 vStr = vStr + ":\n\r\t" + vStr2;
             }
-            addEventLog(vStr);
-            vStr = getDataTime(vStr);
+            AddEventLog(vStr);
+            vStr = GetDataTime(vStr);
             SqlHistory.Add(vStr);
-            appendTxtFile(fileSqlLog, vStr);
+            AppendTxtFile(FileSqlLog, vStr);
 
         }
 
-        public static void addEventLog(string vStr)
+        public static void AddEventLog(string vStr)
         {
-            vStr = getDataTime(vStr);
+            vStr = GetDataTime(vStr);
             LogViewer.Add(vStr);
-            appendTxtFile(fileEventLog, vStr);
+            AppendTxtFile(FileEventLog, vStr);
 
         }
 
-        public static void ExpHandler(Exception e, string AdditionalInformation = "", string vSQl = "")
+        public static void ExpHandler(Exception e, string additionalInformation = "", string vSQl = "")
         {
-            DialogResult result;
-
-            result = MessageBox.Show($"Generic Exception Handler: {e}", AdditionalInformation + " Error message");
-
-            addEventLog(e.ToString() + AdditionalInformation);
+            MessageBox.Show($@"Generic Exception Handler: {e}", additionalInformation + @" Error message");
+            
+            AddEventLog(e + additionalInformation);
             if (vSQl != "")
             {
-                result = MessageBox.Show(vSQl, AdditionalInformation + " Error message");
-                addEventLog(vSQl + AdditionalInformation);
+                MessageBox.Show(vSQl, additionalInformation + @" Error message");
+                AddEventLog(vSQl + additionalInformation);
             }
-
             RunGarbageCollector();
         }
 
@@ -88,19 +84,18 @@ namespace SqlEngine
         }
 
 
-        private static void ExecuteCommandSync(object vRunCommad)
+        private static void ExecuteCommandSync(object vRunComand)
         {
             try
             {
-                System.Diagnostics.ProcessStartInfo procStartInfo =
-                  new System.Diagnostics.ProcessStartInfo("cmd", "/c " + vRunCommad.ToString());
-
-                procStartInfo.RedirectStandardOutput = true;
-                procStartInfo.UseShellExecute = false;
-
-                procStartInfo.CreateNoWindow = true;
-
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                var procStartInfo =
+                  new System.Diagnostics.ProcessStartInfo("cmd", "/c " + vRunComand)
+                     {
+                         RedirectStandardOutput = true,
+                         UseShellExecute = false,
+                         CreateNoWindow = true
+                     };
+                var proc = new System.Diagnostics.Process();
                 proc.StartInfo = procStartInfo;
                 proc.Start();
                 proc.Dispose();
@@ -111,14 +106,14 @@ namespace SqlEngine
             }
         }
 
-        private static void runGBCollection()
+        private static void RunGbCollection()
         {
-            if (isGCrun == 0)
+            if (IsGCrun == 0)
             {
-                isGCrun = 1;
+                IsGCrun = 1;
                 Thread.Sleep(2000);
                 GC.Collect();
-                isGCrun = 0;
+                IsGCrun = 0;
             }
 
         }
@@ -127,12 +122,12 @@ namespace SqlEngine
         {
             try
             {
-                isGcRunCount = isGcRunCount + 1;
-                if ((isGcRunCount % 7) == 0)
+                _isGcRunCount = _isGcRunCount + 1;
+                if ((_isGcRunCount % 7) == 0)
                 {
-                    isGcRunCount = 1;
+                    _isGcRunCount = 1;
 
-                    Thread objThread = new Thread(new ThreadStart(runGBCollection))
+                    var objThread = new Thread(RunGbCollection)
                     {
                         IsBackground = true,
                         Priority = ThreadPriority.AboveNormal
@@ -163,9 +158,11 @@ namespace SqlEngine
         {
             try
             {
-                Thread objThread = new Thread(new ParameterizedThreadStart(ExecuteCommandSync));
-                objThread.IsBackground = true;
-                objThread.Priority = ThreadPriority.AboveNormal;
+                var objThread = new Thread(ExecuteCommandSync)
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.AboveNormal
+                };
                 objThread.Start(vRunCommad);
             }
             catch (ThreadStartException e)
@@ -187,23 +184,23 @@ namespace SqlEngine
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(vHttpUrl);
+                var request = (HttpWebRequest)WebRequest.Create(vHttpUrl);
                 request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                    if (stream != null)
+                        using (var reader = new StreamReader(stream))
+                        {
+                            return reader.ReadToEnd();
+                        }
             }
             catch (Exception e)
             {
                 ExpHandler(e, "In2SqlSvcTool.HttpGet");
                 return null;
             }
-
+            return null;
         }
 
         public static IEnumerable<String> CloudSplitText(string vHttpText)
@@ -227,36 +224,36 @@ namespace SqlEngine
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(vHttpUrl);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader readStream = new StreamReader(stream))
-            {
-                Char[] vCharReadBuf = new Char[256];
-                int vReadCharCount = 1; //readStream.Read(vCharReadBuf, 0, 256);
-                string vStrBuff = "";
-                while (vReadCharCount > 0)
-                {
-                    vReadCharCount = readStream.Read(vCharReadBuf, 0, 256);
-                    if (vReadCharCount > 0)
+            using (var response = (HttpWebResponse)request.GetResponse())
+            using (var stream = response.GetResponseStream())
+                if (stream != null)
+                    using (var readStream = new StreamReader(stream))
                     {
-                        vStrBuff = vStrBuff + new String(vCharReadBuf, 0, vReadCharCount);
-                        String[] vStrArr = vStrBuff.Split('\n');
-                        if (vStrArr.Count() > 0)
+                        var vCharReadBuf = new Char[256];
+                        var vReadCharCount = 1; //readStream.Read(vCharReadBuf, 0, 256);
+                        var vStrBuff = "";
+                        while (vReadCharCount > 0)
                         {
-                            for (int i = 0; i < (vStrArr.Count() - 1); i++)
+                            vReadCharCount = readStream.Read(vCharReadBuf, 0, 256);
+                            if (vReadCharCount > 0)
                             {
-                                yield return vStrArr[i];
+                                vStrBuff = vStrBuff + new String(vCharReadBuf, 0, vReadCharCount);
+                                String[] vStrArr = vStrBuff.Split('\n');
+                                if (vStrArr.Count() > 0)
+                                {
+                                    for (int i = 0; i < (vStrArr.Count() - 1); i++)
+                                    {
+                                        yield return vStrArr[i];
+                                    }
+
+                                    vStrBuff = vStrArr[vStrArr.Count() - 1];
+                                }
                             }
-                            vStrBuff = vStrArr[vStrArr.Count() - 1];
                         }
                     }
-
-                }
-            }
-
         }
 
-        public static string getTmpFileName()
+        public static string GetTmpFileName()
         {
             string vFileName = Path.GetTempFileName();
             vFileName = vFileName.ToUpper().Replace(".TMP", ".csv");
@@ -266,13 +263,13 @@ namespace SqlEngine
 
         }
 
-        public static string writeHttpToFile(string vHttpUrl)
+        public static string WriteHttpToFile(string vHttpUrl)
         {
             try
             {
-                string vFileName = getTmpFileName();
+                var vFileName = GetTmpFileName();
 
-                using (StreamWriter vCurrFile = new StreamWriter(vFileName))
+                using (var vCurrFile = new StreamWriter(vFileName))
                 {
                     foreach (var str in HttpGetArray(vHttpUrl))
                     {
@@ -284,44 +281,42 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "In2SqlSvcTool.writeHttpToFile", vHttpUrl);
+                STool.ExpHandler(e, "In2SqlSvcTool.writeHttpToFile", vHttpUrl);
                 return null;
             }
         }
 
-        public static IEnumerable<String> sqlReadQuery(string vOdbcName, string queryString = "")
+        private static IEnumerable<String> SqlReadQuery(string vOdbcName, string queryString = "")
         {
-            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vOdbcName);
-
+            var vCurrOdbc = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vOdbcName);
             using
-                  (OdbcConnection conn = new System.Data.Odbc.OdbcConnection())
+                  (var conn = new OdbcConnection())
             {
-                using (OdbcCommand cmnd = new OdbcCommand(queryString, conn))
+                using (var odbcCommand = new OdbcCommand(queryString, conn))
                 {
                     try
                     {
-                        vCurrODBC.DSNStr = "DSN=" + vOdbcName;
-                        if (vCurrODBC.Login != null)
+                        vCurrOdbc.DsnStr = "DSN=" + vOdbcName;
+                        if (vCurrOdbc.Login != null)
                         {
-                            vCurrODBC.DSNStr = vCurrODBC.DSNStr + ";Uid=" + vCurrODBC.Login + ";Pwd=" + vCurrODBC.Password + ";";
+                            vCurrOdbc.DsnStr = vCurrOdbc.DsnStr + ";Uid=" + vCurrOdbc.Login + ";Pwd=" + vCurrOdbc.Password + ";";
                         }
 
-                        conn.ConnectionString = vCurrODBC.DSNStr;
+                        conn.ConnectionString = vCurrOdbc.DsnStr;
                         conn.ConnectionTimeout = 5;
                         conn.Open();
                     }
                     catch (Exception e)
                     {
-                        sTool.ExpHandler(e, "In2SqlSvcODBC.ReadData", queryString);
+                        STool.ExpHandler(e, "In2SqlSvcODBC.ReadData", queryString);
                         conn.Close();
                         conn.Dispose();
                         yield break;
                     }
-                    OdbcDataReader rd = cmnd.ExecuteReader();
-                    string strRow = "";
+                    var rd = odbcCommand.ExecuteReader();
                     while (rd.Read())
                     {
-                        strRow = "";
+                        var strRow = "";
                         for (int i = 0; i < rd.FieldCount; i++)
                         {
                             strRow = strRow + '"' + rd.GetString(i) + '"';
@@ -340,16 +335,16 @@ namespace SqlEngine
 
         }
 
-        public static string writeSqlToFile(string vOdbcName, string queryString = "")
+        public static string WriteSqlToFile(string vOdbcName, string queryString = "")
         {
             try
             {
 
-                string vFileName = getTmpFileName();
+                string vFileName = GetTmpFileName();
 
                 using (StreamWriter vCurrFile = new StreamWriter(vFileName))
                 {
-                    foreach (var str in sqlReadQuery(vOdbcName, queryString))
+                    foreach (var str in SqlReadQuery(vOdbcName, queryString))
                     {
                         vCurrFile.WriteLine(str);
                     }
@@ -359,53 +354,55 @@ namespace SqlEngine
             }
             catch (Exception e)
             {
-                sTool.ExpHandler(e, "In2SqlSvcTool.writeSqlToFile", vOdbcName + " # " + queryString);
+                STool.ExpHandler(e, "In2SqlSvcTool.writeSqlToFile", vOdbcName + " # " + queryString);
                 return null;
             }
 
         }  
 
-        public static DataTable ConvertCSVtoDataTable(string strFilePath, char vSplitChar)
+        public static DataTable ConvertCsVtoDataTable(string strFilePath, char vSplitChar)
         {   DataTable csvData = new DataTable(); 
                 using (TextFieldParser csvReader = new TextFieldParser(strFilePath))
                 {
                     csvReader.SetDelimiters(new string[] { vSplitChar.ToString() });
                     csvReader.HasFieldsEnclosedInQuotes = true;
                     string[] colFields = csvReader.ReadFields();
-                    foreach (string column in colFields)
-                    {
-                        DataColumn datecolumn = new DataColumn(column);
-                        datecolumn.AllowDBNull = true;
-                        csvData.Columns.Add(datecolumn);
-                    }
+                    if (colFields != null)
+                        foreach (string column in colFields)
+                        {
+                            var datecolumn = new DataColumn(column);
+                            datecolumn.AllowDBNull = true;
+                            csvData.Columns.Add(datecolumn);
+                        }
 
                     while (!csvReader.EndOfData)
                     {
-                        string[] fieldData = csvReader.ReadFields();
+                        object[] fieldData = csvReader.ReadFields();
                         //Making empty value as null
-                        for (int i = 0; i < fieldData.Length; i++)
-                        {
-                            if (fieldData[i] == "")
+                        if (fieldData != null)
+                            for (int i = 0; i < fieldData.Length; i++)
                             {
-                                fieldData[i] = null;
+                                if (ReferenceEquals(fieldData[i], ""))
+                                {
+                                    fieldData[i] = null;
+                                }
                             }
-                        }
-                        csvData.Rows.Add(fieldData);
+                        if (fieldData != null) csvData.Rows.Add(fieldData);
                     }
                 }
             
             return csvData;
         }
 
-        public static void  deleteFile(string vTempFile)
+        public static void  DeleteFile(string vTempFile)
         {
             try
             {
                 File.Delete(vTempFile);
             }
-            catch 
+            catch
             {
-                vTempFile = "";
+                return;
             }
         }
 
@@ -414,42 +411,44 @@ namespace SqlEngine
             public string  TypeConnection, TableName , CurrCloudName, CurrCloudExTName, Sql;
         } 
 
-        public static CurrentTableRecords getCurrentSql ()
+        public static CurrentTableRecords GetCurrentSql ()
         {           
             var vCurrTable = SqlEngine.CurrExcelApp.ActiveCell.ListObject;
-            CurrentTableRecords vCTR = new CurrentTableRecords();
-            vCTR.Sql = "";
-            vCTR.TypeConnection = "";
-            vCTR.TableName = "";
-            vCTR.CurrCloudName = "";
-            vCTR.CurrCloudExTName = "";
+            var vCtr = new CurrentTableRecords
+            {
+                Sql = "",
+                TypeConnection = "",
+                TableName = "",
+                CurrCloudName = "",
+                CurrCloudExTName = ""
+            };
 
             if (vCurrTable == null)
-                return vCTR;
+                return vCtr;
 
             if (vCurrTable.Comment.Contains("CLOUD"))
             {               
                 string[] vTemp1 = vCurrTable.Comment.Split('|');
                 if (vTemp1.Count() < 2)
-                    return vCTR;
-                vCTR.TypeConnection = "CLOUD";
-                vCTR.Sql = vTemp1[2];
-                vCTR.CurrCloudName = vTemp1[1];
+                    return vCtr;
+                vCtr.TypeConnection = "CLOUD";
+                vCtr.Sql = vTemp1[2];
+                vCtr.CurrCloudName = vTemp1[1];
 
                 string[] vTemp2 = vCurrTable.Name.Split('|');
-                vCTR.CurrCloudExTName = vCurrTable.Name;
-                vCTR.TableName = vTemp2[1];
+                vCtr.CurrCloudExTName = vCurrTable.Name;
+                vCtr.TableName = vTemp2[1];
             }
             else
             {
-                vCTR.TypeConnection = "ODBC";
-                vCTR.Sql = vCurrTable.QueryTable.CommandText;
+                vCtr.TypeConnection = "ODBC";
+                vCtr.Sql = vCurrTable.QueryTable.CommandText;
             }
 
-            vCTR.Sql = intSqlVBAEngine.RemoveBetween(vCTR.Sql, '`', '`');
-            vCTR.Sql = vCTR.Sql.Replace("/**/", "");
+            vCtr.Sql = IntSqlVbaEngine.RemoveBetween(vCtr.Sql, '`', '`');
+            vCtr.Sql = vCtr.Sql.Replace("/**/", "");
 
-            return vCTR;
+            return vCtr;
         }
 
     }

@@ -249,7 +249,7 @@ namespace SqlEngine
 
             if ( vOdbcType == "")
             { 
-                MessageBox.Show(" Please select Sql Database in the first ComboBox");
+                MessageBox.Show(@" Please select Sql Database in the first ComboBox");
                 return;
             }
 

@@ -34,21 +34,21 @@ namespace SqlEngine
 
         private void WF01BTTest_Click(object sender, EventArgs e)
         {
-            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vODBCName);
+            var vCurrODBC = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vODBCName);
             vCurrODBC.Login = WF01TBLogin.Text;
             vCurrODBC.Password = WF01TBPassword.Text;
             SOdbc.ChangeOdbcValue(vODBCName, vCurrODBC);
 
-            SOdbc.checkOdbcStatus(vODBCName);
+            SOdbc.CheckOdbcStatus(vODBCName);
 
-            vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vODBCName);
+            vCurrODBC = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vODBCName);
             DialogResult result;
             if (vCurrODBC.ConnStatus == 1)
             {
                 WF01BTOk.Enabled = true;
                 result = MessageBox.Show("Test passed".ToString());
-                sRegistry.setLocalValue(vODBCName, "Login", vCurrODBC.Login);
-                sRegistry.setLocalValue(vODBCName, "Password", vCurrODBC.Password);
+                SRegistry.SetLocalValue(vODBCName, "Login", vCurrODBC.Login);
+                SRegistry.SetLocalValue(vODBCName, "Password", vCurrODBC.Password);
 
             }
             else
@@ -56,7 +56,7 @@ namespace SqlEngine
                 result = MessageBox.Show(vCurrODBC.ConnErrMsg);
             }
 
-            sTool.RunGarbageCollector();
+            STool.RunGarbageCollector();
         }
 
         private void WF01BTOk_Click(object sender, EventArgs e)

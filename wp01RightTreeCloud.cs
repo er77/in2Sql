@@ -49,7 +49,7 @@ namespace SqlEngine
                 }
                 catch (Exception er)
                 {
-                    sTool.ExpHandler(er, "initCloudObjects");
+                    STool.ExpHandler(er, "initCloudObjects");
                 }
             }
 
@@ -70,7 +70,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "initCloudObjects");
+                STool.ExpHandler(er, "initCloudObjects");
             }
         }
 
@@ -107,7 +107,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "getCsvFilesList 1 ");
+                STool.ExpHandler(er, "getCsvFilesList 1 ");
             }
         }
 
@@ -161,7 +161,7 @@ namespace SqlEngine
                 }
                 catch (Exception er)
                 {
-                    sTool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
+                    STool.ExpHandler(er, "treeODBC_NodeMouseClick 1 ");
                 }
             }
 
@@ -194,7 +194,7 @@ namespace SqlEngine
             }
             catch (Exception er)
             {
-                sTool.ExpHandler(er, "getColumnsandIndexes ");
+                STool.ExpHandler(er, "getColumnsandIndexes ");
             }
 
         }
@@ -245,7 +245,7 @@ namespace SqlEngine
                 }
                 catch (Exception er)
                 {
-                    sTool.ExpHandler(er, "getColumnsandIndexes ");
+                    STool.ExpHandler(er, "getColumnsandIndexes ");
                 }
 
             }

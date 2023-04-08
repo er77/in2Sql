@@ -9,7 +9,7 @@ namespace SqlEngine
     {
         public static string SetSqlLimit(string vCloudType, string vCurrSql)
         {
-            var vSql = intSqlVBAEngine.RemoveSqlLimit(vCurrSql);
+            var vSql = IntSqlVbaEngine.RemoveSqlLimit(vCurrSql);
               
             if (vCloudType.Contains("CloudCH"))
             {
@@ -41,7 +41,7 @@ namespace SqlEngine
             
             if ( (isReplace ==  0 )  &  ((activeCell.ListObject !=null) | (activeCell.Value != null) ) )
             {
-                MessageBox.Show(" Please select empty area  in Excel data grid");
+                MessageBox.Show(@" Please select empty area  in Excel data grid");
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace SqlEngine
 
             if ( vConnUrl.Length > 1 & vTableName.Length > 1)
             {
-                var vTempFile = "TEXT;" + sTool.writeHttpToFile(vConnUrl);
+                var vTempFile = "TEXT;" + STool.WriteHttpToFile(vConnUrl);
                 var xlQueryTable = vCurrWorkSheet.QueryTables.Add(
                                                       Connection: vTempFile
                                                     , Destination: activeCell
@@ -93,7 +93,7 @@ namespace SqlEngine
                 xlQueryTable.Refresh(true);
 
                 vTempFile = vTempFile.Replace("TEXT;", "");
-                sTool.deleteFile(vTempFile);
+                STool.DeleteFile(vTempFile);
 
 
                 var qtAddress = xlQueryTable.ResultRange.Address;
@@ -121,11 +121,11 @@ namespace SqlEngine
                 xlTable.Comment = "CLOUD|" + vCurrCloudName + "|" + vCurrSql;
 
                 xlTable.TableStyle = "TableStyleLight13";
-                intSqlVBAEngine.GetSelectedTab();
+                IntSqlVbaEngine.GetSelectedTab();
 
                 SqlEngine.CurrExcelApp.ScreenUpdating = true;
 
-                intSqlVBAEngine.GetSelectedTab();
+                IntSqlVbaEngine.GetSelectedTab();
             }          
                 
             

@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf09CloudConnectionEditor
+    sealed partial class Wf09CloudCloudConnectionEditor
     {
         /// <summary>
         /// Required designer variable.

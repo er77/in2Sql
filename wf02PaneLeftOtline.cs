@@ -58,16 +58,16 @@ namespace SqlEngine
             nodeToAddTo.Nodes.Clear();
            
 
-            for (int  vBookID = 1; vBookID <= SqlEngine.currExcelApp.Workbooks.Count; vBookID++ )
+            for (int  vBookID = 1; vBookID <= SqlEngine.CurrExcelApp.Workbooks.Count; vBookID++ )
             {
-                SqlEngine.currExcelApp.Workbooks.Item[vBookID].Activate();
+                SqlEngine.CurrExcelApp.Workbooks.Item[vBookID].Activate();
 
-                String vBookName = SqlEngine.currExcelApp.Workbooks.Item[vBookID].Name;
+                String vBookName = SqlEngine.CurrExcelApp.Workbooks.Item[vBookID].Name;
                 TreeNode vNodeExcelBook = new TreeNode(vBookName, 0, 0);
                 vNodeExcelBook.Tag = vBookName + "| ExBook";
                 nodeToAddTo.Nodes.Add(vNodeExcelBook);
 
-                foreach (var vCurrSheet in SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets )// SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets)
+                foreach (var vCurrSheet in SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets )// SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets)
                 {
                     
                     TreeNode vNodeExcelSheet = new TreeNode(vCurrSheet.Name, 1, 1);
@@ -90,7 +90,7 @@ namespace SqlEngine
             nodeToAddTo.Nodes.Clear();
 
            
-            var sheet = SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets(nodeToAddTo.Text); 
+            var sheet = SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets(nodeToAddTo.Text); 
             
                 foreach (var vObj in sheet.ListObjects)
                 {
@@ -163,9 +163,9 @@ namespace SqlEngine
                     {
                         if (e.Button == MouseButtons.Left)
                         { 
-                            for (int i = 1; i <=  SqlEngine.currExcelApp.Workbooks.Count; i++)
+                            for (int i = 1; i <=  SqlEngine.CurrExcelApp.Workbooks.Count; i++)
                             {
-                                var vCurrBook = SqlEngine.currExcelApp.Workbooks[i];
+                                var vCurrBook = SqlEngine.CurrExcelApp.Workbooks[i];
 
                                 if (vCurrBook.Name.ToString().Contains(e.Node.Text))
                                 {
@@ -191,9 +191,9 @@ namespace SqlEngine
                         }
                         else
                         {
-                            for ( int i=1; i<= SqlEngine.currExcelApp.ActiveWorkbook.Sheets.Count; i++    )
+                            for ( int i=1; i<= SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets.Count; i++    )
                             {
-                                var vCurrSheet = SqlEngine.currExcelApp.ActiveWorkbook.Sheets[i];
+                                var vCurrSheet = SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets[i];
 
                                 if ( vCurrSheet.Name.ToString().Contains(e.Node.Text) )
                                 {

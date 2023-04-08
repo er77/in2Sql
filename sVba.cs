@@ -151,7 +151,7 @@ namespace SqlEngine
 
         private static void getCurrentExCellAddress()
         {
-            Excel.Range rng = (Excel.Range)SqlEngine.currExcelApp.ActiveCell;
+            Excel.Range rng = (Excel.Range)SqlEngine.CurrExcelApp.ActiveCell;
 
             //get the row and column details
             vCurrentCellAddress.Row = rng.Row;
@@ -160,8 +160,8 @@ namespace SqlEngine
 
         public static void checkTableName()
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
             getCurrentExCellAddress();
             if (vCurrWorkSheet != null)
@@ -170,13 +170,13 @@ namespace SqlEngine
 
         public static string getCurrentBookName()
         {
-            return SqlEngine.currExcelApp.ActiveWorkbook.Name;
+            return SqlEngine.CurrExcelApp.ActiveWorkbook.Name;
         }
 
 
         public static string getOdbcNameFromCell()
         {
-            return getOdbcNameFromObject(SqlEngine.currExcelApp.ActiveCell.ListObject.QueryTable.Connection);
+            return getOdbcNameFromObject(SqlEngine.CurrExcelApp.ActiveCell.ListObject.QueryTable.Connection);
 
         }
 
@@ -224,7 +224,7 @@ namespace SqlEngine
 
             string vSql = RemoveSqlLimit(vCurrSql);
 
-            string vTypeODBC = sODBC.getODBCProperties(vODBC, "DBType");
+            string vTypeODBC = SOdbc.getODBCProperties(vODBC, "DBType");
             if (vTypeODBC.ToUpper().Contains("VERTICA"))
             {
                 if (vSql.ToUpper().Contains("LIMIT") == false)
@@ -267,12 +267,12 @@ namespace SqlEngine
 
         public static void createPivotTable(string vODBC, string vTableName, string vSql = "")
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vCurrWorkBook = SqlEngine.currExcelApp.ActiveWorkbook;
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            var vCurrWorkBook = SqlEngine.CurrExcelApp.ActiveWorkbook;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
             string vDSN;
-            vDSN = "ODBC;" + sODBC.getODBCProperties(vODBC, "DSNStr");
+            vDSN = "ODBC;" + SOdbc.getODBCProperties(vODBC, "DSNStr");
 
 
             if (vCurrWorkSheet != null & vDSN.Length > 1 & vTableName.Length > 1)
@@ -313,14 +313,14 @@ namespace SqlEngine
 
         public static void createExTable(string vODBC, string vTableName, string vCurrSql = null)
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vCurrWorkBook = SqlEngine.currExcelApp.ActiveWorkbook;
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            var vCurrWorkBook = SqlEngine.CurrExcelApp.ActiveWorkbook;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
-            SqlEngine.currExcelApp.SheetChange += CurrExcelApp_SheetChange;
+            SqlEngine.CurrExcelApp.SheetChange += CurrExcelApp_SheetChange;
 
             string vDSN;
-            vDSN = "ODBC;" + sODBC.getODBCProperties(vODBC, "DSNStr");
+            vDSN = "ODBC;" + SOdbc.getODBCProperties(vODBC, "DSNStr");
 
             if (vActivCell != null & vDSN.Length > 1 & vTableName.Length > 1) {
                 if (vActivCell.Value == null)
@@ -353,7 +353,7 @@ namespace SqlEngine
 
         private static void CurrExcelApp_SheetChange(object Sh, Excel.Range vRange)
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
 
             if ((isRefresh == false) & ((vRange.ListObject == null) == false))
                 if (vRange.ListObject.Name.Contains("In2Sql"))
@@ -415,7 +415,7 @@ namespace SqlEngine
             if (vId < 0)
                 return;
             int vRecCount = 0;
-            using (OdbcConnection conn = new OdbcConnection(sODBC.getODBCProperties(vInsertList[vId].DSNName, "DSNStr")))
+            using (OdbcConnection conn = new OdbcConnection(SOdbc.getODBCProperties(vInsertList[vId].DSNName, "DSNStr")))
             {
                 conn.ConnectionTimeout = 5;
                 conn.Open();
@@ -459,7 +459,7 @@ namespace SqlEngine
 
         private static void QueryTable_AfterRefresh(bool Success)
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             isRefresh = true; 
           
             if ((vActivCell.ListObject == null) == false)
@@ -486,8 +486,8 @@ namespace SqlEngine
 
         public static void RibbonKeepOnly()
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
             sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
@@ -509,8 +509,8 @@ namespace SqlEngine
         public static void RibbonRemoveOnly()
         {
 
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
             sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
@@ -534,7 +534,7 @@ namespace SqlEngine
             {
                 vInsertList = new List<InsertList>();
 
-                var vCurrWorkBook = SqlEngine.currExcelApp.ActiveWorkbook;
+                var vCurrWorkBook = SqlEngine.CurrExcelApp.ActiveWorkbook;
                 foreach (Microsoft.Office.Interop.Excel.Worksheet vCurrWorkSheet in vCurrWorkBook.Sheets)
                 {
                     foreach (Microsoft.Office.Interop.Excel.ListObject vTable in vCurrWorkSheet.ListObjects)
@@ -548,7 +548,7 @@ namespace SqlEngine
 
                         if (vCTR.TypeConnection.Contains("CLOUD"))
                         {
-                            sVbaEngineCloud.createExTable(
+                            SVbaEngineCloud.CreateExTable(
                                              vCTR.CurrCloudName
                                            , vCTR.TableName
                                            , vCTR.Sql
@@ -594,7 +594,7 @@ namespace SqlEngine
 
         public static void tableRefresh(sTool.CurrentTableRecords vCTR, int vIsUndoList = 1)
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
 
             if (vCTR.TypeConnection.Contains("ODBC"))
             {
@@ -608,7 +608,7 @@ namespace SqlEngine
 
             if (vCTR.TypeConnection.Contains("CLOUD"))
             {
-                sVbaEngineCloud.createExTable(
+                SVbaEngineCloud.CreateExTable(
                                                      vCTR.CurrCloudName
                                                    , vCTR.TableName
                                                    , vCTR.Sql
@@ -626,7 +626,7 @@ namespace SqlEngine
         {
             try
             {               
-                var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+                var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
                 if (vActivCell.ListObject == null)
                 {
                     MessageBox.Show(" Please,  select cell from the table", " Refresh error");
@@ -660,7 +660,7 @@ namespace SqlEngine
         {
             try
             {               
-                var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+                var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
                 if ((vActivCell.ListObject == null) == false)
                 {
                     sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
@@ -692,7 +692,7 @@ namespace SqlEngine
             { //eeee
                 isRefresh = true;
 
-                var vActivCell = SqlEngine.currExcelApp.ActiveCell;                
+                var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;                
 
                 sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
 
@@ -717,7 +717,7 @@ namespace SqlEngine
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))
                 {
-                    sVbaEngineCloud.createExTable(
+                    SVbaEngineCloud.CreateExTable(
                                      vCTR.CurrCloudName
                                    , vCTR.TableName
                                    , vCTR.Sql
@@ -740,7 +740,7 @@ namespace SqlEngine
 
         public static void RibbonPivotExcel()
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             if (vActivCell.ListObject == null)
             {
                 MessageBox.Show(" Please, select cell from the table", " Refresh error");
@@ -757,7 +757,7 @@ namespace SqlEngine
 
             if (vCTR.TypeConnection.Contains("CLOUD"))
             {
-                SqlEngine.currExcelApp.SendKeys("%NVT");
+                SqlEngine.CurrExcelApp.SendKeys("%NVT");
             }
 
         
@@ -768,17 +768,17 @@ namespace SqlEngine
 
         public static void runTableProperties()
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             // SqlEngine.currExcelApp.CommandBars.ExecuteMso("EditQuery");
             if ((vActivCell.ListObject == null) == false)
             {
-                SqlEngine.currExcelApp.ScreenUpdating = false;
+                SqlEngine.CurrExcelApp.ScreenUpdating = false;
 
-                SqlEngine.currExcelApp.SendKeys("%A%P%S");
-                SqlEngine.currExcelApp.SendKeys("+");
-                SqlEngine.currExcelApp.CommandBars.ReleaseFocus();
+                SqlEngine.CurrExcelApp.SendKeys("%A%P%S");
+                SqlEngine.CurrExcelApp.SendKeys("+");
+                SqlEngine.CurrExcelApp.CommandBars.ReleaseFocus();
 
-                SqlEngine.currExcelApp.ScreenUpdating = true;
+                SqlEngine.CurrExcelApp.ScreenUpdating = true;
             }
             else
                 MessageBox.Show(" Please, select  the external table", " Refresh error");
@@ -788,10 +788,10 @@ namespace SqlEngine
 
         public static void runSqlProperties()
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             // SqlEngine.currExcelApp.CommandBars.ExecuteMso("EditQuery");
             if ((vActivCell.ListObject == null) == false)
-                SqlEngine.currExcelApp.SendKeys("%j%f%o");
+                SqlEngine.CurrExcelApp.SendKeys("%j%f%o");
             else
                 MessageBox.Show(" Please, select  the external table", " Refresh error");
 
@@ -800,18 +800,18 @@ namespace SqlEngine
          
         public static void runPowerPivotM()
         {
-            SqlEngine.currExcelApp.SendKeys("%a%d%m");
+            SqlEngine.CurrExcelApp.SendKeys("%a%d%m");
                   GetSelectedTab();
         }
 
         public static void GetSelectedTab ()
         {
-            SqlEngine.currExcelApp.ScreenUpdating = false;
-             SqlEngine.currExcelApp.SendKeys("%Y%Q%A");
-             SqlEngine.currExcelApp.SendKeys("%");
-             SqlEngine.currExcelApp.CommandBars.ReleaseFocus();//CommandBars.ReleaseFocus 
+            SqlEngine.CurrExcelApp.ScreenUpdating = false;
+             SqlEngine.CurrExcelApp.SendKeys("%Y%Q%A");
+             SqlEngine.CurrExcelApp.SendKeys("%");
+             SqlEngine.CurrExcelApp.CommandBars.ReleaseFocus();//CommandBars.ReleaseFocus 
              
-            SqlEngine.currExcelApp.ScreenUpdating = true;
+            SqlEngine.CurrExcelApp.ScreenUpdating = true;
         }
         //
 

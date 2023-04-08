@@ -4,46 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.sCloud;
-using static SqlEngine.sCsv;
+using static SqlEngine.SCloud;
+using static SqlEngine.SCsv;
 
 namespace SqlEngine
 {
     class wp01RightTreeCloud
     {
       
-            private static void initCloudObjects(ref sCloud.CloudProperties vCurrCloudObj)
+            private static void initCloudObjects(ref SCloud.CloudProperties vCurrCloudObj)
             {
                 try
                 {
                     if (vCurrCloudObj.Tables == null)
                     {
-                        vCurrCloudObj.Tables = new List<sCloud.CloudObjects>();
+                        vCurrCloudObj.Tables = new List<SCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.Views == null)
                     {
-                        vCurrCloudObj.Views = new List<sCloud.CloudObjects>();
+                        vCurrCloudObj.Views = new List<SCloud.CloudObjects>();
                     }
 
-                    if (vCurrCloudObj.SQLProgramms == null)
+                    if (vCurrCloudObj.SqlPrograms == null)
                     {
-                        vCurrCloudObj.SQLProgramms = new List<sCloud.CloudObjects>();
+                        vCurrCloudObj.SqlPrograms = new List<SCloud.CloudObjects>();
                     }
 
-                    if (vCurrCloudObj.SQLFunctions == null)
+                    if (vCurrCloudObj.SqlFunctions == null)
                     {
-                        vCurrCloudObj.SQLFunctions = new List<sCloud.CloudObjects>();
+                        vCurrCloudObj.SqlFunctions = new List<SCloud.CloudObjects>();
                     }
 
                     if (vCurrCloudObj.Tables.Count == 0)
                     {
-                        vCurrCloudObj.Tables.AddRange(sCloud.getCloudTableList(vCurrCloudObj.CloudName));
+                        vCurrCloudObj.Tables.AddRange(SCloud.GetCloudTableList(vCurrCloudObj.CloudName));
                     }
 
                     if (vCurrCloudObj.Views.Count == 0)
                     {
-                        vCurrCloudObj.Views.AddRange(sCloud.getCloudViewList(vCurrCloudObj.CloudName));
+                        vCurrCloudObj.Views.AddRange(SCloud.GetCloudViewList(vCurrCloudObj.CloudName));
                     }                     
 
                 }
@@ -54,18 +54,18 @@ namespace SqlEngine
             }
 
 
-        private static void initCsvObjects(ref sCsv.FolderProperties vCurrCloudObj)
+        private static void initCsvObjects(ref SCsv.FolderProperties vCurrCloudObj)
         {
             try
             {
                 if (vCurrCloudObj.Files == null)
                 {
-                    vCurrCloudObj.Files = new List<sCsv.CloudObjects>();
+                    vCurrCloudObj.Files = new List<SCsv.CloudObjects>();
                 } 
 
                 if (vCurrCloudObj.Files.Count == 0)
                 {
-                    vCurrCloudObj.Files.AddRange(sCsv.getFileList(vCurrCloudObj.FolderName));
+                    vCurrCloudObj.Files.AddRange(SCsv.GetFileList(vCurrCloudObj.FolderName));
                 }                 
             }
             catch (Exception er)
@@ -79,7 +79,7 @@ namespace SqlEngine
             e.Node.Nodes.Clear();
             string vCurrFolderName = e.Node.Text;
              
-            FolderProperties vCurrFolder = sCsv.vFolderList.Find(item => item.FolderName == vCurrFolderName);
+            FolderProperties vCurrFolder = SCsv.FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);
 
             try
             {
@@ -116,11 +116,11 @@ namespace SqlEngine
                 e.Node.Nodes.Clear();
                 string vCurrCloudName = e.Node.Text; 
 
-                CloudProperties vCurrCloud = sCloud.vCloudList.Find(item => item.CloudName == vCurrCloudName);
+                CloudProperties vCurrCloud = SCloud.CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
 
                 try
                 {
-                    if ((sCloud.checkCloudState(vCurrCloudName) < 0))
+                    if ((SCloud.CheckCloudState(vCurrCloudName) < 0))
                     {
                         return;
                     }
@@ -171,20 +171,20 @@ namespace SqlEngine
             {
                 String vNodeTag = e.Node.Parent.Text + '.' + e.Node.Text;
 
-                FilesAndProperties vCurrObjProp = sCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag); 
+                FilesAndProperties vCurrObjProp = SCsv.FilesAndPropertiesList.Find(item => item.ObjName == vNodeTag); 
 
-                if (vCurrObjProp.objColumns == null)
+                if (vCurrObjProp.ObjColumns == null)
                 {
-                    sCsv.vFileObjProp.AddRange(sCsv.getCsvFileColumn(e.Node.Parent.Text, e.Node.Text));
-                    vCurrObjProp = sCsv.vFileObjProp.Find(item => item.ObjName == vNodeTag);
+                    SCsv.FilesAndPropertiesList.AddRange(SCsv.GetCsvFileColumn(e.Node.Parent.Text, e.Node.Text));
+                    vCurrObjProp = SCsv.FilesAndPropertiesList.Find(item => item.ObjName == vNodeTag);
                 }
 
-                if (vCurrObjProp.objColumns != null)
-                    if (vCurrObjProp.objColumns.Count > 0)
+                if (vCurrObjProp.ObjColumns != null)
+                    if (vCurrObjProp.ObjColumns.Count > 0)
                     {
                         e.Node.Nodes.Clear();
 
-                        foreach (var vCurrColumn in vCurrObjProp.objColumns)
+                        foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
                         {
                             TreeNode vNodeColumn = new TreeNode(vCurrColumn.ToString(), 14, 14);
                             vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
@@ -205,20 +205,20 @@ namespace SqlEngine
                 try
                 {
                     String vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
-                    var vCurrObjProp = sCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
+                    var vCurrObjProp = SCloud.CloudObjectsAndPropertiesList.Find(item => item.ObjName == vNodeTag);
 
-                    if (vCurrObjProp.objColumns == null)
+                    if (vCurrObjProp.ObjColumns == null)
                     {
-                    sCloud.vCloudObjProp.AddRange(sCloud.getObjectProperties(e.Node.Parent.Parent.Text , e.Node.Text  ));
-                        vCurrObjProp = sCloud.vCloudObjProp.Find(item => item.ObjName == vNodeTag);
+                    SCloud.CloudObjectsAndPropertiesList.AddRange(SCloud.GetObjectProperties(e.Node.Parent.Parent.Text , e.Node.Text  ));
+                        vCurrObjProp = SCloud.CloudObjectsAndPropertiesList.Find(item => item.ObjName == vNodeTag);
                     }
 
-                    if (vCurrObjProp.objColumns != null)
-                        if (vCurrObjProp.objColumns.Count > 0)
+                    if (vCurrObjProp.ObjColumns != null)
+                        if (vCurrObjProp.ObjColumns.Count > 0)
                         {
                             e.Node.Nodes.Clear();
 
-                            foreach (var vCurrColumn in vCurrObjProp.objColumns)
+                            foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
                             {
                                 TreeNode vNodeColumn = new TreeNode(vCurrColumn.ToString(), 14, 14);
                                 vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
@@ -230,7 +230,7 @@ namespace SqlEngine
                                 TreeNode vNodeIndexFolder = new TreeNode("Indexes".ToString(), 12, 12);
                                 vNodeIndexFolder.Tag = vNodeTag + "_idx";
                                 e.Node.Nodes.Add(vNodeIndexFolder);
-                                foreach (var vCurrIndx in vCurrObjProp.objIndexes)
+                                foreach (var vCurrIndx in vCurrObjProp.ObjIndexes)
                                 {
                                     TreeNode vNodeIndx = new TreeNode(vCurrIndx.ToString(), 13, 13);
                                     vNodeIndx.Tag = vNodeTag + '.' + vCurrIndx + "_idx";

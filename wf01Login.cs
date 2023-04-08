@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class wf01Login : Form
+    public sealed partial class wf01Login : Form
     {
         String vODBCName;
         public wf01Login(String vCurrODBCName)
@@ -34,14 +34,14 @@ namespace SqlEngine
 
         private void WF01BTTest_Click(object sender, EventArgs e)
         {
-            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
+            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vODBCName);
             vCurrODBC.Login = WF01TBLogin.Text;
             vCurrODBC.Password = WF01TBPassword.Text;
-            sODBC.ChangeOdbcValue(vODBCName, vCurrODBC);
+            SOdbc.ChangeOdbcValue(vODBCName, vCurrODBC);
 
-            sODBC.checkOdbcStatus(vODBCName);
+            SOdbc.checkOdbcStatus(vODBCName);
 
-            vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
+            vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vODBCName);
             DialogResult result;
             if (vCurrODBC.ConnStatus == 1)
             {

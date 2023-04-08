@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class wf08About : Form
+    public partial class Wf08About : Form
     {
-        public wf08About()
+        public Wf08About()
         {
             InitializeComponent();
         }

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class wf04EditQuery : Form
+    public sealed partial class wf04EditQuery : Form
     {
         private Microsoft.Office.Interop.Excel.ListObject vCurrTable;
          
@@ -24,7 +24,7 @@ namespace SqlEngine
 
             if (vCTR.CurrCloudExTName != "")
              {
-                SqlEngine.currExcelApp.ActiveSheet.ListObjects(vCTR.CurrCloudExTName).Range().Select();
+                SqlEngine.CurrExcelApp.ActiveSheet.ListObjects(vCTR.CurrCloudExTName).Range().Select();
              }
 
             InitializeComponent();
@@ -82,7 +82,7 @@ namespace SqlEngine
 
                 if (vCTR.TypeConnection.Contains("CLOUD"))
                 {
-                    sVbaEngineCloud.createExTable(
+                    SVbaEngineCloud.CreateExTable(
                                                          vCTR.CurrCloudName
                                                        , vCTR.TableName
                                                        , SqlEditor.Text

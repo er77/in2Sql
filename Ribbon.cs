@@ -33,11 +33,11 @@ namespace SqlEngine
             if (vListofPanes == null)
                 vListofPanes = new List<BooksVsPannel>();           
 
-             var  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+             var  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
 
             if (vcurrPannel.BookName == null)
             {
-                vcurrPannel.BookName = SqlEngine.currExcelApp.ActiveWorkbook.Name;
+                vcurrPannel.BookName = SqlEngine.CurrExcelApp.ActiveWorkbook.Name;
 
                 vcurrPannel.leftPaneCntrlOtl = new wf02PaneLeftOtline();
                 vcurrPannel.objIn2sqlLeftOtl = Globals.SqlEngine.CustomTaskPanes.Add(vcurrPannel.leftPaneCntrlOtl, "in2Sql.outline");
@@ -62,24 +62,24 @@ namespace SqlEngine
             if (vListofPanes == null)
                 addToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
 
             if (vcurrPannel.objIn2sqlLeftOtl == null)
             {
                 addToListPanes();
-                vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+                vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
                 vcurrPannel.objIn2sqlLeftOtl.Visible = true;               
             }
         }
 
-        wf07OdbcProperties frmShowODBCProp = null;
+        Wf07OdbcProperties frmShowODBCProp = null;
         public void showODBCProp()
         {
             if (frmShowODBCProp == null  )
-                frmShowODBCProp = new wf07OdbcProperties();
+                frmShowODBCProp = new Wf07OdbcProperties();
 
             if (  frmShowODBCProp.IsDisposed  )
-               frmShowODBCProp = new wf07OdbcProperties(); 
+               frmShowODBCProp = new Wf07OdbcProperties(); 
             frmShowODBCProp.Show();
 
         }
@@ -88,14 +88,14 @@ namespace SqlEngine
 
 
 
-        wf08About frmshowAbout = null;
+        Wf08About frmshowAbout = null;
         public void showAbout()
         {
             if (frmshowAbout == null)
-                frmshowAbout = new wf08About();
+                frmshowAbout = new Wf08About();
 
             if (frmshowAbout.IsDisposed)
-                frmshowAbout = new wf08About();
+                frmshowAbout = new Wf08About();
             frmshowAbout.Show();
         }
 
@@ -105,7 +105,7 @@ namespace SqlEngine
             if (vListofPanes == null)
                 addToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name );
+            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name );
 
             if (vcurrPannel.objPanelRigtSqlM != null)
             {
@@ -118,7 +118,7 @@ namespace SqlEngine
             else
             {
                 addToListPanes();
-                  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+                  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
                 vcurrPannel.objPanelRigtSqlM.Visible = true;
                 vcurrPannel.objPanelRigtSqlM.Width = 600;
                 vcurrPannel.rightPaneCntrlSqlm.showSqlEdit();
@@ -130,7 +130,7 @@ namespace SqlEngine
             if ( vListofPanes == null )
                 addToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
             if (vcurrPannel.objPanelRigtSqlM == null)
             {
                 addToListPanes();
@@ -154,7 +154,7 @@ namespace SqlEngine
             if (vListofPanes == null)
                 addToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.currExcelApp.ActiveWorkbook.Name);
+            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
             if (vcurrPannel.objIn2sqlLeftOtl == null)
             {
               InitLeftPaneOtl();
@@ -218,7 +218,7 @@ namespace SqlEngine
 
         private void showSqlEdit ()
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             if  (vActivCell.ListObject == null) 
             {
                 MessageBox.Show("Please select table with SQL query");
@@ -235,7 +235,7 @@ namespace SqlEngine
 
         public void ExecMenuButton(Office.IRibbonControl vControl)
         {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             try
             {
                 sTool.RunGarbageCollector();

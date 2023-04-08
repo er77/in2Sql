@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf01Login
+    sealed partial class wf01Login
     {
         /// <summary>
         /// Required designer variable.

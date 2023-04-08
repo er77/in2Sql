@@ -2,27 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class sCloud
+    class SCloud
     {
 
         public struct CloudObjects
         {
             public String Name;
-            public int idTbl;
+            public int IdTbl;
         }
 
-        public static int vIdtbl = 0;
+        private static int _idtbl;
 
         public struct ObjectsAndProperties
         {
-            public List<String> objColumns;
-            public List<String> objIndexes;
+            public List<String> ObjColumns;
+           // public List<String> ObjIndexes;
           //  public List<String> objDependencies;
             public String ObjName;
         }
@@ -33,20 +31,20 @@ namespace SqlEngine
           //  public int ConnStatus;
             public List<CloudObjects> Tables;
             public List<CloudObjects> Views;
-            public List<CloudObjects> SQLProgramms;
-            public List<CloudObjects> SQLFunctions;
+            public List<CloudObjects> SqlPrograms;
+            public List<CloudObjects> SqlFunctions;
         }
 
-        public static List<CloudProperties> vCloudList = CloudList();
+        public static List<CloudProperties> CloudPropertiesList = CloudList();
 
-        public static List<ObjectsAndProperties> vCloudObjProp = new List<ObjectsAndProperties>();
+        public static List<ObjectsAndProperties> CloudObjectsAndPropertiesList = new List<ObjectsAndProperties>();
 
         public static List<CloudProperties> CloudList()
         {
             try
             {                
                 List<CloudProperties> listClooudProperties = new List<CloudProperties>();               
-                listClooudProperties.AddRange(getCloudList());
+                listClooudProperties.AddRange(GetCloudList());
                 return listClooudProperties;
             }
             catch (Exception e)
@@ -56,27 +54,27 @@ namespace SqlEngine
             }
         }
 
-        public static string prepareCloudQuery_int(string Url, string vCurrSql , string vLogin, string vPassword)
+        public static string prepareCloudQuery_int(string url, string vCurrSql , string vLogin, string vPassword)
         {
-            string vResult = Url;
+            string vResult = url;
             vResult = vResult.Replace("%SQL%", vCurrSql);
             vResult = vResult.Replace("%LOGIN%", vLogin);
             vResult = vResult.Replace("%PASSWORD%", vPassword);
             return vResult;
         }
 
-        public static string prepareCloudQuery ( string vCloudName, string vCurrSql)
+        public static string PrepareCloudQuery ( string vCloudName, string vCurrSql)
         {
 
             if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                 return "";
 
-            CloudProperties vCurrCloud = sCloud.vCloudList.Find(item => item.CloudName == vCloudName);
+            CloudProperties vCurrCloud = SCloud.CloudPropertiesList.Find(item => item.CloudName == vCloudName);
 
             if (vCurrCloud.CloudName == null)
                 return "";
 
-            vCurrSql = sVbaEngineCloud.setSqlLimit(vCurrCloud.CloudType, vCurrSql);
+            vCurrSql = SVbaEngineCloud.SetSqlLimit(vCurrCloud.CloudType, vCurrSql);
 
             if (vCurrCloud.CloudType.Contains("CloudCH"))
                 vCurrSql = vCurrSql.Replace("FORMAT CSVWithNames", "") + " FORMAT CSVWithNames";
@@ -87,15 +85,15 @@ namespace SqlEngine
             return prepareCloudQuery_int(vCurrCloud.Url, vCurrSql, vCurrCloud.Login, vCurrCloud.Password) ;
         }
 
-        public static int checkCloudState (string  vCurrCloudName)
+        public static int CheckCloudState (string  vCurrCloudName)
         {
 
-            CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
+            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
 
-            string vSqlURL  = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlCheck(vCurrCloud.CloudType) );
-            vSqlURL = sTool.HttpGet(vSqlURL);
+            string sqlUrl  = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlCheck(vCurrCloud.CloudType) );
+            sqlUrl = sTool.HttpGet(sqlUrl);
 
-            if (vSqlURL.Length < 2)
+            if (sqlUrl.Length < 2)
             {                 
                 return -1 ;
             }
@@ -103,80 +101,76 @@ namespace SqlEngine
             return 1;
         }
 
-        public static string getCloudType(string vCurrCloudName)
+        public static string GetCloudType(string vCurrCloudName)
         {
-            CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
+            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
             return vCurrCloud.CloudType;
         }
 
  
-        public static IEnumerable<CloudObjects> getCloudTableList(string vCurrCloudName)
+        public static IEnumerable<CloudObjects> GetCloudTableList(string vCurrCloudName)
             {
-            CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
-            string vSqlURL;
+            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
+            string sqlUrl;
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlTable(vCurrCloud.CloudType));
+            sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlTable(vCurrCloud.CloudType));
 
-             return getCloudObjectList(vSqlURL);
+             return GetCloudObjectList(sqlUrl);
                
             }
 
-        public static IEnumerable<CloudObjects> getCloudViewList(string vCurrCloudName)
+        public static IEnumerable<CloudObjects> GetCloudViewList(string vCurrCloudName)
         {
-            CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
-            string vSqlURL;
-
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudSqlView(vCurrCloud.CloudType));
-
-            return getCloudObjectList(vSqlURL);
-
+            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
+            string sqlUrl;
+            sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlView(vCurrCloud.CloudType));
+            return GetCloudObjectList(sqlUrl);
         }
 
-        private static IEnumerable<CloudObjects> getCloudObjectList(string vSqlURL)
+        private static IEnumerable<CloudObjects> GetCloudObjectList(string sqlUrl)
         {
-             
-            List<String> vObjects = new List<String>();
-            vObjects.AddRange(sTool.HttpGetArray(vSqlURL));
-            int i = 0;
+            var vObjects = new List<String>();
+            vObjects.AddRange(sTool.HttpGetArray(sqlUrl));
+            var i = 0;
             foreach (var vCurrObj in vObjects)
             {
                 i += 1;
                 if (i < 2)
                     continue;
-
-                CloudObjects vObj = new CloudObjects();
-                vObj.Name = vCurrObj.ToString().Replace('"',' ').Trim();
-                vObj.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                var vObj = new CloudObjects
+                {
+                    Name = vCurrObj.Replace('"',' ').Trim(),
+                    IdTbl = _idtbl
+                };
+                _idtbl = _idtbl + 1;
                 yield return vObj;
             }
         }
 
 
-        public static IEnumerable<ObjectsAndProperties> getObjectProperties(string vCurrCloudName, string vObjName)
+        public static IEnumerable<ObjectsAndProperties> GetObjectProperties(string vCurrCloudName, string vObjName)
         {
-            CloudProperties vCurrCloud = vCloudList.Find(item => item.CloudName == vCurrCloudName);
-            string vSqlURL;
+            var vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
 
-            vSqlURL = prepareCloudQuery(vCurrCloudName, sLibrary.getCloudColumns(vCurrCloud.CloudType));
+            var sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudColumns(vCurrCloud.CloudType));
             var vTb1 = vObjName.Split('.');
 
-            vSqlURL = vSqlURL.Replace("%TNAME%", vTb1[1]);
-            vSqlURL = vSqlURL.Replace("%TOWNER%", vTb1[0]);           
+            sqlUrl = sqlUrl.Replace("%TNAME%", vTb1[1]);
+            sqlUrl = sqlUrl.Replace("%TOWNER%", vTb1[0]);           
              
-            ObjectsAndProperties vObject = new ObjectsAndProperties();
+            var vObject = new ObjectsAndProperties();
             vObject.ObjName = vCurrCloudName + '.' + vObjName;
-            vObject.objColumns = new List<string>(); 
+            vObject.ObjColumns = new List<string>(); 
 
-            List<String> vObjects = new List<String>();
-            vObjects.AddRange(sTool.HttpGetArray(vSqlURL));
-            int i = 0;
+            var vObjects = new List<String>();
+            vObjects.AddRange(sTool.HttpGetArray(sqlUrl));
+            var i = 0;
             foreach (var vCurrObj in vObjects)
             {
                 i += 1;
                 if (i < 2)
                     continue;
-                vObject.objColumns.Add(vCurrObj.ToString().Replace('"', ' ').Trim());
+                vObject.ObjColumns.Add(vCurrObj.Replace('"', ' ').Trim());
             }
 
             yield return vObject;
@@ -184,16 +178,15 @@ namespace SqlEngine
         }
          
 
-        public static IEnumerable<CloudProperties> getCloudList()
+        public static IEnumerable<CloudProperties> GetCloudList()
         {
-            RegistryKey vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-            string vCurrName = "";
+            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
             string vPrevName = "";
             if (vCurrRegKey != null)
             {
                 CloudProperties vCloudProperties= new CloudProperties();  
 
-                foreach (string name in vCurrRegKey.GetValueNames())
+                foreach (var name in vCurrRegKey.GetValueNames())
                 {
                     if (name.Contains("Cloud"))
                     {
@@ -205,7 +198,7 @@ namespace SqlEngine
                             yield return new CloudProperties();
                             break;
                         }
-                        vCurrName = vNameDetails[1];
+                       var vCurrName = vNameDetails[1];
 
                         if (!vCurrName.Equals(vPrevName))
                         {

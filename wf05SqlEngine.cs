@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.sCloud;
+using static SqlEngine.SCloud;
 
 namespace SqlEngine
 {
@@ -30,7 +30,7 @@ namespace SqlEngine
         {
             contextMenuSqlConnections.Items.Clear();
 
-            foreach (var vCurrvODBCList in sODBC.vODBCList)
+            foreach (var vCurrvODBCList in SOdbc.vODBCList)
             {
                 ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvODBCList.OdbcName + " | odbc"  );
                 vCurrConnMenu.Click += Connection_Click;
@@ -38,7 +38,7 @@ namespace SqlEngine
             }
             SqlConnectionsToolStripDropDown.DropDown = contextMenuSqlConnections;
 
-            foreach (var vCurrvCloud in sCloud.vCloudList)
+            foreach (var vCurrvCloud in SCloud.CloudPropertiesList)
             {
                 ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvCloud.CloudName + " | cloud");
                 vCurrConnMenu.Click += Connection_Click;
@@ -172,7 +172,7 @@ namespace SqlEngine
         {
             try
             {
-                string DsnConn = sODBC.getODBCProperties(vOdbcName, "DSNStr"); 
+                string DsnConn = SOdbc.getODBCProperties(vOdbcName, "DSNStr"); 
 
                 if (DsnConn == null | DsnConn == "")
                 {
@@ -207,7 +207,7 @@ namespace SqlEngine
                 if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                     return;              
                  
-                string vConnURL = sCloud.prepareCloudQuery(vCloudName, vCurrSql );
+                string vConnURL = SCloud.PrepareCloudQuery(vCloudName, vCurrSql );
 
                 if (vConnURL == null | vConnURL == "")
                 {
@@ -279,7 +279,7 @@ namespace SqlEngine
                          intSqlVBAEngine.createExTable(ConnName.Text, sTool.GetHash(qstr), qstr);
                     
                     else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
-                         sVbaEngineCloud.createExTable(vOdbcName, sTool.GetHash(qstr), qstr);
+                         SVbaEngineCloud.CreateExTable(vOdbcName, sTool.GetHash(qstr), qstr);
                     
             }
             catch (Exception e)

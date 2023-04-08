@@ -291,7 +291,7 @@ namespace SqlEngine
 
         public static IEnumerable<String> sqlReadQuery(string vOdbcName, string queryString = "")
         {
-            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vOdbcName);
+            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vOdbcName);
 
             using
                   (OdbcConnection conn = new System.Data.Odbc.OdbcConnection())
@@ -416,7 +416,7 @@ namespace SqlEngine
 
         public static CurrentTableRecords getCurrentSql ()
         {           
-            var vCurrTable = SqlEngine.currExcelApp.ActiveCell.ListObject;
+            var vCurrTable = SqlEngine.CurrExcelApp.ActiveCell.ListObject;
             CurrentTableRecords vCTR = new CurrentTableRecords();
             vCTR.Sql = "";
             vCTR.TypeConnection = "";

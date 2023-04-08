@@ -243,12 +243,12 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="sLibrary.cs" />
+    <Compile Include="SSqlLibrary.cs" />
     <Compile Include="sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
     <Compile Include="wp01RightTreeCloud.cs" />
-    <Compile Include="sCloud.cs" />
-    <Compile Include="sCsv.cs" />
+    <Compile Include="SCloud.cs" />
+    <Compile Include="SCsv.cs" />
     <Compile Include="sUndo.cs" />
     <Compile Include="wf03PanelRigtSqlM.cs">
       <SubType>UserControl</SubType>
@@ -257,7 +257,7 @@
       <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </Compile>
     <Compile Include="wp02RightTreeTables.cs" />
-    <Compile Include="sODBC.cs" />
+    <Compile Include="SOdbc.cs" />
     <Compile Include="sTool.cs" />
     <Compile Include="wf01Login.cs">
       <SubType>Form</SubType>
@@ -290,30 +290,30 @@
     <Compile Include="wf06SqlBuilder.Designer.cs">
       <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf07OdbcProperties.cs">
+    <Compile Include="Wf07OdbcProperties.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf07OdbcProperties.Designer.cs">
-      <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
+    <Compile Include="Wf07OdbcProperties.Designer.cs">
+      <DependentUpon>Wf07OdbcProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf08About.cs">
+    <Compile Include="Wf08About.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf08About.Designer.cs">
-      <DependentUpon>wf08About.cs</DependentUpon>
+    <Compile Include="Wf08About.Designer.cs">
+      <DependentUpon>Wf08About.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf09CloudConnectionEditor.cs">
+    <Compile Include="Wf09CloudCloudConnectionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf09CloudConnectionEditor.Designer.cs">
-      <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
+    <Compile Include="Wf09CloudCloudConnectionEditor.Designer.cs">
+      <DependentUpon>Wf09CloudCloudConnectionEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="sVbaEngineCloud.cs" />
-    <Compile Include="wf10CsvEdit.cs">
+    <Compile Include="SVbaEngineCloud.cs" />
+    <Compile Include="Wf10CsvEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf10CsvEdit.Designer.cs">
-      <DependentUpon>wf10CsvEdit.cs</DependentUpon>
+    <Compile Include="Wf10CsvEdit.Designer.cs">
+      <DependentUpon>Wf10CsvEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -336,17 +336,17 @@
     <EmbeddedResource Include="wf06SqlBuilder.resx">
       <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf07OdbcProperties.resx">
-      <DependentUpon>wf07OdbcProperties.cs</DependentUpon>
+    <EmbeddedResource Include="Wf07OdbcProperties.resx">
+      <DependentUpon>Wf07OdbcProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf08About.resx">
-      <DependentUpon>wf08About.cs</DependentUpon>
+    <EmbeddedResource Include="Wf08About.resx">
+      <DependentUpon>Wf08About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf09CloudConnectionEditor.resx">
-      <DependentUpon>wf09CloudConnectionEditor.cs</DependentUpon>
+    <EmbeddedResource Include="Wf09CloudCloudConnectionEditor.resx">
+      <DependentUpon>Wf09CloudCloudConnectionEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf10CsvEdit.resx">
-      <DependentUpon>wf10CsvEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Wf10CsvEdit.resx">
+      <DependentUpon>Wf10CsvEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

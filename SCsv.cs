@@ -4,26 +4,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class sCsv
+    class SCsv
     {
 
         public struct CloudObjects
         {
             public String Name;
-            public int idTbl;
+            public int IdTbl;
         }
 
-        public static int vIdtbl = 0;
+        private static int _idtbl ;
 
         public struct FilesAndProperties
         {
-            public List<String> objColumns;
+            public List<String> ObjColumns;
             public String ObjName;
         }
 
@@ -34,14 +32,14 @@ namespace SqlEngine
 
         }
 
-        public static List<FolderProperties> vFolderList = FolderList();
+        public static List<FolderProperties> FolderPropertiesList = FolderList();
 
-        public static List<FilesAndProperties> vFileObjProp = new List<FilesAndProperties>();
+        public static readonly List<FilesAndProperties> FilesAndPropertiesList = new List<FilesAndProperties>();
 
-        public static string getFirstFolder ()
+        public static string GetFirstFolder ()
         {
-            if (vFolderList != null )
-              return vFolderList[0].Path + "\\";
+            if (FolderPropertiesList != null )
+              return FolderPropertiesList[0].Path + "\\";
 
             return "c:\\Temp\\";
         }
@@ -51,7 +49,7 @@ namespace SqlEngine
             try
             {
                 List<FolderProperties> listClooudProperties = new List<FolderProperties>();
-                listClooudProperties.AddRange(getCsvList());
+                listClooudProperties.AddRange(GetCsvList());
                 return listClooudProperties;
             }
             catch (Exception e)
@@ -61,48 +59,49 @@ namespace SqlEngine
             }
         } 
 
-        public static IEnumerable<CloudObjects> getFileList(string vCurrFolderName)
+        public static IEnumerable<CloudObjects> GetFileList(string vCurrFolderName)
         {
-            FolderProperties vCurrFolderN = vFolderList.Find(item => item.FolderName == vCurrFolderName);       
+            FolderProperties vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);       
 
-            return getFiesinFolderList(vCurrFolderN.Path);
+            return GetFiesInFolderList(vCurrFolderN.Path);
 
         } 
 
-        private static IEnumerable<CloudObjects> getFiesinFolderList(string vFolderPath)
+        private static IEnumerable<CloudObjects> GetFiesInFolderList(string vFolderPath)
         {
             DirectoryInfo d = new DirectoryInfo(@vFolderPath);
-            FileInfo[] Files = d.GetFiles("*.csv"); 
+            FileInfo[] files = d.GetFiles("*.csv"); 
             string str = "";
-            foreach (FileInfo file in Files)
+            foreach (FileInfo file in files)
             {
                 str = str + ", " + file.Name;
                 CloudObjects vObj = new CloudObjects();
                 vObj.Name = file.Name;
-                vObj.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                vObj.IdTbl = _idtbl;
+                _idtbl = _idtbl + 1;
                 yield return vObj;
             } 
         }
 
 
-        public static IEnumerable<FilesAndProperties> getCsvFileColumn(string vCurrFolderName, string vObjName)
+        public static IEnumerable<FilesAndProperties> GetCsvFileColumn(string vCurrFolderName, string vObjName)
         {
-            FolderProperties vCurrFolderN = vFolderList.Find(item => item.FolderName == vCurrFolderName);
+            FolderProperties vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);
 
             FilesAndProperties vObject = new FilesAndProperties();
             vObject.ObjName = vCurrFolderName + '.' + vObjName;
-            vObject.objColumns = new List<string>();
+            vObject.ObjColumns = new List<string>();
 
             using (TextFieldParser csvReader = new TextFieldParser( vCurrFolderN.Path + "\\" + vObjName ))
             {
                 csvReader.SetDelimiters(new string[] { "," });
                 csvReader.HasFieldsEnclosedInQuotes = true;
                 string[] colFields = csvReader.ReadFields();
-                foreach (string column in colFields)
-                {
-                    vObject.objColumns.Add(column.ToString().Replace('"', ' ').Trim());
-                }           
+                if (colFields != null)
+                    foreach (string column in colFields)
+                    {
+                        vObject.ObjColumns.Add(column.Replace('"', ' ').Trim());
+                    }
             }
 
             yield return vObject; 
@@ -110,10 +109,9 @@ namespace SqlEngine
         }
 
 
-        public static IEnumerable<FolderProperties> getCsvList()
+        public static IEnumerable<FolderProperties> GetCsvList()
         {
-            RegistryKey vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-            string vCurrName = "";
+            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
             string vPrevName = "";
             if (vCurrRegKey != null)
             {
@@ -131,7 +129,7 @@ namespace SqlEngine
                             yield return new FolderProperties();
                             break;
                         }
-                        vCurrName = vNameDetails[1];
+                        var vCurrName = vNameDetails[1];
 
                         if (!vCurrName.Equals(vPrevName))
                         {

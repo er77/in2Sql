@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
-using Microsoft.Office.Tools.Excel;
+
 
 namespace SqlEngine
 {
     public partial class SqlEngine
     {
-        public static Excel.Application currExcelApp;
+        public static Excel.Application CurrExcelApp;
  
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
@@ -19,14 +15,14 @@ namespace SqlEngine
             return new Ribbon();
         }
 
-        private void SqlEngine_Startup(object sender, System.EventArgs e)
+        private void SqlEngine_Startup(object sender, EventArgs e)
         {
-            currExcelApp = this.Application;
+            CurrExcelApp = Application;
         }
 
-        private void SqlEngine_Shutdown(object sender, System.EventArgs e)
+        private static void SqlEngine_Shutdown(object sender, EventArgs e)
         {
-            currExcelApp = null;
+            CurrExcelApp = null;
             sTool.RunGarbageCollector();
         }
 
@@ -38,8 +34,8 @@ namespace SqlEngine
         /// </summary>
         private void InternalStartup()
         {
-            this.Startup += new System.EventHandler(SqlEngine_Startup);
-            this.Shutdown += new System.EventHandler(SqlEngine_Shutdown);
+            Startup += SqlEngine_Startup;
+            Shutdown += SqlEngine_Shutdown;
 
              
         }

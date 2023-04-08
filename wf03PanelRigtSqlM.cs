@@ -109,11 +109,11 @@ namespace SqlEngine
                
         }
 
-        wf07OdbcProperties OdbcEdit =  null;
+        Wf07OdbcProperties OdbcEdit =  null;
 
         private void OdbcEditPanel ()
         {
-            OdbcEdit = new wf07OdbcProperties();
+            OdbcEdit = new Wf07OdbcProperties();
            // OdbcEdit.TopLevel = false;
            // OdbcEdit.FormBorderStyle = FormBorderStyle.None;
             OdbcEdit.Parent = ODBCtabControl.TabPages[2];
@@ -190,9 +190,9 @@ namespace SqlEngine
         {
             try
             {
-                sCloud.vCloudList = sCloud.CloudList();
+                SCloud.CloudPropertiesList = SCloud.CloudList();
 
-                foreach (var vCurrCloudList in sCloud.vCloudList)
+                foreach (var vCurrCloudList in SCloud.CloudPropertiesList)
                 {
                     if (vCurrCloudList.CloudType.Contains(vCloudType))
                         wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrCloudList.CloudName, vCloudType + '$');
@@ -209,9 +209,9 @@ namespace SqlEngine
         {
             try
             {
-                sCsv.vFolderList = sCsv.FolderList();
+                SCsv.FolderPropertiesList = SCsv.FolderList();
 
-                foreach (var vCurrFolder in sCsv.vFolderList)
+                foreach (var vCurrFolder in SCsv.FolderPropertiesList)
                 {
                       wp02RightTreeTables.setCSVTreeLineSimple(nodeToAddTo, vCurrFolder.FolderName,   "CSV$");
                 }
@@ -229,7 +229,7 @@ namespace SqlEngine
             try
             {
 
-                foreach (var vCurrCloudList in sCloud.vCloudList)
+                foreach (var vCurrCloudList in SCloud.CloudPropertiesList)
                 {
                     string vv = vCurrCloudList.CloudName;
                 }
@@ -237,7 +237,7 @@ namespace SqlEngine
 
                 if (vIsUI == 0)
                 {
-                    foreach (var vCurrvODBCList in sODBC.vODBCList)
+                    foreach (var vCurrvODBCList in SOdbc.vODBCList)
                     {
                         wp02RightTreeTables.setODBCTreeLineSimple(nodeToAddTo, vCurrvODBCList.OdbcName);
                     }
@@ -246,9 +246,9 @@ namespace SqlEngine
                 if (vIsUI == 1)
                 {
 
-                    foreach (var vCurrvODBCList in sODBC.vODBCList)
+                    foreach (var vCurrvODBCList in SOdbc.vODBCList)
                     {
-                        sODBC.checkOdbcStatus(vCurrvODBCList.OdbcName);
+                        SOdbc.checkOdbcStatus(vCurrvODBCList.OdbcName);
                         wp02RightTreeTables.setODBCTreeLineComplex(nodeToAddTo, vCurrvODBCList.OdbcName, vCurrvODBCList.OdbcName);
                     }
                     return;
@@ -313,7 +313,7 @@ namespace SqlEngine
         {
             if (sender.ToString().Contains("Edit"))
             {
-                wf10CsvEdit frmCsvEdit = new wf10CsvEdit();
+                Wf10CsvEdit frmCsvEdit = new Wf10CsvEdit();
                 frmCsvEdit.Show();
             }
            
@@ -332,13 +332,13 @@ namespace SqlEngine
                 vConnName = vConnName.Replace("#","");
                 vConnName = vConnName.Replace("$", "");
 
-                wf09CloudConnectionEditor frmshowCloudCHE =  new wf09CloudConnectionEditor(vConnName);
-                frmshowCloudCHE.Show();  
+                Wf09CloudCloudConnectionEditor frmshowCloudCloudChe =  new Wf09CloudCloudConnectionEditor(vConnName);
+                frmshowCloudCloudChe.Show();  
             }
             else if(sender.ToString().Contains("Create"))
             {
-                wf09CloudConnectionEditor frmshowCloudCHC = new wf09CloudConnectionEditor();
-                frmshowCloudCHC.Show(); 
+                Wf09CloudCloudConnectionEditor frmshowCloudCloudChc = new Wf09CloudCloudConnectionEditor();
+                frmshowCloudCloudChc.Show(); 
 
             }
             else if (sender.ToString().Contains("Refresh"))
@@ -439,17 +439,17 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("Table"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().Contains("Cloud"))
-                    sVbaEngineCloud.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
+                    SVbaEngineCloud.CreateExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text,null);             
 
                 else
                      intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             /* fix me */
             else if (sender.ToString().Contains("generate CSV"))
                 if (miSelectNode.Parent.Parent.Tag.ToString().ToUpper().Contains("ODBC"))
-                    sODBC.dumpOdbctoCsv(
+                    SOdbc.dumpOdbctoCsv(
                                      miSelectNode.Parent.Parent.Text
                                    , "select * from  " + miSelectNode.Text
-                                   , sCsv.getFirstFolder() + miSelectNode.Text + ".csv");                 
+                                   , SCsv.GetFirstFolder() + miSelectNode.Text + ".csv");                 
 
             else if (sender.ToString().Contains("Chart"))
                 MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), "Menu Items Event",

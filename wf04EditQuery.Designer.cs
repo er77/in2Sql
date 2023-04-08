@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf04EditQuery
+    sealed partial class wf04EditQuery
     {
         /// <summary>
         /// Required designer variable.

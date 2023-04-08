@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.sCloud;
+using static SqlEngine.SCloud;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SqlEngine
 {
-    class sVbaEngineCloud
+    internal static class SVbaEngineCloud
     {
-
-  
-        public static string setSqlLimit(string vCloudType, string vCurrSql)
+        public static string SetSqlLimit(string vCloudType, string vCurrSql)
         {
-            string vSql = intSqlVBAEngine.RemoveSqlLimit(vCurrSql);
+            var vSql = intSqlVBAEngine.RemoveSqlLimit(vCurrSql);
               
             if (vCloudType.Contains("CloudCH"))
             {
@@ -28,54 +21,52 @@ namespace SqlEngine
         }
 
 
-        public static void createExTable(string vCurrCloudName, string vTableName, string vCurrSql = null, int isReplace=0, string vOldTableName="")
+        public static void CreateExTable(string vCurrCloudName, string vTableName, string vCurrSql = null, int isReplace=0, string vOldTableName="")
         {
-            var vCurrWorkSheet = SqlEngine.currExcelApp.ActiveSheet;
-            var vCurrWorkBook = SqlEngine.currExcelApp.ActiveWorkbook;
-           
-
+            var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
+            
             if (isReplace == 1)
             {
                 vCurrWorkSheet.ListObjects(vOldTableName).Range().Select();
             }
 
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
+            var activeCell = SqlEngine.CurrExcelApp.ActiveCell;
 
-            SqlEngine.currExcelApp.ScreenUpdating = false;
+            SqlEngine.CurrExcelApp.ScreenUpdating = false;
 
             if (vCurrSql == null )
                 vCurrSql = "SELECT \n\t * \n FROM \n\t " + vTableName + "\n where 1=1   "; 
 
-            string vConnURL = sCloud.prepareCloudQuery(vCurrCloudName, vCurrSql );   
+            var vConnUrl = PrepareCloudQuery(vCurrCloudName, vCurrSql );   
             
-            if ( (isReplace ==  0 )  &  ((vActivCell.ListObject !=null) | (vActivCell.Value != null) ) )
-                {
-                    MessageBox.Show(" Please select empty area  in Excel data grid");
-                    return;
-                }
+            if ( (isReplace ==  0 )  &  ((activeCell.ListObject !=null) | (activeCell.Value != null) ) )
+            {
+                MessageBox.Show(" Please select empty area  in Excel data grid");
+                return;
+            }
 
             if (isReplace == 1)
-               if (vActivCell.ListObject != null)
-                {
-                    try
+               if (activeCell.ListObject != null)
+                { try
                     {
                         if (vOldTableName == "")
-                            vActivCell.ListObject.Delete();
+                            activeCell.ListObject.Delete();
                         else
                             vCurrWorkSheet.ListObjects(vOldTableName).Delete();
                     }
                     catch
                     {
+                        isReplace = 1;
                     } 
                 }
 
 
-            if (vActivCell != null & vConnURL.Length > 1 & vTableName.Length > 1)
+            if ( vConnUrl.Length > 1 & vTableName.Length > 1)
             {
-                string vTempFile = "TEXT;" + sTool.writeHttpToFile(vConnURL);
+                var vTempFile = "TEXT;" + sTool.writeHttpToFile(vConnUrl);
                 var xlQueryTable = vCurrWorkSheet.QueryTables.Add(
                                                       Connection: vTempFile
-                                                    , Destination: vActivCell
+                                                    , Destination: activeCell
                                                 );
 
                 xlQueryTable.Name = vCurrCloudName + "|" + vTableName;
@@ -114,14 +105,17 @@ namespace SqlEngine
                         , Source: vCurrWorkSheet.Range(qtAddress)
                         , XlListObjectHasHeaders: Excel.XlYesNoGuess.xlYes);
 
-                string vExTName = vOldTableName;
+                var vExTName = vOldTableName;
                   if (vExTName =="" )
                      vExTName = vCurrCloudName + "|" + vTableName + '|' + DateTime.Now.ToString("YYYYMMDDTHHmmss");
-                try
-                {
-                     vCurrWorkSheet.ListObjects(vExTName).Delete();
-                }
-                catch { }
+                  try
+                  {
+                      vCurrWorkSheet.ListObjects(vExTName).Delete();
+                  }
+                  catch
+                  {
+                      //vExTName = "";
+                  }
 
                 xlTable.Name = vExTName;
                 xlTable.Comment = "CLOUD|" + vCurrCloudName + "|" + vCurrSql;
@@ -129,10 +123,9 @@ namespace SqlEngine
                 xlTable.TableStyle = "TableStyleLight13";
                 intSqlVBAEngine.GetSelectedTab();
 
-                SqlEngine.currExcelApp.ScreenUpdating = true;
+                SqlEngine.CurrExcelApp.ScreenUpdating = true;
 
                 intSqlVBAEngine.GetSelectedTab();
-                return;
             }          
                 
             

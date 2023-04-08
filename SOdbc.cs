@@ -5,23 +5,20 @@ using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
 
-    class sODBC
+    class SOdbc
     {
 
-        static int vIdtbl;
+        static int _idtbl;
 
         public struct SqlObjects
         {
             public String Name;
-            public int idTbl;
+            public int IdTbl;
         }
 
 
@@ -55,7 +52,7 @@ namespace SqlEngine
         {
             try
             {
-                int vOdbcIndex = sODBC.vODBCList.FindIndex(item => item.OdbcName == vOdbcName);
+                int vOdbcIndex = SOdbc.vODBCList.FindIndex(item => item.OdbcName == vOdbcName);
                 vODBCList[vOdbcIndex] = vNewOdbcValue;
             }
             catch (Exception e)
@@ -71,7 +68,7 @@ namespace SqlEngine
         {
             try
             {
-                var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vODBCName);
+                var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vODBCName);
                 string vCurrProp = "";
                 if (vProperties.Contains("Database")) vCurrProp = vCurrODBC.Database;
                 else if (vProperties.Contains("Description")) vCurrProp = vCurrODBC.Description;
@@ -95,7 +92,7 @@ namespace SqlEngine
         {
             try
             {
-                vIdtbl = 0;
+                _idtbl = 0;
                 List<OdbcProperties> listOdbcProperties = new List<OdbcProperties>();
                 listOdbcProperties.AddRange(getODBCList(Microsoft.Win32.Registry.CurrentUser));
                 listOdbcProperties.AddRange(getODBCList(Microsoft.Win32.Registry.LocalMachine));
@@ -152,7 +149,7 @@ namespace SqlEngine
 
         public static IEnumerable<String> SqlReadDataValue(string vOdbcName, string queryString = "")
         {
-            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vOdbcName);
+            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vOdbcName);
 
             using
                   (OdbcConnection conn = new System.Data.Odbc.OdbcConnection())
@@ -192,7 +189,7 @@ namespace SqlEngine
         public static void checkOdbcStatus(string vOdbcName)
         {
 
-            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vOdbcName);
+            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vOdbcName);
             try
             {
                 vCurrODBC.ConnStatus = 0;
@@ -214,7 +211,7 @@ namespace SqlEngine
                     {
                         vCurrODBC.ConnStatus = 1;
                         vCurrODBC.ConnErrMsg = "";
-                        vCurrODBC.DBType = sLibrary.getDBType(conn.DataSource, conn.Driver);
+                        vCurrODBC.DBType = SSqlLibrary.GetDbType(conn.DataSource, conn.Driver);
                     }
                 }
             }
@@ -222,33 +219,33 @@ namespace SqlEngine
             {
                 vCurrODBC.ConnStatus = -3;
                 vCurrODBC.ConnErrMsg = e.Message.ToString();
-                vCurrODBC.ConnErrType = sLibrary.getErrConType(e.Message.ToString());
+                vCurrODBC.ConnErrType = SSqlLibrary.GetErrConType(e.Message.ToString());
             }
             ChangeOdbcValue(vOdbcName, vCurrODBC);
         }
 
         public static IEnumerable<SqlObjects> getViewList(string vOdbcName)
         {
-            var vViews = SqlReadDataValue(vOdbcName, sLibrary.getSqlViews(getODBCProperties(vOdbcName, "DBType")));
+            var vViews = SqlReadDataValue(vOdbcName, SSqlLibrary.GetSqlViews(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrView in vViews)
             {
                 SqlObjects vView = new SqlObjects();
                 vView.Name = vCurrView.ToString();
-                vView.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                vView.IdTbl = _idtbl;
+                _idtbl = _idtbl + 1;
                 yield return vView;
             }
         }
 
         public static IEnumerable<SqlObjects> getTableList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSqlTables(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, SSqlLibrary.GetSqlTables(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
                 vTable.Name = vCurrTable.ToString();
-                vTable.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                vTable.IdTbl = _idtbl;
+                _idtbl = _idtbl + 1;
                 yield return vTable;
             }
         }
@@ -256,26 +253,26 @@ namespace SqlEngine
 
         public static IEnumerable<SqlObjects> getSQLProgrammsList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSQLProgramms(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, SSqlLibrary.GetSqlProgramms(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
                 vTable.Name = vCurrTable.ToString();
-                vTable.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                vTable.IdTbl = _idtbl;
+                _idtbl = _idtbl + 1;
                 yield return vTable;
             }
         }
 
         public static IEnumerable<SqlObjects> getSQLFunctionsList(string vOdbcName)
         {
-            var vTables = SqlReadDataValue(vOdbcName, sLibrary.getSQLFunctions(getODBCProperties(vOdbcName, "DBType")));
+            var vTables = SqlReadDataValue(vOdbcName, SSqlLibrary.GetSqlFunctions(getODBCProperties(vOdbcName, "DBType")));
             foreach (var vCurrTable in vTables)
             {
                 SqlObjects vTable = new SqlObjects();
                 vTable.Name = vCurrTable.ToString();
-                vTable.idTbl = vIdtbl;
-                vIdtbl = vIdtbl + 1;
+                vTable.IdTbl = _idtbl;
+                _idtbl = _idtbl + 1;
                 yield return vTable;
             }
         }
@@ -283,7 +280,7 @@ namespace SqlEngine
         public static IEnumerable<ObjectsAndProperties> getObjectProperties(string vOdbcName, string vObjName)
         {
             string vDBType = getODBCProperties(vOdbcName, "DBType");
-            string vSql = sLibrary.getSQLTableColumn(vDBType);
+            string vSql = SSqlLibrary.GetSqlTableColumn(vDBType);
 
             var vTb1 = vObjName.Split('.');
 
@@ -311,7 +308,7 @@ namespace SqlEngine
                 vObject.objColumns.Add(vCurrObject);
             }
 
-            vSql = sLibrary.getSQLIndexes(vDBType);
+            vSql = SSqlLibrary.GetSqlIndexes(vDBType);
 
             if (vDBType.Contains("ORACLE"))
             {
@@ -335,7 +332,7 @@ namespace SqlEngine
             }
 
 
-            vSql = sLibrary.getSQLDependencies(vDBType);
+            vSql = SSqlLibrary.GetSqlDependencies(vDBType);
             if (vDBType.Contains("ORACLE"))
             {
                 vSql = vSql.Replace("%TOWNER%", vTb1[1]);
@@ -360,7 +357,7 @@ namespace SqlEngine
             try
             {
                 int i = 0;
-                string DsnConn = sODBC.getODBCProperties(vOdbcName, "DSNStr");
+                string DsnConn = SOdbc.getODBCProperties(vOdbcName, "DSNStr");
 
                 if (DsnConn == null | DsnConn == "")
                 {

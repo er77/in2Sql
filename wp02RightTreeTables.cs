@@ -4,54 +4,54 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.sCloud;
+using static SqlEngine.SCloud;
 
 namespace SqlEngine
 {
     class wp02RightTreeTables
     {
-        private static void initSQlObjects(ref sODBC.OdbcProperties vCurrOdbc)
+        private static void initSQlObjects(ref SOdbc.OdbcProperties vCurrOdbc)
         {
             try
             {
                 if (vCurrOdbc.Tables == null)
                 {
-                    vCurrOdbc.Tables = new List<sODBC.SqlObjects>();
+                    vCurrOdbc.Tables = new List<SOdbc.SqlObjects>();
                 }
 
                 if (vCurrOdbc.Views == null)
                 {
-                    vCurrOdbc.Views = new List<sODBC.SqlObjects>();
+                    vCurrOdbc.Views = new List<SOdbc.SqlObjects>();
                 }
 
                 if (vCurrOdbc.SQLProgramms == null)
                 {
-                    vCurrOdbc.SQLProgramms = new List<sODBC.SqlObjects>();
+                    vCurrOdbc.SQLProgramms = new List<SOdbc.SqlObjects>();
                 }
 
                 if (vCurrOdbc.SQLFunctions == null)
                 {
-                    vCurrOdbc.SQLFunctions = new List<sODBC.SqlObjects>();
+                    vCurrOdbc.SQLFunctions = new List<SOdbc.SqlObjects>();
                 }
 
                 if (vCurrOdbc.Tables.Count == 0)
                 {
-                    vCurrOdbc.Tables.AddRange(sODBC.getTableList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.Tables.AddRange(SOdbc.getTableList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.Views.Count == 0)
                 {
-                    vCurrOdbc.Views.AddRange(sODBC.getViewList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.Views.AddRange(SOdbc.getViewList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.SQLProgramms.Count == 0)
                 {
-                    vCurrOdbc.SQLProgramms.AddRange(sODBC.getSQLProgrammsList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.SQLProgramms.AddRange(SOdbc.getSQLProgrammsList(vCurrOdbc.OdbcName));
                 }
 
                 if (vCurrOdbc.SQLFunctions.Count == 0)
                 {
-                    vCurrOdbc.SQLFunctions.AddRange(sODBC.getSQLFunctionsList(vCurrOdbc.OdbcName));
+                    vCurrOdbc.SQLFunctions.AddRange(SOdbc.getSQLFunctionsList(vCurrOdbc.OdbcName));
                 }
 
             }
@@ -96,7 +96,7 @@ namespace SqlEngine
         {
             try
             {
-                var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vCurrvListOdbcName);
+                var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vCurrvListOdbcName);
 
                 if ((vCurrODBC.ConnStatus == 0))
                 {
@@ -177,9 +177,9 @@ namespace SqlEngine
         {
             e.Node.Nodes.Clear();
             string vCurrOdbcName = e.Node.Text;
-            sODBC.checkOdbcStatus(vCurrOdbcName);
+            SOdbc.checkOdbcStatus(vCurrOdbcName);
 
-            var vCurrODBC = sODBC.vODBCList.Find(item => item.OdbcName == vCurrOdbcName);
+            var vCurrODBC = SOdbc.vODBCList.Find(item => item.OdbcName == vCurrOdbcName);
 
             try
             {
@@ -270,12 +270,12 @@ namespace SqlEngine
             {
 
                 String vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
-                var vCurrObjProp = sODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
+                var vCurrObjProp = SOdbc.vObjProp.Find(item => item.ObjName == vNodeTag);
 
                 if (vCurrObjProp.objColumns == null)
                 {
-                    sODBC.vObjProp.AddRange(sODBC.getObjectProperties(e.Node.Parent.Parent.Text, e.Node.Text));
-                    vCurrObjProp = sODBC.vObjProp.Find(item => item.ObjName == vNodeTag);
+                    SOdbc.vObjProp.AddRange(SOdbc.getObjectProperties(e.Node.Parent.Parent.Text, e.Node.Text));
+                    vCurrObjProp = SOdbc.vObjProp.Find(item => item.ObjName == vNodeTag);
                 }
 
                 if (vCurrObjProp.objColumns != null)

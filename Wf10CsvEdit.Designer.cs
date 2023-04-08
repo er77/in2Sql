@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf10CsvEdit
+    sealed partial class Wf10CsvEdit
     {
         /// <summary>
         /// Required designer variable.

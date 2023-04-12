@@ -12,14 +12,14 @@ namespace SqlEngine
         // intSqlVBAEngine.isRefresh = true;
 
         //Microsoft.Office.Interop.Excel.ListObject
-        public struct InsertList
+        private struct InsertList
         { public List<string> SqlUpdate;
             public string DsnName;
         }
 
-        public static List<InsertList> VInsertList = new List<InsertList>();
+        private static List<InsertList> _vInsertList = new List<InsertList>();
 
-        public static InsertList NewInsertRecord(String vDsnName, string vDdl)
+        private static InsertList NewInsertRecord(string vDsnName, string vDdl)
         {
             InsertList vnewRecord;
             vnewRecord.DsnName = vDsnName;
@@ -34,19 +34,19 @@ namespace SqlEngine
         public static void AddToInsertList(string vDsnName, string vDdl)
         {
 
-            if (VInsertList.Count < 0)
+            if (_vInsertList.Count < 0)
             {
-                VInsertList.Add(NewInsertRecord(vDsnName, vDdl));
+                _vInsertList.Add(NewInsertRecord(vDsnName, vDdl));
                 return;
             }
 
-            int vIntInsetId = VInsertList.FindIndex(item => item.DsnName == vDsnName);
+            int vIntInsetId = _vInsertList.FindIndex(item => item.DsnName == vDsnName);
             if (vIntInsetId < 0)
             {
-                VInsertList.Add(NewInsertRecord(vDsnName, vDdl));
+                _vInsertList.Add(NewInsertRecord(vDsnName, vDdl));
                 return;
             }
-            VInsertList[vIntInsetId].SqlUpdate.Add(vDdl);
+            _vInsertList[vIntInsetId].SqlUpdate.Add(vDdl);
         }
 
         public void SetExcelCalcOff()
@@ -100,7 +100,7 @@ namespace SqlEngine
             public int Row;
         }
 
-        private static ExCellAddress _vCurrentCurrentCellAddress ;
+        private static ExCellAddress _currentCellAddress ;
 
         /*    public void  execVbaCode(string vCurrVbaProcedure, ref Office.IRibbonControl vControl, String vSelectedValue)
             {
@@ -144,8 +144,8 @@ namespace SqlEngine
             var rng = SqlEngine.CurrExcelApp.ActiveCell;
 
             //get the row and column details
-            _vCurrentCurrentCellAddress.Row = rng.Row;
-            _vCurrentCurrentCellAddress.Column = rng.Column;
+            _currentCellAddress.Row = rng.Row;
+            _currentCellAddress.Column = rng.Column;
         }
 
         public static void CheckTableName()
@@ -237,8 +237,7 @@ namespace SqlEngine
 
         private static string PrepareSql(string vOdbc, string vTableName, string vCurrSql = null, int isPivot = 0)
         {
-            string setSqlLimit;
-            setSqlLimit = vCurrSql;
+            var setSqlLimit = vCurrSql;
 
             if (setSqlLimit == null)
                 setSqlLimit = " select  " + Environment.NewLine + "  *      from " + vTableName + Environment.NewLine + "   where 1=1  ";
@@ -380,8 +379,8 @@ namespace SqlEngine
 
         public static void UpdateTablesAll()
         {
-            for (int i = 0; i < VInsertList.Count; i++)
-                UpdateTables(VInsertList[i].DsnName);
+            for (int i = 0; i < _vInsertList.Count; i++)
+                UpdateTables(_vInsertList[i].DsnName);
         }
 
 
@@ -397,16 +396,16 @@ namespace SqlEngine
             if (vDns == "")
                 vDns = GetOdbcNameFromCell();
 
-            var vId = VInsertList.FindIndex(item => item.DsnName == vDns);
+            var vId = _vInsertList.FindIndex(item => item.DsnName == vDns);
             if (vId < 0)
                 return;
             var vRecCount = 0;
-            using (OdbcConnection conn = new OdbcConnection(SOdbc.GetOdbcProperties(VInsertList[vId].DsnName, "DSNStr")))
+            using (OdbcConnection conn = new OdbcConnection(SOdbc.GetOdbcProperties(_vInsertList[vId].DsnName, "DSNStr")))
             {
                 conn.ConnectionTimeout = 5;
                 conn.Open();
 
-                foreach (var vInsert in VInsertList[vId].SqlUpdate)
+                foreach (var vInsert in _vInsertList[vId].SqlUpdate)
                 {
                     vRecCount = vRecCount + 1;
                     if ((vInsert == "") == false)
@@ -424,7 +423,7 @@ namespace SqlEngine
                             }
                     }
                 }
-                VInsertList[vId].SqlUpdate.RemoveRange(0, VInsertList[vId].SqlUpdate.Count);
+                _vInsertList[vId].SqlUpdate.RemoveRange(0, _vInsertList[vId].SqlUpdate.Count);
                 DeleteUpdateList(vId);
             }
 
@@ -435,12 +434,12 @@ namespace SqlEngine
         private static void DeleteUpdateList(int vId = -1)
         {
             if (vId < 0)
-                vId = VInsertList.FindIndex(item => item.DsnName == GetOdbcNameFromCell());
+                vId = _vInsertList.FindIndex(item => item.DsnName == GetOdbcNameFromCell());
 
             if (vId < 0)
                 return;
 
-            VInsertList[vId].SqlUpdate.RemoveRange(0, VInsertList[vId].SqlUpdate.Count);
+            _vInsertList[vId].SqlUpdate.RemoveRange(0, _vInsertList[vId].SqlUpdate.Count);
         }
 
         private static void QueryTable_AfterRefresh(bool success)
@@ -506,7 +505,7 @@ namespace SqlEngine
         {
             try
             {
-                VInsertList = new List<InsertList>();
+                _vInsertList = new List<InsertList>();
 
                 var vCurrWorkBook = SqlEngine.CurrExcelApp.ActiveWorkbook;
                 foreach (Worksheet vCurrWorkSheet in vCurrWorkBook.Sheets)

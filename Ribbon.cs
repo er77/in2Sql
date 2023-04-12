@@ -22,7 +22,7 @@ namespace SqlEngine
             public Microsoft.Office.Tools.CustomTaskPane objPanelRigtSqlM;
             public Microsoft.Office.Tools.CustomTaskPane objIn2sqlLeftOtl;
             public wf03PanelRigtSqlM rightPaneCntrlSqlm;
-            public wf02PaneLeftOtline leftPaneCntrlOtl;
+            public Wf02PaneLeftOtline leftPaneCntrlOtl;
             public string BookName;
         }
 
@@ -39,7 +39,7 @@ namespace SqlEngine
             {
                 vcurrPannel.BookName = SqlEngine.CurrExcelApp.ActiveWorkbook.Name;
 
-                vcurrPannel.leftPaneCntrlOtl = new wf02PaneLeftOtline();
+                vcurrPannel.leftPaneCntrlOtl = new Wf02PaneLeftOtline();
                 vcurrPannel.objIn2sqlLeftOtl = Globals.SqlEngine.CustomTaskPanes.Add(vcurrPannel.leftPaneCntrlOtl, "in2Sql.outline");
                 vcurrPannel.objIn2sqlLeftOtl.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionLeft;
                 vcurrPannel.objIn2sqlLeftOtl.DockPositionRestrict = Office.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoChange;
@@ -214,7 +214,7 @@ namespace SqlEngine
             return "" + vRowCount;
         }
 
-        wf04EditQuery frmShowSqlEdit = null ; 
+        Wf04EditQuery frmShowSqlEdit = null ; 
 
         private void showSqlEdit ()
         {
@@ -225,9 +225,9 @@ namespace SqlEngine
                 return;
             }
             if ( frmShowSqlEdit == null )
-                frmShowSqlEdit = new wf04EditQuery();
+                frmShowSqlEdit = new Wf04EditQuery();
             if (  frmShowSqlEdit.IsDisposed )
-              frmShowSqlEdit = new wf04EditQuery(); 
+              frmShowSqlEdit = new Wf04EditQuery(); 
 
             frmShowSqlEdit.Show();
         }

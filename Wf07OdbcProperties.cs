@@ -223,7 +223,7 @@ namespace SqlEngine
 
 
                 default:
-                    RTBOdbcProp.Text = " under construction ";
+                    RTBOdbcProp.Text = @" under construction ";
                     break;
             }
 

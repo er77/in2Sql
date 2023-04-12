@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf02PaneLeftOtline
+    partial class Wf02PaneLeftOtline
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(wf02PaneLeftOtline));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wf02PaneLeftOtline));
             this.treeExcelOtl = new System.Windows.Forms.TreeView();
             this.imageOutline = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuExcelRoot = new System.Windows.Forms.ContextMenuStrip(this.components);

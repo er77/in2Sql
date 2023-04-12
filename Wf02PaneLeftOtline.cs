@@ -1,45 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class wf02PaneLeftOtline : UserControl
+    public partial class Wf02PaneLeftOtline : UserControl
     {
         private TreeNode miSelectNode;
 
-        public wf02PaneLeftOtline()
+        public Wf02PaneLeftOtline()
         {
             InitializeComponent();
             PopulateExcelTreeView();
 
-            this.treeExcelOtl.NodeMouseClick +=
-                    new TreeNodeMouseClickEventHandler(this.treeExcelOtl_MouseClick);
-
-
-            this.treeExcelOtl.KeyPress +=
-                new KeyPressEventHandler(this.treeExcelOtl_KeyPress);            
+            treeExcelOtl.NodeMouseClick += (treeExcelOtl_MouseClick);
+            treeExcelOtl.KeyPress += (treeExcelOtl_KeyPress);            
         }
 
-        public void PopulateExcelTreeView( )
+        private void PopulateExcelTreeView( )
         {
             try
             {  
-                TreeNode rootTable = new TreeNode("Excel".ToString(), 4, 4);
-                rootTable.Tag = "excel";                
-                TreeNode vNodeExcelSheet = new TreeNode(" ".ToString(), 99, 99);
+                var rootTable = new TreeNode("Excel", 4, 4)
+                {
+                    Tag = "excel"
+                };
+                var vNodeExcelSheet = new TreeNode(" ", 99, 99);
                 rootTable.Nodes.Add(vNodeExcelSheet);
                 treeExcelOtl.Nodes.Add(rootTable);
 
-                TreeNode rootTask = new TreeNode("Tasks".ToString(), 3, 3);
-                rootTask.Tag = "task";
-                TreeNode vNodeExcelTask = new TreeNode(" ".ToString(), 99, 99);
+                var rootTask = new TreeNode("Tasks", 3, 3)
+                {
+                    Tag = "task"
+                };
+                var vNodeExcelTask = new TreeNode(" ", 99, 99);
                 rootTask.Nodes.Add(vNodeExcelTask);
                 treeExcelOtl.Nodes.Add(rootTask);
             }
@@ -48,76 +43,78 @@ namespace SqlEngine
                 STool.ExpHandler(er, "PopulateOdbcTreeView");
             }
         }
-
-
-
-
-        private void RefreshExcel(TreeNode nodeToAddTo)
+ 
+        private static void RefreshExcel(TreeNode nodeToAddTo)
         {
             // intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             nodeToAddTo.Nodes.Clear();
            
 
-            for (int  vBookID = 1; vBookID <= SqlEngine.CurrExcelApp.Workbooks.Count; vBookID++ )
+            for (int  bookId = 1; bookId <= SqlEngine.CurrExcelApp.Workbooks.Count; bookId++ )
             {
-                SqlEngine.CurrExcelApp.Workbooks.Item[vBookID].Activate();
+                SqlEngine.CurrExcelApp.Workbooks.Item[bookId].Activate();
 
-                String vBookName = SqlEngine.CurrExcelApp.Workbooks.Item[vBookID].Name;
-                TreeNode vNodeExcelBook = new TreeNode(vBookName, 0, 0);
-                vNodeExcelBook.Tag = vBookName + "| ExBook";
+                var vBookName = SqlEngine.CurrExcelApp.Workbooks.Item[bookId].Name;
+                var vNodeExcelBook = new TreeNode(vBookName, 0, 0)
+                {
+                    Tag = vBookName + "| ExBook"
+                };
                 nodeToAddTo.Nodes.Add(vNodeExcelBook);
 
-                foreach (var vCurrSheet in SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets )// SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets)
+                foreach (var currSheet in SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets )// SqlEngine.currExcelApp.ActiveSheet.Parent.Worksheets)
                 {
-                    
-                    TreeNode vNodeExcelSheet = new TreeNode(vCurrSheet.Name, 1, 1);
-                    vNodeExcelSheet.Tag = vBookName + "." + vCurrSheet.Name + "| ExList";
-                    vNodeExcelBook.Nodes.Add(vNodeExcelSheet);                    
-                    if (vCurrSheet.ListObjects != null )
-                    foreach (var vObj in vCurrSheet.ListObjects )
+                    var vNodeExcelSheet = new TreeNode(currSheet.Name, 1, 1)
                     {
-                        TreeNode vNodeExcelObject = new TreeNode(vObj.name, 2, 2);
-                        vNodeExcelObject.Tag =  vObj.name + "| ExTable";
+                        Tag = vBookName + "." + currSheet.Name + "| ExList"
+                    };
+                    vNodeExcelBook.Nodes.Add(vNodeExcelSheet);
+                    if (currSheet.ListObjects == null) continue;
+                    foreach (var vObj in currSheet.ListObjects )
+                    {
+                        var vNodeExcelObject = new TreeNode(vObj.name, 2, 2)
+                        {
+                            Tag = vObj.name + "| ExTable"
+                        };
                         vNodeExcelSheet.Nodes.Add(vNodeExcelObject);
                     }
                 }
             }
         }
 
-        private void RefreshExSheet(TreeNode nodeToAddTo)
+        private static void RefreshExSheet(TreeNode nodeToAddTo)
         {
             // intSqlVBAEngine.createExTable(miSelectNode.Parent.Parent.Text, miSelectNode.Text);
             nodeToAddTo.Nodes.Clear();
-
-           
-            var sheet = SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets(nodeToAddTo.Text); 
+            
+            var sheet = SqlEngine.CurrExcelApp.ActiveSheet.Parent.Worksheets(nodeToAddTo.Text);
             
                 foreach (var vObj in sheet.ListObjects)
                 {
-                    TreeNode vNodeExcelObject = new TreeNode(vObj.name, 2, 2);
-                    vNodeExcelObject.Tag =  vObj.name + "|  ExTable ";
+                    var vNodeExcelObject = new TreeNode(vObj.name, 2, 2)
+                    {
+                        Tag = vObj.name + "|  ExTable "
+                    };
                     nodeToAddTo.Nodes.Add(vNodeExcelObject);
                 }
             
         }
 
-        private ContextMenuStrip createMenu(TreeNodeMouseClickEventArgs e, String[] vMenu, EventHandler myFuncName, ContextMenuStrip vCurrMenu)
+        private static ContextMenuStrip CreateMenu(TreeNodeMouseClickEventArgs e, IEnumerable<string> vMenu, EventHandler myFuncName, ContextMenuStrip vCurrMenu)
         {
-            if (e.Node.ContextMenuStrip == null)
+            if (e.Node.ContextMenuStrip != null) return vCurrMenu;
+            
+            if (vCurrMenu.Items.Count < 1)
             {
-                if (vCurrMenu.Items.Count < 1)
-                {
-                    vCurrMenu.Items.Clear();
+                vCurrMenu.Items.Clear();
 
-                    foreach (string rw in vMenu)
-                    {
-                        ToolStripMenuItem vMenuRun = new ToolStripMenuItem(rw);
-                        vMenuRun.Click += myFuncName;
-                        vCurrMenu.Items.Add(vMenuRun);
-                    }
+                foreach (var rw in vMenu)
+                {
+                    var vMenuRun = new ToolStripMenuItem(rw);
+                    vMenuRun.Click += myFuncName;
+                    vCurrMenu.Items.Add(vMenuRun);
                 }
-                e.Node.ContextMenuStrip = vCurrMenu;
             }
+            e.Node.ContextMenuStrip = vCurrMenu;
             return vCurrMenu;
         }
 
@@ -145,9 +142,9 @@ namespace SqlEngine
                     {
                         if (e.Button == MouseButtons.Right)
                         {  
-                            contextMenuExcelRoot = createMenu(
+                            contextMenuExcelRoot = CreateMenu(
                                                       e
-                                                  , new String[] { "Refresh" /*, "Sort", "Create Outline", "Create Task" */ }
+                                                  , new[] { "Refresh" /*, "Sort", "Create Outline", "Create Task" */ }
                                                   , rootOutline_Click
                                                   , contextMenuExcelRoot);
                             return; 
@@ -167,7 +164,7 @@ namespace SqlEngine
                             {
                                 var vCurrBook = SqlEngine.CurrExcelApp.Workbooks[i];
 
-                                if (vCurrBook.Name.ToString().Contains(e.Node.Text))
+                                if (vCurrBook.Name.Contains(e.Node.Text))
                                 {
                                     vCurrBook.Activate();
                                     return;
@@ -182,12 +179,11 @@ namespace SqlEngine
                     {
                         if (e.Button == MouseButtons.Right)
                         { 
-                            contextMenuExSheet = createMenu(
+                            contextMenuExSheet = CreateMenu(
                                                e
-                                           , new String[] { "Refresh"/*, "Copy", "Rename",  "Delete"*/ }
+                                           , new[] { "Refresh"/*, "Copy", "Rename",  "Delete"*/ }
                                            , ExcelActions_Click
                                            , contextMenuExSheet);
-                            return; 
                         }
                         else
                         {
@@ -195,13 +191,11 @@ namespace SqlEngine
                             {
                                 var vCurrSheet = SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets[i];
 
-                                if ( vCurrSheet.Name.ToString().Contains(e.Node.Text) )
-                                {
-                                    vCurrSheet.Activate();
-                                    return;
-                                }
+                                if (!vCurrSheet.Name.ToString().Contains(e.Node.Text)) continue;
+                                
+                                vCurrSheet.Activate();
+                                return;
                             }
-                            return;
                         }
                     }
                 }

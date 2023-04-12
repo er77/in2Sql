@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SqlEngine.SCloud;
 using static SqlEngine.SCsv;
 
 namespace SqlEngine
 {
-    class wp01RightTreeCloud
+    class Wp01RightTreeCloud
     {
       
-            private static void initCloudObjects(ref SCloud.CloudProperties vCurrCloudObj)
+            private static void InitCloudObjects(ref CloudProperties vCurrCloudObj)
             {
                 try
                 {
@@ -54,7 +51,7 @@ namespace SqlEngine
             }
 
 
-        private static void initCsvObjects(ref SCsv.FolderProperties vCurrCloudObj)
+        private static void InitCsvObjects(ref FolderProperties vCurrCloudObj)
         {
             try
             {
@@ -74,7 +71,7 @@ namespace SqlEngine
             }
         }
 
-        public static void getCsvFilesList (TreeNodeMouseClickEventArgs e)
+        public static void GetCsvFilesList (TreeNodeMouseClickEventArgs e)
         {
             e.Node.Nodes.Clear();
             string vCurrFolderName = e.Node.Text;
@@ -91,19 +88,17 @@ namespace SqlEngine
                 vNodeTableFolder.Tag = vCurrFolder.FolderName + "_csv";
                 e.Node.Nodes.Add(vNodeTableFolder);
                 */
-                initCsvObjects(ref vCurrFolder);
+                InitCsvObjects(ref vCurrFolder);
 
                 foreach (var vCurrFile in vCurrFolder.Files)
                 {
-                    TreeNode vNodeTable = new TreeNode(vCurrFile.Name, 22, 22);
+                    var vNodeTable = new TreeNode(vCurrFile.Name, 22, 22);
                     vNodeTable.Tag = vCurrFolder.FolderName + "|" + vCurrFile.Name + "|$FILE_CSV$";
                     e.Node.Nodes.Add(vNodeTable);
-                    TreeNode vNodeColumnTbl = new TreeNode(" ".ToString(), 99, 99);
+                    var vNodeColumnTbl = new TreeNode(" ", 99, 99);
                     vNodeColumnTbl.Tag = vCurrFolder.FolderName + "." + vCurrFile.Name;
                     vNodeTable.Nodes.Add(vNodeColumnTbl);
                 }
- 
-                return;
             }
             catch (Exception er)
             {
@@ -111,7 +106,7 @@ namespace SqlEngine
             }
         }
 
-        public static void getCloudTablesAndViews(TreeNodeMouseClickEventArgs e)
+        public static void GetCloudTablesAndViews(TreeNodeMouseClickEventArgs e)
             {
                 e.Node.Nodes.Clear();
                 string vCurrCloudName = e.Node.Text; 
@@ -128,23 +123,23 @@ namespace SqlEngine
                     e.Node.ImageIndex = 2;
                     e.Node.SelectedImageIndex = 2;
                     e.Node.Tag = vCurrCloud.CloudType + '#';
-                    TreeNode vNodeTableFolder = new TreeNode("Tables".ToString(), 3, 3);
+                    TreeNode vNodeTableFolder = new TreeNode("Tables", 3, 3);
                     vNodeTableFolder.Tag = vCurrCloud.CloudName + "_tf";
                     e.Node.Nodes.Add(vNodeTableFolder);
 
-                    initCloudObjects(ref vCurrCloud);
+                    InitCloudObjects(ref vCurrCloud);
 
                     foreach (var vCurrTable in vCurrCloud.Tables)
                     {
                         TreeNode vNodeTable = new TreeNode(vCurrTable.Name, 4, 4);
                         vNodeTable.Tag = vCurrCloud.CloudName + "|" + vCurrTable.Name + "|$TABLE_CLD$";
                         vNodeTableFolder.Nodes.Add(vNodeTable);
-                        TreeNode vNodeColumnTbl = new TreeNode(" ".ToString(), 99, 99);
+                        TreeNode vNodeColumnTbl = new TreeNode(" ", 99, 99);
                         vNodeColumnTbl.Tag = vCurrCloud.CloudName + "." + vCurrTable.Name;
                         vNodeTable.Nodes.Add(vNodeColumnTbl);
                     }
 
-                    TreeNode vNodeViewFolder = new TreeNode("Views".ToString(), 5, 5);
+                    TreeNode vNodeViewFolder = new TreeNode("Views", 5, 5);
                     vNodeViewFolder.Tag = vCurrCloud.CloudName + "_vf";
                     e.Node.Nodes.Add(vNodeViewFolder);
 
@@ -153,11 +148,10 @@ namespace SqlEngine
                         TreeNode vNodeView = new TreeNode(vCurrView.Name, 6, 6);
                         vNodeView.Tag = vCurrCloud.CloudName + "." + vNodeView.Name + "|$VIEW_CLD$";
                         vNodeViewFolder.Nodes.Add(vNodeView);
-                        TreeNode vNodeColumnVw = new TreeNode(" ".ToString(), 99, 99);
+                        TreeNode vNodeColumnVw = new TreeNode(" ", 99, 99);
                         vNodeColumnVw.Tag = vCurrCloud.CloudName + "." + vNodeView.Name;
                         vNodeView.Nodes.Add(vNodeColumnVw);
                     }
-                    return;
                 }
                 catch (Exception er)
                 {
@@ -165,7 +159,7 @@ namespace SqlEngine
                 }
             }
 
-        public static void getCsvHeaders (TreeNodeMouseClickEventArgs e)
+        public static void GetCsvHeaders (TreeNodeMouseClickEventArgs e)
         {
             try
             {
@@ -186,8 +180,10 @@ namespace SqlEngine
 
                         foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
                         {
-                            TreeNode vNodeColumn = new TreeNode(vCurrColumn.ToString(), 14, 14);
-                            vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
+                            var vNodeColumn = new TreeNode(vCurrColumn, 14, 14)
+                            {
+                                Tag = vNodeTag + '.' + vCurrColumn + "_clm"
+                            };
                             e.Node.Nodes.Add(vNodeColumn);
                         }
                     }
@@ -200,7 +196,7 @@ namespace SqlEngine
         }
 
 
-        public static void getColumnsAndIndexes(TreeNodeMouseClickEventArgs e)
+        public static void GetColumnsAndIndexes(TreeNodeMouseClickEventArgs e)
             {
                 try
                 {
@@ -220,19 +216,19 @@ namespace SqlEngine
 
                             foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
                             {
-                                TreeNode vNodeColumn = new TreeNode(vCurrColumn.ToString(), 14, 14);
+                                TreeNode vNodeColumn = new TreeNode(vCurrColumn, 14, 14);
                                 vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
                                 e.Node.Nodes.Add(vNodeColumn);
                             }
                             if (e.Node.Tag.ToString().Contains("$TABLE$"))
                             {
                                 e.Node.Tag = vNodeTag + ".TABLE";
-                                TreeNode vNodeIndexFolder = new TreeNode("Indexes".ToString(), 12, 12);
+                                TreeNode vNodeIndexFolder = new TreeNode("Indexes", 12, 12);
                                 vNodeIndexFolder.Tag = vNodeTag + "_idx";
                                 e.Node.Nodes.Add(vNodeIndexFolder);
                                 foreach (var vCurrIndx in vCurrObjProp.ObjIndexes)
                                 {
-                                    TreeNode vNodeIndx = new TreeNode(vCurrIndx.ToString(), 13, 13);
+                                    TreeNode vNodeIndx = new TreeNode(vCurrIndx, 13, 13);
                                     vNodeIndx.Tag = vNodeTag + '.' + vCurrIndx + "_idx";
                                     vNodeIndexFolder.Nodes.Add(vNodeIndx);
                                 }

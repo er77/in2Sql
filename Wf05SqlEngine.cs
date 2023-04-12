@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Odbc;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static SqlEngine.SCloud;
-
 namespace SqlEngine
 {
-    public partial class wf05SqlEngine : Form
+    public partial class Wf05SqlEngine : Form
     {
-        public wf05SqlEngine()
+        public Wf05SqlEngine()
         {
             InitializeComponent();
 
@@ -30,17 +22,15 @@ namespace SqlEngine
         {
             contextMenuSqlConnections.Items.Clear();
 
-            foreach (var vCurrvODBCList in SOdbc.OdbcPropertiesList)
+            foreach (var vCurrConnMenu in SOdbc.OdbcPropertiesList.Select(odbcList => new ToolStripMenuItem(odbcList.OdbcName + " | odbc"  )))
             {
-                ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvODBCList.OdbcName + " | odbc"  );
                 vCurrConnMenu.Click += Connection_Click;
                 contextMenuSqlConnections.Items.Add(vCurrConnMenu);
             }
             SqlConnectionsToolStripDropDown.DropDown = contextMenuSqlConnections;
 
-            foreach (var vCurrvCloud in SCloud.CloudPropertiesList)
+            foreach (var vCurrConnMenu in SCloud.CloudPropertiesList.Select(cloud => new ToolStripMenuItem(cloud.CloudName + " | cloud")))
             {
-                ToolStripMenuItem vCurrConnMenu = new ToolStripMenuItem(vCurrvCloud.CloudName + " | cloud");
                 vCurrConnMenu.Click += Connection_Click;
                 contextMenuSqlConnections.Items.Add(vCurrConnMenu);
             }
@@ -61,52 +51,50 @@ namespace SqlEngine
         }
 
 
-        private void opnSqlDocument()
+        private void OpnSqlDocument()
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            var ofd = new OpenFileDialog
             {
-                Filter = "Text files (.sql)|*.sql",
-                Title = "Open Sql Script..."
+                Filter = @"Text files (.sql)|*.sql",
+                Title = @"Open Sql Script..."
             };
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                System.IO.StreamReader sr = new System.IO.StreamReader(ofd.FileName);
-                SqlDocument.Text = sr.ReadToEnd();
-            }
-            ofd = null;
+            
+            if (ofd.ShowDialog() != DialogResult.OK) return;
+            
+            var sr = new System.IO.StreamReader(ofd.FileName);
+            SqlDocument.Text = sr.ReadToEnd();
         }
 
-        private void saveSqlDocument()
+        private void SaveSqlDocument()
         {
-            SaveFileDialog svf = new SaveFileDialog
+            var svf = new SaveFileDialog
             {
-                Filter = "Text files (.sql)|*.sql",
-                Title = "Save Sql Script..."
+                Filter = @"Text files (.sql)|*.sql",
+                Title = @"Save Sql Script..."
             };
-            if (svf.ShowDialog() == DialogResult.OK)
-            {
-                System.IO.StreamWriter sw = new System.IO.StreamWriter(svf.FileName);
-                sw.Write(SqlDocument.Text);
-                sw.Close();
-            }
-            svf = null;
+            
+            if (svf.ShowDialog() != DialogResult.OK) return;
+            
+            var sw = new System.IO.StreamWriter(svf.FileName);
+            sw.Write(SqlDocument.Text);
+            sw.Close();
         }
 
         BackgroundWorker bw  = new BackgroundWorker();  
         
-        private string getSql ()
+        private string GetSql ()
         {
-            string qstr = SqlDocument.SelectedText;
+            var sqlDocumentText = SqlDocument.SelectedText;
 
-            if (qstr == "")
-                qstr = SqlDocument.Text;
+            if (sqlDocumentText == "")
+                sqlDocumentText = SqlDocument.Text;
 
-            qstr = qstr.Replace(System.Environment.NewLine, " ");
-            qstr = qstr.Replace("\r", " ");
-            qstr = qstr.Replace("\n", " ");
-            qstr = qstr.Replace("\t", " ");
-            qstr = qstr.Trim();
-            return qstr;
+            sqlDocumentText = sqlDocumentText.Replace(Environment.NewLine, " ");
+            sqlDocumentText = sqlDocumentText.Replace("\r", " ");
+            sqlDocumentText = sqlDocumentText.Replace("\n", " ");
+            sqlDocumentText = sqlDocumentText.Replace("\t", " ");
+            sqlDocumentText = sqlDocumentText.Trim();
+            return sqlDocumentText;
         }
 
         private void EditTollMenu_Click(object sender, EventArgs e)
@@ -114,16 +102,16 @@ namespace SqlEngine
             STool.RunGarbageCollector();
 
             SqlDocument.ReadOnly = true;
-            string qstr = getSql(); 
+            string qstr = GetSql(); 
 
             if (sender.ToString().Contains("New"))
                 SqlDocument.Clear();
 
             else if (sender.ToString().Contains("Open"))
-                opnSqlDocument();
+                OpnSqlDocument();
 
             else if (sender.ToString().Contains("Save"))
-                saveSqlDocument();
+                SaveSqlDocument();
 
             else if (sender.ToString().Contains("Undo"))
                 SqlDocument.Undo();
@@ -142,7 +130,7 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("sqlRun"))            
                 if (bw.IsBusy == false )                                     
-                    sqlExecuteandDataGrid(qstr);                          
+                    SqlExecuteandDataGrid(qstr);                          
                 else
                     MessageBox.Show(@"This Sql Engine is busy. Please create new one", @"sql run event",
                                                                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);             
@@ -151,7 +139,7 @@ namespace SqlEngine
                 ConnectionDropDownMenu();
 
             else if (sender.ToString().Contains("Excel"))
-                sqlExecExcel(qstr);
+                SqlExecExcel(qstr);
 
             else
                 MessageBox.Show(string.Concat("You have Clicked '", sender.ToString(), "' Menu"), @"Menu Items Event",
@@ -168,29 +156,29 @@ namespace SqlEngine
         }
         */
 
-        private void  OdbcGrid (string vOdbcName , string vSqlCommand)
+        private void  OdbcGrid (string odbcName , string sqlCommand)
         {
             try
             {
-                string DsnConn = SOdbc.GetOdbcProperties(vOdbcName, "DSNStr"); 
+                var odbcProperties = SOdbc.GetOdbcProperties(odbcName, "DSNStr"); 
 
-                if (DsnConn == null | DsnConn == "")
+                if (odbcProperties == null | odbcProperties == "")
                 {
                     MessageBox.Show(@"Please make the connection by expand list on the left pane ", @"sql run event",
                                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                IntSqlVbaEngine.SetSqlLimit(vOdbcName, vSqlCommand);
-                STool.AddSqlLog(vOdbcName, vSqlCommand);
+                IntSqlVbaEngine.SetSqlLimit(odbcName, sqlCommand);
+                STool.AddSqlLog(odbcName, sqlCommand);
 
                 using
-                        (OdbcConnection conn = new System.Data.Odbc.OdbcConnection(DsnConn))
-                        using (OdbcDataAdapter cmnd = new OdbcDataAdapter(vSqlCommand, conn))
+                        (OdbcConnection conn = new OdbcConnection(odbcProperties))
+                        using (var cmnd = new OdbcDataAdapter(sqlCommand, conn))
                         {
-                            DataTable table = new DataTable();
+                            var table = new DataTable();
                             cmnd.Fill(table);                     
-                            this.SqlDataResult.DataSource = table;
+                            SqlDataResult.DataSource = table;
                         }
             }
             catch (Exception e)
@@ -207,19 +195,19 @@ namespace SqlEngine
                 if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                     return;              
                  
-                string vConnURL = SCloud.PrepareCloudQuery(vCloudName, vCurrSql );
+                var vConnUrl = SCloud.PrepareCloudQuery(vCloudName, vCurrSql );
 
-                if (vConnURL == null | vConnURL == "")
+                if (vConnUrl == null | vConnUrl == "")
                 {
                     MessageBox.Show(@"Please make the connection by expand list on the left pane ", @"sql run event",
                                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                string vTempFile = STool.WriteHttpToFile(vConnURL);
+                var vTempFile = STool.WriteHttpToFile(vConnUrl);
 
-                this.SqlDataResult.DataSource = STool.ConvertCsVtoDataTable(vTempFile,',');
-                 STool.DeleteFile(vTempFile);
+                SqlDataResult.DataSource = STool.ConvertCsVtoDataTable(vTempFile,',');
+                STool.DeleteFile(vTempFile);
                 
             }
             catch (Exception e)
@@ -228,7 +216,7 @@ namespace SqlEngine
             }
         }
 
-        private void sqlExecuteandDataGrid(string SqlCommand)
+        private void SqlExecuteandDataGrid(string sqlCommand)
         {
             // await Task.Delay(1);
 
@@ -248,18 +236,18 @@ namespace SqlEngine
                 string vOdbcName = vTempName[0].Trim();
                 if (vTempName.Count() > 1)
                     if (vTempName[1].ToUpper().Contains("ODBC"))
-                        OdbcGrid(vOdbcName, SqlCommand);
+                        OdbcGrid(vOdbcName, sqlCommand);
                     else if (vTempName[1].ToUpper().Contains("CLOUD"))
-                        CloudGrid(vOdbcName, SqlCommand); 
+                        CloudGrid(vOdbcName, sqlCommand); 
             }
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    STool.ExpHandler(e, "sqlExecuteandDataGrid");                    
+                    STool.ExpHandler(e, "SqlExecuteandDataGrid");                    
             } 
         }
 
-        private void sqlExecExcel(string qstr)
+        private void SqlExecExcel(string qstr)
         {
             // await Task.Delay(1);
 
@@ -271,31 +259,33 @@ namespace SqlEngine
             }
 
             try
-            {   string[] vTempName = ConnName.Text.Split('|');
-                string vOdbcName = vTempName[0].Trim();
+            {   var vTempName = ConnName.Text.Split('|');
+                var vOdbcName = vTempName[0].Trim();
                 qstr = "select * from ( " + qstr + " ) df where 1=1 ";
-                if (vTempName.Count() > 1)
-                    if (vTempName[1].ToUpper().Contains("ODBC"))
-                         IntSqlVbaEngine.CreateExTable(ConnName.Text, STool.GetHash(qstr), qstr);
+                
+                if (vTempName.Count() <= 1) return;
+                
+                if (vTempName[1].ToUpper().Contains("ODBC"))
+                    IntSqlVbaEngine.CreateExTable(ConnName.Text, STool.GetHash(qstr), qstr);
                     
-                    else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
-                         SVbaEngineCloud.CreateExTable(vOdbcName, STool.GetHash(qstr), qstr);
-                    
+                else if (vTempName[1].ToUpper().Contains("CLOUD"))                    
+                    SVbaEngineCloud.CreateExTable(vOdbcName, STool.GetHash(qstr), qstr);
+
             }
             catch (Exception e)
             {
                 if ((e.HResult == -2147024809) == false)
-                    STool.ExpHandler(e, "sqlExecuteandDataGrid");
+                    STool.ExpHandler(e, @"SqlExecuteandDataGrid");
             }
         }
 
 
-        private void SqlDocument_TextChanged(object sender, EventArgs e)
+/*        private void SqlDocument_TextChanged(object sender, EventArgs e)
         {
 
             
         }
-
+*/
         private void SqlConnectionsToolStripDropDown_Click(object sender, EventArgs e)
         {
 
@@ -303,7 +293,7 @@ namespace SqlEngine
 
         private void SqlDocument_Load(object sender, EventArgs e)
         {
-            SqlDocument.Text = "Free Sql Manager \n\r  https://t.me/in2sql  \n\r https://sourceforge.net/projects/in2sql/ \n\r erasyuk@gmail.com ";
+            SqlDocument.Text = @"Free Sql Manager \n\r  https://t.me/in2sql  \n\r https://sourceforge.net/projects/in2sql/ \n\r erasyuk@gmail.com ";
         }
 
         private void SaveToExTable_ButtonClick(object sender, EventArgs e)

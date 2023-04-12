@@ -17,8 +17,7 @@ namespace SqlEngine
             InitializeComponent();
             StartPosition = FormStartPosition.Manual;
             Location = new Point(pX, pY);
-
-
+            
             RefreshList();
         }
 

@@ -1,29 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class wf06SqlBuilder : Form
+    public partial class Wf06SqlBuilder : Form
     {
-        private static List<TreeNode> vTableList = new List<TreeNode>() ;
+        private static readonly List<TreeNode> VTableList = new List<TreeNode>() ;
 
         private  string vConnType = "ODBC";
 
-        public wf06SqlBuilder()
+        public Wf06SqlBuilder()
         {
             InitializeComponent();
-            this.TBJoiner.AllowDrop = true;
+            TBJoiner.AllowDrop = true;
 
-            this.TBJoiner.DragDrop += TBJoiner_DragDrop;
-            this.TBJoiner.DragEnter += TBJoiner_DragEnter;
+            TBJoiner.DragDrop += TBJoiner_DragDrop;
+            TBJoiner.DragEnter += TBJoiner_DragEnter;
         }
 
         private void TBJoiner_TextChanged(object sender, EventArgs e)
@@ -31,13 +26,13 @@ namespace SqlEngine
 
         }
 
-        public void setLblConnectionName (string lblName, string vCurrConnType = "ODBC" )
+        public void SetLblConnectionName (string lblName, string vCurrConnType = "ODBC" )
         {
             this.lblConnectionName.Text = lblName;
             vConnType = vCurrConnType;
         }
 
-        public string getLblConnectionName( )
+        public string GetLblConnectionName( )
         {
            return  this.lblConnectionName.Text;
         }
@@ -50,44 +45,44 @@ namespace SqlEngine
                 e.Effect = DragDropEffects.None;
         }
 
-        TreeNode vMainTable = null;
+        private TreeNode vMainTable ;
 
-        private void  drawSelect ()
+        private void  DrawSelect ()
         {
-            TBJoiner.Text = "SELECT \r\n\t 1 cnt \r\n ";
+            TBJoiner.Text = @"SELECT \r\n\t 1 cnt \r\n ";
 
             int i = 0;
-            foreach (TreeNode tn in vTableList)
+            foreach (TreeNode tn in VTableList)
             {
                 i = i + 1;
                 foreach (TreeNode tb in tn.Nodes)
                     if (tb.Text.Equals("Indexes") == false)
                     {
-                        string[] vClmnName = tb.Text.Split('|');
+                        var vClmnName = tb.Text.Split('|');
                         vClmnName[0] = vClmnName[0].Trim();
                         if ( i == 1 )
-                          TBJoiner.Text = TBJoiner.Text + "\t , a" + i + ".\"" + vClmnName[0] + "\" \r\n";
+                          TBJoiner.Text = TBJoiner.Text + @"\t , a" + i + ".\"" + vClmnName[0] + "\" \r\n";
                         else
-                          TBJoiner.Text = TBJoiner.Text + "\t , a" + i + ".\"" + vClmnName[0] + "\" \t  a" + i + "_" + vClmnName[0] + "\r\n";
+                          TBJoiner.Text = TBJoiner.Text + @"\t , a" + i + ".\"" + vClmnName[0] + "\" \t  a" + i + "_" + vClmnName[0] + "\r\n";
                     }
             }
             i = 0;
             string vInnerJoin = "";
-            foreach (TreeNode tn in vTableList)
+            foreach (TreeNode tn in VTableList)
             {
                 i = i + 1;
                 if (i == 1)
                 {
-                    TBJoiner.Text = TBJoiner.Text + " FROM " + tn.Text + " a" + i + " \r\n";
+                    TBJoiner.Text = TBJoiner.Text + @" FROM " + tn.Text + @" a" + i + @" \r\n";
                     continue;
                 }
 
-                TBJoiner.Text = TBJoiner.Text + "\t  left join  " + tn.Text + " a" + i + " on  \t 1=1 \r\n";
+                TBJoiner.Text = TBJoiner.Text + @"\t  left join  " + tn.Text + @" a" + i + @" on  \t 1=1 \r\n";
                 foreach (TreeNode vCurrColumn in tn.Nodes)
                 {
 
                     int j = 0;
-                    foreach (TreeNode tl in vTableList)
+                    foreach (TreeNode tl in VTableList)
                     {
                         j = j + 1;
                         if (i >= j & i != j)
@@ -98,12 +93,12 @@ namespace SqlEngine
                                     vClmnName[0] = vClmnName[0].Trim();
                                     if (vClmnName[0].ToUpper().Contains("DATE") | vClmnName[0].ToUpper().Contains("GUID"))
                                     {
-                                        TBJoiner.Text = TBJoiner.Text + "\t \t /* and  a" + i + "." + vClmnName[0] + " =  a" + j + "." + vClmnName[0] + "  */ \r\n";
+                                        TBJoiner.Text = TBJoiner.Text + @"\t \t /* and  a" + i + "." + vClmnName[0] + @" =  a" + j + "." + vClmnName[0] + "  */ \r\n";
                                         vInnerJoin = vInnerJoin + "\t /* and a" + i + "." + vClmnName[0] + " is not null */ \r\n";
                                     }
                                     else
                                     {
-                                        TBJoiner.Text = TBJoiner.Text + "\t \t and  a" + i + ".\"" + vClmnName[0] + "\" =  a" + j + ".\"" + vClmnName[0] + "\"\r\n";
+                                        TBJoiner.Text = TBJoiner.Text + @"\t \t and  a" + i + ".\"" + vClmnName[0] + "\" =  a" + j + ".\"" + vClmnName[0] + "\"\r\n";
                                         vInnerJoin = vInnerJoin + "\t and a" + i + ".\"" + vClmnName[0] + "\" is not null \r\n";
                                     }
                                     
@@ -111,12 +106,12 @@ namespace SqlEngine
                     }
                 }
 
-                TBJoiner.Text = TBJoiner.Text + " \r\n ";
+                TBJoiner.Text = TBJoiner.Text + @" \r\n ";
 
 
             }
 
-            TBJoiner.Text = TBJoiner.Text + " WHERE 1=1 \r\n ";
+            TBJoiner.Text = TBJoiner.Text + @" WHERE 1=1 \r\n ";
             TBJoiner.Text = TBJoiner.Text + vInnerJoin;
 
             SqlColored();
@@ -201,7 +196,7 @@ namespace SqlEngine
           //  var miSelectNode = in2SqlWF03PanelRigtSqlM.getNode(e.X, e.Y);
             //MessageBox.Show(str);
 
-            TreeNode vtb = wf03PanelRigtSqlM.CurrSqlPanel.findeTable(str, getLblConnectionName());
+            TreeNode vtb = wf03PanelRigtSqlM.CurrSqlPanel.findeTable(str, GetLblConnectionName());
             if ((vtb == null) == false)
             {
                 if (vtb.Nodes.Count < 2)
@@ -210,12 +205,12 @@ namespace SqlEngine
                     return;
                 }
 
-                vTableList.Add(vtb);
-                if (vTableList.Count == 1)
+                VTableList.Add(vtb);
+                if (VTableList.Count == 1)
                     vMainTable = vtb;
                 TBJoiner.Clear();
 
-                drawSelect();
+                DrawSelect();
 
             }
             //throw new NotImplementedException();
@@ -228,12 +223,12 @@ namespace SqlEngine
 
         private void newToolStripButton1_Click(object sender, EventArgs e)
         {
-            vTableList.Clear();
+            VTableList.Clear();
             vMainTable = null;
             TBJoiner.Clear();
         }
 
-        private void toolStripComboBox1_Click(object sender, EventArgs e)
+/*        private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
 
         }
@@ -242,7 +237,7 @@ namespace SqlEngine
         {
 
         }
-
+*/
         private void copyToolStripButton1_Click(object sender, EventArgs e)
         {
             TBJoiner.SelectAll();

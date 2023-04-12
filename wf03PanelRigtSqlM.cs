@@ -88,7 +88,7 @@ namespace SqlEngine
             tabControl1.TabPages.Add("N1");
             tabControl1.TabPages[tabControl1.TabCount - 1].Text = "S0" + tabControl1.TabCount;
 
-            wf05SqlEngine sqlTab = new wf05SqlEngine();
+            Wf05SqlEngine sqlTab = new Wf05SqlEngine();
             sqlTab.TopLevel = false;
             sqlTab.FormBorderStyle = FormBorderStyle.None;
             sqlTab.Parent = tabControl1.TabPages[tabControl1.TabCount - 1];
@@ -96,11 +96,11 @@ namespace SqlEngine
             sqlTab.Show();
         }
 
-        wf06SqlBuilder sqlBuild = null;
+        Wf06SqlBuilder sqlBuild = null;
 
         private void SqlBuild ()
         {
-            sqlBuild = new wf06SqlBuilder();
+            sqlBuild = new Wf06SqlBuilder();
             sqlBuild.TopLevel = false;
             sqlBuild.FormBorderStyle = FormBorderStyle.None;
             sqlBuild.Parent = ODBCtabControl.TabPages[1];
@@ -300,7 +300,7 @@ namespace SqlEngine
 
             else if (sender.ToString().Contains("Login"))
             {
-                wf01Login frm1 = new wf01Login(miSelectNode.Text);//.Sho
+                Wf01Login frm1 = new Wf01Login(miSelectNode.Text);//.Sho
                 frm1.Show();
                 miSelectNode.ImageIndex = 1;
                 miSelectNode.Collapse();
@@ -568,34 +568,34 @@ namespace SqlEngine
 
             if (  (e.Node.Tag.ToString().ToUpper().Contains("CLOUD")) & (e.Node.Tag.ToString().Contains("$")))
                 {
-                    wp01RightTreeCloud.getCloudTablesAndViews(e);
+                    Wp01RightTreeCloud.GetCloudTablesAndViews(e);
                     return;
                 }
             
                 if ( (e.Node.Tag.ToString().Contains("ODBC$")))
                 {
                     Wp02RightTreeTables.GetTablesAndViews(e);
-                    sqlBuild.setLblConnectionName(e.Node.Text, "ODBC");
+                    sqlBuild.SetLblConnectionName(e.Node.Text, "ODBC");
                     return;
                 }
 
                 if ( (e.Node.Tag.ToString().ToUpper().Contains("CSV")) & (e.Node.Tag.ToString().Contains("$")) & (e.Node.Parent.Text.ToString().ToUpper().Contains("CSV")))
                 {
-                    wp01RightTreeCloud.getCsvFilesList(e);
-                    sqlBuild.setLblConnectionName(e.Node.Text, "CSV");
+                    Wp01RightTreeCloud.GetCsvFilesList(e);
+                    sqlBuild.SetLblConnectionName(e.Node.Text, "CSV");
                     return;
                 }
 
                 if (  (e.Node.Tag.ToString().ToUpper().Contains("CSV")) & (e.Node.Tag.ToString().Contains("$")) & (e.Node.Parent.Text.ToString().ToUpper().Contains("CSV")))
                 {
-                    wp01RightTreeCloud.getCsvFilesList(e);
-                    sqlBuild.setLblConnectionName(e.Node.Text, "CSV");
+                    Wp01RightTreeCloud.GetCsvFilesList(e);
+                    sqlBuild.SetLblConnectionName(e.Node.Text, "CSV");
                     return;
                 }
 
                 if ( (e.Node.Tag.ToString().ToUpper().Contains("$FILE_CSV$")))
                 {
-                    wp01RightTreeCloud.getCsvHeaders(e);
+                    Wp01RightTreeCloud.GetCsvHeaders(e);
                     return;
                 }
 
@@ -605,7 +605,7 @@ namespace SqlEngine
                     {
                         if (e.Node.Tag.ToString().Contains("CLD") | e.Node.Parent.Parent.Tag.ToString().Contains("Cloud"))
                         {
-                            wp01RightTreeCloud.getColumnsAndIndexes(e);
+                            Wp01RightTreeCloud.GetColumnsAndIndexes(e);
                             return;
                         }                       
                         else

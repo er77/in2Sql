@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf05SqlEngine
+    partial class Wf05SqlEngine
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(wf05SqlEngine));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wf05SqlEngine));
             this.contextMenuSqlConnections = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SqlConnectionsToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();

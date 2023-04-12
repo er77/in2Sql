@@ -172,7 +172,7 @@ namespace SqlEngine
         public static void GetTablesAndViews(TreeNodeMouseClickEventArgs e)
         {
             e.Node.Nodes.Clear();
-            string vCurrOdbcName = e.Node.Text;
+            var vCurrOdbcName = e.Node.Text;
             SOdbc.CheckOdbcStatus(vCurrOdbcName);
 
             var vCurrOdbc = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vCurrOdbcName);

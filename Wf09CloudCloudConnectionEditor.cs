@@ -47,9 +47,7 @@ namespace SqlEngine
 
         private void WF09BTTest_Click(object sender, EventArgs e)
         {
-            string vSqlUrl;
-
-            vSqlUrl = SCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
+            var vSqlUrl = SCloud.prepareCloudQuery_int(tbURL.Text, tbSQL.Text, tbLogin.Text, tbPassword.Text);
 
             vSqlUrl = STool.HttpGet(vSqlUrl);
             

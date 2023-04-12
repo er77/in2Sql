@@ -1,41 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public sealed partial class wf04EditQuery : Form
-    {
-       private Microsoft.Office.Interop.Excel.ListObject vCurrTable;
-         
-
-        private STool.CurrentTableRecords vCTR = STool.GetCurrentSql();
-
-        public wf04EditQuery()
+    public sealed partial class Wf04EditQuery : Form
+    {         
+        private readonly STool.CurrentTableRecords currentTableRecords;
+        public Wf04EditQuery()
         {
-            vCTR = STool.GetCurrentSql();
+            currentTableRecords = STool.GetCurrentSql();
 
-            if (vCTR.CurrCloudExTName != "")
+            if (currentTableRecords.CurrCloudExTName != "")
              {
-                SqlEngine.CurrExcelApp.ActiveSheet.ListObjects(vCTR.CurrCloudExTName).Range().Select();
+                SqlEngine.CurrExcelApp.ActiveSheet.ListObjects(currentTableRecords.CurrCloudExTName).Range().Select();
              }
-
+                                       
             InitializeComponent();
             SqlEditor.Language = FastColoredTextBoxNS.Language.SQL;
 
-            SqlEditor.Text = vCTR.Sql;
-             this.Text = "Sql Edit: " + vCTR.TableName; 
-            SqlEditor_TextChanged( null, null);            
-        }
-
-      
+            SqlEditor.Text = currentTableRecords.Sql;
+            Text = @"Sql Edit: " + currentTableRecords.TableName; 
+            //SqlEditor_TextChanged( null, null);            
+        }      
 
         private void SqlEditTol_Click(object sender, EventArgs e)
         {
@@ -46,7 +32,7 @@ namespace SqlEngine
             {
                 string vSql;
 
-                vSql = vCurrTable.QueryTable.CommandText;
+                vSql = currTable.QueryTable.CommandText;
 
                 vSql = IntSqlVbaEngine.RemoveBetween(vSql, '`', '`');
                 vSql = vSql.Replace("/**/", "");
@@ -55,7 +41,7 @@ namespace SqlEngine
             }
 
             else if (sender.ToString().Contains("Save"))
-                vCurrTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromCell(), SqlEditor.Text);
+                currTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromCell(), SqlEditor.Text);
 
             else if (sender.ToString().Contains("Cut"))
                 SqlEditor.Cut();
@@ -75,19 +61,19 @@ namespace SqlEngine
                 SqlEditor.ReadOnly = true;
                 SQLEditToolStrip.Focus();
 
-                if (vCTR.TypeConnection.Contains("ODBC"))
-                {   vCurrTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromObject(vCurrTable), SqlEditor.Text);
-                    IntSqlVbaEngine.ObjRefreshHistory(vCurrTable);                    
+                if (currentTableRecords.TypeConnection.Contains("ODBC"))
+                {   currTable.QueryTable.CommandText = IntSqlVbaEngine.SetSqlLimit(IntSqlVbaEngine.GetOdbcNameFromObject(currTable), SqlEditor.Text);
+                    IntSqlVbaEngine.ObjRefreshHistory(currTable);                    
                 }
 
-                if (vCTR.TypeConnection.Contains("CLOUD"))
+                if (currentTableRecords.TypeConnection.Contains("CLOUD"))
                 {
                     SVbaEngineCloud.CreateExTable(
-                                                         vCTR.CurrCloudName
-                                                       , vCTR.TableName
+                                                         currentTableRecords.CurrCloudName
+                                                       , currentTableRecords.TableName
                                                        , SqlEditor.Text
                                                        , 1
-                                                       , vCTR.CurrCloudExTName) ;
+                                                       , currentTableRecords.CurrCloudExTName) ;
                 }
                  
                 SqlEditor.ReadOnly = false;
@@ -95,7 +81,7 @@ namespace SqlEngine
 
         }
 
-        private void SqlECloseIm_Click(object sender, EventArgs e)
+  /*      private void SqlECloseIm_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -103,21 +89,21 @@ namespace SqlEngine
         private void TableName_Click(object sender, EventArgs e)
         {
          //   var vActivCell = SqlEngine.currExcelApp.ActiveCell;
-        //    vCurrTable.QueryTable.Name = this.TableName.Text ;
+        //    currTable.QueryTable.Name = this.TableName.Text ;
         }
-
+*/
         private void SQLEditToolStrip_VisibleChanged(object sender, EventArgs e)
         {
            // vCurrObject.Name = this.TableName.Text;
 
         }        
 
-        private void SqlEditor_TextChanged(object sender, EventArgs e)
+/*        private void SqlEditor_TextChanged(object sender, EventArgs e)
         {
  
            
         }
-
+*/
         private void SqlEditor_Load(object sender, EventArgs e)
         {
             SqlEditor.Language = FastColoredTextBoxNS.Language.SQL;

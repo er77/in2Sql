@@ -1,4 +1,5 @@
 ﻿<Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('packages\xunit.core.2.4.2\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <!--
     This section defines project-level properties.
@@ -132,6 +133,9 @@
   -->
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="Castle.Core, Version=5.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>packages\Castle.Core.5.1.1\lib\net462\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>packages\CsvHelper.15.0.10\lib\net47\CsvHelper.dll</HintPath>
     </Reference>
@@ -144,8 +148,8 @@
     <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.6.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
       <HintPath>packages\K4os.Compression.LZ4.Streams.1.2.6\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
     </Reference>
-    <Reference Include="K4os.Hash.xxHash, Version=1.0.6.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
-      <HintPath>packages\K4os.Hash.xxHash.1.0.6\lib\net45\K4os.Hash.xxHash.dll</HintPath>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.8.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>packages\K4os.Hash.xxHash.1.0.8\lib\net462\K4os.Hash.xxHash.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -155,6 +159,9 @@
     </Reference>
     <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Moq, Version=4.18.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>packages\Moq.4.18.4\lib\net462\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -173,16 +180,16 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -204,6 +211,18 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.abstractions.2.0.3\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.assert.2.4.2\lib\netstandard1.1\xunit.assert.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.extensibility.core.2.4.2\lib\net452\xunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.4.2.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>packages\xunit.extensibility.execution.2.4.2\lib\net452\xunit.execution.desktop.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Tools.v4.0.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -246,7 +265,7 @@
     <Compile Include="SSqlLibrary.cs" />
     <Compile Include="SRegistry.cs" />
     <Compile Include="Ribbon.cs" />
-    <Compile Include="wp01RightTreeCloud.cs" />
+    <Compile Include="Wp01RightTreeCloud.cs" />
     <Compile Include="SCloud.cs" />
     <Compile Include="SCsv.cs" />
     <Compile Include="SUndo.cs" />
@@ -259,36 +278,36 @@
     <Compile Include="Wp02RightTreeTables.cs" />
     <Compile Include="SOdbc.cs" />
     <Compile Include="STool.cs" />
-    <Compile Include="wf01Login.cs">
+    <Compile Include="Wf01Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf01Login.Designer.cs">
-      <DependentUpon>wf01Login.cs</DependentUpon>
+    <Compile Include="Wf01Login.Designer.cs">
+      <DependentUpon>Wf01Login.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf02PaneLeftOtline.cs">
+    <Compile Include="Wf02PaneLeftOtline.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="wf02PaneLeftOtline.Designer.cs">
-      <DependentUpon>wf02PaneLeftOtline.cs</DependentUpon>
+    <Compile Include="Wf02PaneLeftOtline.Designer.cs">
+      <DependentUpon>Wf02PaneLeftOtline.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf04EditQuery.cs">
+    <Compile Include="Wf04EditQuery.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf04EditQuery.Designer.cs">
-      <DependentUpon>wf04EditQuery.cs</DependentUpon>
+    <Compile Include="Wf04EditQuery.Designer.cs">
+      <DependentUpon>Wf04EditQuery.cs</DependentUpon>
     </Compile>
-    <Compile Include="wf05SqlEngine.cs">
+    <Compile Include="Wf05SqlEngine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf05SqlEngine.Designer.cs">
-      <DependentUpon>wf05SqlEngine.cs</DependentUpon>
+    <Compile Include="Wf05SqlEngine.Designer.cs">
+      <DependentUpon>Wf05SqlEngine.cs</DependentUpon>
     </Compile>
     <Compile Include="sVba.cs" />
-    <Compile Include="wf06SqlBuilder.cs">
+    <Compile Include="Wf06SqlBuilder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="wf06SqlBuilder.Designer.cs">
-      <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
+    <Compile Include="Wf06SqlBuilder.Designer.cs">
+      <DependentUpon>Wf06SqlBuilder.cs</DependentUpon>
     </Compile>
     <Compile Include="Wf07OdbcProperties.cs">
       <SubType>Form</SubType>
@@ -321,20 +340,20 @@
     <EmbeddedResource Include="wf03PanelRigtSqlM.resx">
       <DependentUpon>wf03PanelRigtSqlM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf01Login.resx">
-      <DependentUpon>wf01Login.cs</DependentUpon>
+    <EmbeddedResource Include="Wf01Login.resx">
+      <DependentUpon>Wf01Login.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf02PaneLeftOtline.resx">
-      <DependentUpon>wf02PaneLeftOtline.cs</DependentUpon>
+    <EmbeddedResource Include="Wf02PaneLeftOtline.resx">
+      <DependentUpon>Wf02PaneLeftOtline.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf04EditQuery.resx">
-      <DependentUpon>wf04EditQuery.cs</DependentUpon>
+    <EmbeddedResource Include="Wf04EditQuery.resx">
+      <DependentUpon>Wf04EditQuery.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf05SqlEngine.resx">
-      <DependentUpon>wf05SqlEngine.cs</DependentUpon>
+    <EmbeddedResource Include="Wf05SqlEngine.resx">
+      <DependentUpon>Wf05SqlEngine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="wf06SqlBuilder.resx">
-      <DependentUpon>wf06SqlBuilder.cs</DependentUpon>
+    <EmbeddedResource Include="Wf06SqlBuilder.resx">
+      <DependentUpon>Wf06SqlBuilder.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wf07OdbcProperties.resx">
       <DependentUpon>Wf07OdbcProperties.cs</DependentUpon>
@@ -389,6 +408,10 @@
     <Content Include="ico.ico" />
     <Content Include="ReadMe.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+    <Analyzer Include="packages\xunit.analyzers.1.0.0\analyzers\dotnet\cs\xunit.analyzers.fixes.dll" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -442,4 +465,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\xunit.core.2.4.2\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\xunit.core.2.4.2\build\xunit.core.props'))" />
+    <Error Condition="!Exists('packages\xunit.core.2.4.2\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\xunit.core.2.4.2\build\xunit.core.targets'))" />
+  </Target>
+  <Import Project="packages\xunit.core.2.4.2\build\xunit.core.targets" Condition="Exists('packages\xunit.core.2.4.2\build\xunit.core.targets')" />
 </Project>

@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.Office.Core;
 
 namespace SqlEngine
 {
@@ -9,7 +10,7 @@ namespace SqlEngine
     {
         private const DataProtectionScope Scope = DataProtectionScope.CurrentUser;
 
-        private static string Encrypt(this string plainText)
+        public static string Encrypt(this string plainText)
         {
             if (plainText == null) return null;
 
@@ -21,7 +22,7 @@ namespace SqlEngine
             return Convert.ToBase64String(encrypted);
         }
 
-        private static string Decrypt(this string cipher)
+        public static string Decrypt(this string cipher)
         {
             if (cipher == null) return null;
 
@@ -82,6 +83,8 @@ namespace SqlEngine
                 STool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
             }
         }
+        
+            
 
   /*      public static void schedulueDeleteFile(string vFileName )
         {

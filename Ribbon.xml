@@ -121,7 +121,7 @@
     <menu id="m_CellInfo" label="Cell Properties"   imageMso="FileCompactAndRepairDatabase"  >
             <button id="CellInfoComments"          label="Comments"            onAction="ExecMenuButton"	imageMso="ControlTitle" />
             <button id="CellInfoSupportingDetail"  label="Supporting Detail"   onAction="ExecMenuButton"	imageMso="TextBoxInsert" />
-            <button id="CellInfoAttachmnet"        label="Attachment"          onAction="ExecMenuButton"	imageMso="ReviewAcceptChange"    />
+            <button id="CellInfoAttachment"        label="Attachment"          onAction="ExecMenuButton"	imageMso="ReviewAcceptChange"    />
             <button id="CellInfoHistory"           label="Cell History"        onAction="ExecMenuButton"	imageMso="HeaderFooterPageNumberInsert"    />
           </menu>
           

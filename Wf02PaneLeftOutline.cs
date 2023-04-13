@@ -5,11 +5,11 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    public partial class Wf02PaneLeftOtline : UserControl
+    public partial class Wf02PaneLeftOutline : UserControl
     {
         private TreeNode miSelectNode;
 
-        public Wf02PaneLeftOtline()
+        public Wf02PaneLeftOutline()
         {
             InitializeComponent();
             PopulateExcelTreeView();
@@ -149,45 +149,41 @@ namespace SqlEngine
                                                   , contextMenuExcelRoot);
                             return; 
                         }
-                        else
-                        {
-                            RefreshExcel(e.Node);
-                            return;
-                        }
+                        RefreshExcel(e.Node);
                     }
 
                     if (e.Node.Tag.ToString().Contains("ExBook"))
                     {
                         if (e.Button == MouseButtons.Left)
                         { 
-                            for (int i = 1; i <=  SqlEngine.CurrExcelApp.Workbooks.Count; i++)
+                            for (var i = 1; i <=  SqlEngine.CurrExcelApp.Workbooks.Count; i++)
                             {
                                 var vCurrBook = SqlEngine.CurrExcelApp.Workbooks[i];
 
-                                if (vCurrBook.Name.Contains(e.Node.Text))
-                                {
-                                    vCurrBook.Activate();
-                                    return;
-                                }
+                                if (!vCurrBook.Name.Contains(e.Node.Text)) continue;
+                                
+                                vCurrBook.Activate();
+                                return;
                             }
                             return;
                         }
                          
                     }
 
-                    if (e.Node.Tag.ToString().Contains("ExList"))
+                    if (!e.Node.Tag.ToString().Contains("ExList")) return;
+                    
                     {
                         if (e.Button == MouseButtons.Right)
                         { 
                             contextMenuExSheet = CreateMenu(
-                                               e
-                                           , new[] { "Refresh"/*, "Copy", "Rename",  "Delete"*/ }
-                                           , ExcelActions_Click
-                                           , contextMenuExSheet);
+                                e
+                                , new[] { "Refresh"/*, "Copy", "Rename",  "Delete"*/ }
+                                , ExcelActions_Click
+                                , contextMenuExSheet);
                         }
                         else
                         {
-                            for ( int i=1; i<= SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets.Count; i++    )
+                            for ( var i=1; i<= SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets.Count; i++    )
                             {
                                 var vCurrSheet = SqlEngine.CurrExcelApp.ActiveWorkbook.Sheets[i];
 

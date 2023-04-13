@@ -11,9 +11,9 @@ namespace SqlEngine
             currentTableRecords = STool.GetCurrentSql();
 
             if (currentTableRecords.CurrCloudExTName != "")
-             {
+            {
                 SqlEngine.CurrExcelApp.ActiveSheet.ListObjects(currentTableRecords.CurrCloudExTName).Range().Select();
-             }
+            }
                                        
             InitializeComponent();
             SqlEditor.Language = FastColoredTextBoxNS.Language.SQL;
@@ -25,15 +25,14 @@ namespace SqlEngine
 
         private void SqlEditTol_Click(object sender, EventArgs e)
         {
+            var currTable = SqlEngine.CurrExcelApp.ActiveCell.ListObject;
+
             if (sender.ToString().Contains("New"))
                 SqlEditor.Clear();
 
             else if (sender.ToString().Contains("Open"))
-            {
-                string vSql;
-
-                vSql = currTable.QueryTable.CommandText;
-
+            {                
+                var vSql = currTable.QueryTable.CommandText;
                 vSql = IntSqlVbaEngine.RemoveBetween(vSql, '`', '`');
                 vSql = vSql.Replace("/**/", "");
 

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using Office = Microsoft.Office.Core;
 
@@ -19,77 +17,78 @@ namespace SqlEngine
 
         private struct BooksVsPannel
         {
-            public Microsoft.Office.Tools.CustomTaskPane objPanelRigtSqlM;
-            public Microsoft.Office.Tools.CustomTaskPane objIn2sqlLeftOtl;
-            public wf03PanelRigtSqlM rightPaneCntrlSqlm;
-            public Wf02PaneLeftOtline leftPaneCntrlOtl;
+            public Microsoft.Office.Tools.CustomTaskPane ObjPanelRightSqlM;
+            public Microsoft.Office.Tools.CustomTaskPane ObjIn2SqlLeftOtl;
+            public Wf03PanelRightSqlM RightPaneCntrlSqlm;
+            public Wf02PaneLeftOutline LeftPaneCntrlOtl;
             public string BookName;
         }
 
         private List<BooksVsPannel> vListofPanes; 
 
-          private void addToListPanes ()
+          private void AddToListPanes ()
         { 
             if (vListofPanes == null)
                 vListofPanes = new List<BooksVsPannel>();           
 
-             var  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+            var  pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
 
-            if (vcurrPannel.BookName == null)
-            {
-                vcurrPannel.BookName = SqlEngine.CurrExcelApp.ActiveWorkbook.Name;
+            if (pannel.BookName != null) return;
+            
+            pannel.BookName = SqlEngine.CurrExcelApp.ActiveWorkbook.Name;
 
-                vcurrPannel.leftPaneCntrlOtl = new Wf02PaneLeftOtline();
-                vcurrPannel.objIn2sqlLeftOtl = Globals.SqlEngine.CustomTaskPanes.Add(vcurrPannel.leftPaneCntrlOtl, "in2Sql.outline");
-                vcurrPannel.objIn2sqlLeftOtl.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionLeft;
-                vcurrPannel.objIn2sqlLeftOtl.DockPositionRestrict = Office.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoChange;
-                vcurrPannel.objIn2sqlLeftOtl.Visible = false;
-                vcurrPannel.objIn2sqlLeftOtl.Width = 200;
+            pannel.LeftPaneCntrlOtl = new Wf02PaneLeftOutline();
+            pannel.ObjIn2SqlLeftOtl = Globals.SqlEngine.CustomTaskPanes.Add(pannel.LeftPaneCntrlOtl, "in2Sql.outline");
+            pannel.ObjIn2SqlLeftOtl.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionLeft;
+            pannel.ObjIn2SqlLeftOtl.DockPositionRestrict = Office.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoChange;
+            pannel.ObjIn2SqlLeftOtl.Visible = false;
+            pannel.ObjIn2SqlLeftOtl.Width = 200;
 
-                vcurrPannel.rightPaneCntrlSqlm = new wf03PanelRigtSqlM();
-                vcurrPannel.objPanelRigtSqlM = Globals.SqlEngine.CustomTaskPanes.Add(vcurrPannel.rightPaneCntrlSqlm, "in2Sql.explorer");
-                vcurrPannel.objPanelRigtSqlM.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionRight;
-                vcurrPannel.objPanelRigtSqlM.DockPositionRestrict = Office.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoChange;
-                vcurrPannel.objPanelRigtSqlM.Visible = false;
-                vcurrPannel.objPanelRigtSqlM.Width = 200;
+            pannel.RightPaneCntrlSqlm = new Wf03PanelRightSqlM();
+            pannel.ObjPanelRightSqlM = Globals.SqlEngine.CustomTaskPanes.Add(pannel.RightPaneCntrlSqlm, "in2Sql.explorer");
+            pannel.ObjPanelRightSqlM.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionRight;
+            pannel.ObjPanelRightSqlM.DockPositionRestrict = Office.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoChange;
+            pannel.ObjPanelRightSqlM.Visible = false;
+            pannel.ObjPanelRightSqlM.Width = 200;
 
-                vListofPanes.Add(vcurrPannel);
-            }
+            vListofPanes.Add(pannel);
         }
 
         private void InitLeftPaneOtl()
         {
             if (vListofPanes == null)
-                addToListPanes();
+                AddToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+            if (vListofPanes == null) return;
+            
+            var pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
 
-            if (vcurrPannel.objIn2sqlLeftOtl == null)
+            if (pannel.ObjIn2SqlLeftOtl != null) return;
+            
             {
-                addToListPanes();
-                vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
-                vcurrPannel.objIn2sqlLeftOtl.Visible = true;               
+                AddToListPanes();
+                pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+                pannel.ObjIn2SqlLeftOtl.Visible = true;
             }
         }
 
-        Wf07OdbcProperties frmShowODBCProp = null;
-        public void showODBCProp()
+        private Wf07OdbcProperties frmShowOdbcProp;
+        public void ShowOdbcProp()
         {
-            if (frmShowODBCProp == null  )
-                frmShowODBCProp = new Wf07OdbcProperties();
+            if (frmShowOdbcProp == null  )
+                frmShowOdbcProp = new Wf07OdbcProperties();
 
-            if (  frmShowODBCProp.IsDisposed  )
-               frmShowODBCProp = new Wf07OdbcProperties(); 
-            frmShowODBCProp.Show();
+            if (  frmShowOdbcProp.IsDisposed  )
+               frmShowOdbcProp = new Wf07OdbcProperties(); 
+            frmShowOdbcProp.Show();
 
         }
 
         //
 
 
-
-        Wf08About frmshowAbout = null;
-        public void showAbout()
+        private Wf08About frmshowAbout;
+        public void ShowAbout()
         {
             if (frmshowAbout == null)
                 frmshowAbout = new Wf08About();
@@ -100,77 +99,87 @@ namespace SqlEngine
         }
 
 
-            public void showEditPane()
+            public void ShowEditPane()
         {
             if (vListofPanes == null)
-                addToListPanes();
+                AddToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name );
+            if (vListofPanes == null) return;
+            
+            var pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name );
 
-            if (vcurrPannel.objPanelRigtSqlM != null)
+            if (pannel.ObjPanelRightSqlM != null)
             {
-                vcurrPannel.objPanelRigtSqlM.Visible = !vcurrPannel.objPanelRigtSqlM.Visible;
-                if (vcurrPannel.objPanelRigtSqlM.Visible)
-                    vcurrPannel.objPanelRigtSqlM.Width = 600;
-                vcurrPannel.rightPaneCntrlSqlm.showSqlEdit();
+                pannel.ObjPanelRightSqlM.Visible = !pannel.ObjPanelRightSqlM.Visible;
+                if (pannel.ObjPanelRightSqlM.Visible)
+                    pannel.ObjPanelRightSqlM.Width = 600;
+                pannel.RightPaneCntrlSqlm.ShowSqlEdit();
 
             }
             else
             {
-                addToListPanes();
-                  vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
-                vcurrPannel.objPanelRigtSqlM.Visible = true;
-                vcurrPannel.objPanelRigtSqlM.Width = 600;
-                vcurrPannel.rightPaneCntrlSqlm.showSqlEdit();
+                AddToListPanes();
+                pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+                pannel.ObjPanelRightSqlM.Visible = true;
+                pannel.ObjPanelRightSqlM.Width = 600;
+                pannel.RightPaneCntrlSqlm.ShowSqlEdit();
             }
         }
 
-        public void showSQlMAnPane()
+        public void ShowSQlMAnPane()
         {
             if ( vListofPanes == null )
-                addToListPanes();
+                AddToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
-            if (vcurrPannel.objPanelRigtSqlM == null)
+            if (vListofPanes == null) return;
+            
+            var pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+            if (pannel.ObjPanelRightSqlM == null)
             {
-                addToListPanes();
+                AddToListPanes();
             }
             else
             {
-                vcurrPannel.objPanelRigtSqlM.Visible = !vcurrPannel.objPanelRigtSqlM.Visible;
+                pannel.ObjPanelRightSqlM.Visible = !pannel.ObjPanelRightSqlM.Visible;
 
-                if (vcurrPannel.objPanelRigtSqlM.Visible)
-                {
-                    vcurrPannel.rightPaneCntrlSqlm.ShowOdbcTree();
-                    vcurrPannel.objPanelRigtSqlM.Width = 200;
-                }
+                if (!pannel.ObjPanelRightSqlM.Visible) return;
+                
+                pannel.RightPaneCntrlSqlm.ShowOdbcTree();
+                pannel.ObjPanelRightSqlM.Width = 200;
             }
         }
 
  
 
-        public void showOutlinePane()
+        public void ShowOutlinePane()
         {
             if (vListofPanes == null)
-                addToListPanes();
+                AddToListPanes();
 
-            var vcurrPannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
-            if (vcurrPannel.objIn2sqlLeftOtl == null)
+            if (vListofPanes == null) return;
+            
+            var pannel = vListofPanes.Find(item => item.BookName == SqlEngine.CurrExcelApp.ActiveWorkbook.Name);
+            if (pannel.ObjIn2SqlLeftOtl == null)
             {
-              InitLeftPaneOtl();
-             }
+                InitLeftPaneOtl();
+            }
             else
             {
-                vcurrPannel.objIn2sqlLeftOtl.Visible = !vcurrPannel.objIn2sqlLeftOtl.Visible;                
+                pannel.ObjIn2SqlLeftOtl.Visible = !pannel.ObjIn2SqlLeftOtl.Visible;                
             }
         }
 
 
         public void ActivateTab()
         {
-            if (ribbon != null)
-                ribbon.ActivateTab("SqlEngine");
-            STool.RunGarbageCollector();
+            if (ribbon == null)
+            {
+                STool.RunGarbageCollector();
+                return;
+            }
+            
+            ribbon.ActivateTab("SqlEngine");
+            
         }
 
         public Ribbon()
@@ -180,7 +189,7 @@ namespace SqlEngine
 
         #region IRibbonExtensibility Members
 
-        public string GetCustomUI(string ribbonID)
+        public string GetCustomUI(string ribbonId)
         {
             return GetResourceText("SqlEngine.Ribbon.xml");
         }
@@ -197,29 +206,29 @@ namespace SqlEngine
 
         #endregion
 
-        public static int vRowCount = 10000;
+        public static int VRowCount = 10000;
 
         public void SetRowCount(Office.IRibbonControl vControl,String text)
         {
-            if (int.TryParse(text, out vRowCount))
-            {     if(  vRowCount > 0 & vRowCount < 1000001)
-                    MessageBox.Show("Row limit  is " + vRowCount,   @" Row Count");
-                  else
-                    vRowCount = 10000;
-            } 
+            if (!int.TryParse(text, out VRowCount)) return;
+            
+            if(  VRowCount > 0 & VRowCount < 1000001)
+                MessageBox.Show(@"Row limit  is " + VRowCount,   @" Row Count");
+            else
+                VRowCount = 10000;
         }
 
-        public string getRowCount(Office.IRibbonControl vControl)
+        public string GetRowCount(Office.IRibbonControl vControl)
         {
-            return "" + vRowCount;
+            return "" + VRowCount;
         }
 
-        Wf04EditQuery frmShowSqlEdit = null ; 
+        private Wf04EditQuery frmShowSqlEdit; 
 
-        private void showSqlEdit ()
+        private void ShowSqlEdit ()
         {
-            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
-            if  (vActivCell.ListObject == null) 
+            var activeCell = SqlEngine.CurrExcelApp.ActiveCell;
+            if  (activeCell.ListObject == null) 
             {
                 MessageBox.Show(@"Please select table with SQL query");
                 return;
@@ -235,7 +244,6 @@ namespace SqlEngine
 
         public void ExecMenuButton(Office.IRibbonControl vControl)
         {
-            var vActivCell = SqlEngine.CurrExcelApp.ActiveCell;
             try
             {
                 STool.RunGarbageCollector();
@@ -243,7 +251,7 @@ namespace SqlEngine
                 switch (vControl.Id)
                 {
                     case "ExecConnManager":
-                        showSQlMAnPane();
+                        ShowSQlMAnPane();
                         ActivateTab();
                         break;
 
@@ -254,17 +262,17 @@ namespace SqlEngine
                         break;
 
                     case "OdbcProp":
-                        showODBCProp();
+                        ShowOdbcProp();
                         ActivateTab();
                         break;
 
                     case "BackOutl":
-                        showOutlinePane();
+                        ShowOutlinePane();
                         ActivateTab();
                         break;                       
 
                     case "SqlEdit":
-                        showEditPane();
+                        ShowEditPane();
                         break;
 
                     case "KeepOnly":
@@ -289,7 +297,7 @@ namespace SqlEngine
                          
 
                     case "EditQuery":
-                        showSqlEdit();
+                        ShowSqlEdit();
                         ActivateTab();
                         break;
 
@@ -336,30 +344,10 @@ namespace SqlEngine
                         break;
 
                     case "About":
-                        showAbout();
-                     /*  var frmshowAbout = new in2SqlWF09CloudConnectionEditor();
-                        frmshowAbout.Show();
-                        ActivateTab();*/
+                        ShowAbout();
                         break;
-
-
- 
-
-                    //RightTaskPane
-
-                    default:
-                        /*  string caption = "Information message";
-                          MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                          DialogResult result;
-
-                          // Displays the MessageBox.
-                          result = MessageBox.Show(vControl.Id, caption, buttons);
-                          */
-                        break;
-
-
                 }
-               // In2SqlSvcTool.RunGarbageCollector();
+                
             }
             catch (Exception e)
             {
@@ -391,19 +379,14 @@ namespace SqlEngine
 
         private static string GetResourceText(string resourceName)
         {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            string[] resourceNames = asm.GetManifestResourceNames();
-            for (int i = 0; i < resourceNames.Length; ++i)
+            var asm = Assembly.GetExecutingAssembly();
+            var resourceNames = asm.GetManifestResourceNames();
+            foreach (var t in resourceNames)
             {
-                if (string.Compare(resourceName, resourceNames[i], StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    using (StreamReader resourceReader = new StreamReader(asm.GetManifestResourceStream(resourceNames[i])))
-                    {
-                        if (resourceReader != null)
-                        {
-                            return resourceReader.ReadToEnd();
-                        }
-                    }
+                if (string.Compare(resourceName, t, StringComparison.OrdinalIgnoreCase) != 0) continue;
+                using (var resourceReader = new StreamReader(asm.GetManifestResourceStream(t)))
+                { 
+                    return resourceReader.ReadToEnd();
                 }
             }
             return null;

@@ -5,10 +5,10 @@ namespace SqlEngine
 {
     public sealed partial class Wf01Login : Form
     {
-        string odbcName;
+        private readonly string odbcName;
         public Wf01Login(string currOdbcName)
         {
-            if ((currOdbcName == null) || (Cursor.Current == null)) return;
+            if (currOdbcName == null || Cursor.Current == null) return;
             
             Cursor = new Cursor(Cursor.Current.Handle);
             var pX = Cursor.Position.X - 200;
@@ -56,12 +56,12 @@ namespace SqlEngine
 
         private void WF01BTOk_Click(object sender, EventArgs e)
         {
-            this.Close(); //Application.Exit();
+            Close(); //Application.Exit();
         }
 
         private void WF01BTCancel_Click(object sender, EventArgs e)
         {
-            this.Close(); //Application.Exit();
+            Close(); //Application.Exit();
         }
 
         private void WF01LblPassword_Click(object sender, EventArgs e)

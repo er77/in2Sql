@@ -20,12 +20,12 @@ namespace SqlEngine
 
         private static int _isGcRunCount;
 
-        public static List<String> SqlHistory = new List<String>();
-        public static List<String> LogViewer = new List<String>();
+        private static readonly List<string> SqlHistory = new List<string>();
+        private static readonly List<string> LogViewer = new List<string>();
 
 
-        public const string FileEventLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogEvent.log";
-        public const string FileSqlLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogSqlEngine.log";
+        private const string FileEventLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogEvent.log";
+        private const string FileSqlLog = @"%USERPROFILE%\\appdata\\roaming\\Microsoft\\AddIns\\in2Sql_LogSqlEngine.log";
 
         private static string GetDataTime(string vStr)
         {
@@ -84,12 +84,12 @@ namespace SqlEngine
         }
 
 
-        private static void ExecuteCommandSync(object vRunComand)
+        private static void ExecuteCommandSync(object runCommand)
         {
             try
             {
                 var procStartInfo =
-                  new System.Diagnostics.ProcessStartInfo("cmd", "/c " + vRunComand)
+                  new System.Diagnostics.ProcessStartInfo("cmd", "/c " + runCommand)
                      {
                          RedirectStandardOutput = true,
                          UseShellExecute = false,
@@ -108,13 +108,12 @@ namespace SqlEngine
 
         private static void RunGbCollection()
         {
-            if (IsGCrun == 0)
-            {
-                IsGCrun = 1;
-                Thread.Sleep(2000);
-                GC.Collect();
-                IsGCrun = 0;
-            }
+            if (IsGCrun != 0) return;
+            
+            IsGCrun = 1;
+            Thread.Sleep(2000);
+            GC.Collect();
+            IsGCrun = 0;
 
         }
 
@@ -122,21 +121,19 @@ namespace SqlEngine
         {
             try
             {
-                _isGcRunCount = _isGcRunCount + 1;
-                if ((_isGcRunCount % 7) == 0)
+                _isGcRunCount += 1;
+                if ((_isGcRunCount % 7) != 0) return;
+                
+                _isGcRunCount = 1;
+
+                var objThread = new Thread(RunGbCollection)
                 {
-                    _isGcRunCount = 1;
-
-                    var objThread = new Thread(RunGbCollection)
-                    {
-                        IsBackground = true,
-                        Priority = ThreadPriority.AboveNormal
-                    };
-                    if ((objThread.ThreadState & ThreadState.WaitSleepJoin) == 0)
-                    {
-                        objThread.Start();
-                    }
-
+                    IsBackground = true,
+                    Priority = ThreadPriority.AboveNormal
+                };
+                if ((objThread.ThreadState & ThreadState.WaitSleepJoin) == 0)
+                {
+                    objThread.Start();
                 }
             }
             catch (ThreadStartException e)
@@ -154,7 +151,7 @@ namespace SqlEngine
 
         }
 
-        public static void RunCmdLauncher(string vRunCommad)
+        public static void RunCmdLauncher(string runCommand)
         {
             try
             {
@@ -163,7 +160,7 @@ namespace SqlEngine
                     IsBackground = true,
                     Priority = ThreadPriority.AboveNormal
                 };
-                objThread.Start(vRunCommad);
+                objThread.Start(runCommand);
             }
             catch (ThreadStartException e)
             {
@@ -205,15 +202,11 @@ namespace SqlEngine
 
         public static IEnumerable<String> CloudSplitText(string vHttpText)
         {
-            String[] vSplittedText = vHttpText.Split('\n');
-            foreach (String vCurrLine in vSplittedText)
-            {
-                yield return vCurrLine;//.Replace('\r', "");
-            }
+            return vHttpText.Split('\n');
         }
 
 
-        public static IEnumerable<String> HttpGetArray(string vHttpUrl)
+        public static IEnumerable<string> HttpGetArray(string vHttpUrl)
         {
             vHttpUrl = vHttpUrl.Replace("\n", " ");
             vHttpUrl = vHttpUrl.Replace("\r", " ");
@@ -221,7 +214,7 @@ namespace SqlEngine
             vHttpUrl = vHttpUrl.Replace("/*`*/", " ");
             vHttpUrl = vHttpUrl.Replace("  ", " ");
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(vHttpUrl);
+            var request = (HttpWebRequest)WebRequest.Create(vHttpUrl);
             request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
             using (var response = (HttpWebResponse)request.GetResponse())
@@ -235,27 +228,27 @@ namespace SqlEngine
                         while (vReadCharCount > 0)
                         {
                             vReadCharCount = readStream.Read(vCharReadBuf, 0, 256);
-                            if (vReadCharCount > 0)
-                            {
-                                vStrBuff = vStrBuff + new String(vCharReadBuf, 0, vReadCharCount);
-                                String[] vStrArr = vStrBuff.Split('\n');
-                                if (vStrArr.Count() > 0)
-                                {
-                                    for (int i = 0; i < (vStrArr.Count() - 1); i++)
-                                    {
-                                        yield return vStrArr[i];
-                                    }
+                            
+                            if (vReadCharCount <= 0) continue;
+                            
+                            vStrBuff = vStrBuff + new String(vCharReadBuf, 0, vReadCharCount);
+                            var vStrArr = vStrBuff.Split('\n');
 
-                                    vStrBuff = vStrArr[vStrArr.Count() - 1];
-                                }
+                            if (!vStrArr.Any()) continue;
+                            
+                            for (var i = 0; i < (vStrArr.Count() - 1); i++)
+                            {
+                                yield return vStrArr[i];
                             }
+
+                            vStrBuff = vStrArr[vStrArr.Count() - 1];
                         }
                     }
         }
 
-        public static string GetTmpFileName()
+        private static string GetTmpFileName()
         {
-            string vFileName = Path.GetTempFileName();
+            var vFileName = Path.GetTempFileName();
             vFileName = vFileName.ToUpper().Replace(".TMP", ".csv");
             File.Delete(vFileName);
 
@@ -286,7 +279,7 @@ namespace SqlEngine
             }
         }
 
-        private static IEnumerable<String> SqlReadQuery(string vOdbcName, string queryString = "")
+        private static IEnumerable<string> SqlReadQuery(string vOdbcName, string queryString = "")
         {
             var vCurrOdbc = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vOdbcName);
             using
@@ -342,7 +335,7 @@ namespace SqlEngine
 
                 string vFileName = GetTmpFileName();
 
-                using (StreamWriter vCurrFile = new StreamWriter(vFileName))
+                using (var vCurrFile = new StreamWriter(vFileName))
                 {
                     foreach (var str in SqlReadQuery(vOdbcName, queryString))
                     {
@@ -361,14 +354,14 @@ namespace SqlEngine
         }  
 
         public static DataTable ConvertCsVtoDataTable(string strFilePath, char vSplitChar)
-        {   DataTable csvData = new DataTable(); 
-                using (TextFieldParser csvReader = new TextFieldParser(strFilePath))
+        {   var csvData = new DataTable(); 
+                using (var csvReader = new TextFieldParser(strFilePath))
                 {
                     csvReader.SetDelimiters(new string[] { vSplitChar.ToString() });
                     csvReader.HasFieldsEnclosedInQuotes = true;
-                    string[] colFields = csvReader.ReadFields();
+                    var colFields = csvReader.ReadFields();
                     if (colFields != null)
-                        foreach (string column in colFields)
+                        foreach (var column in colFields)
                         {
                             var datecolumn = new DataColumn(column);
                             datecolumn.AllowDBNull = true;
@@ -377,10 +370,10 @@ namespace SqlEngine
 
                     while (!csvReader.EndOfData)
                     {
-                        object[] fieldData = csvReader.ReadFields();
+                        var fieldData = csvReader.ReadFields();
                         //Making empty value as null
                         if (fieldData != null)
-                            for (int i = 0; i < fieldData.Length; i++)
+                            for (var i = 0; i < fieldData.Length; i++)
                             {
                                 if (ReferenceEquals(fieldData[i], ""))
                                 {
@@ -391,7 +384,7 @@ namespace SqlEngine
                     }
                 }
             
-            return csvData;
+                return csvData;
         }
 
         public static void  DeleteFile(string vTempFile)
@@ -402,7 +395,7 @@ namespace SqlEngine
             }
             catch
             {
-                return;
+                //return;
             }
         }
 
@@ -428,14 +421,14 @@ namespace SqlEngine
 
             if (vCurrTable.Comment.Contains("CLOUD"))
             {               
-                string[] vTemp1 = vCurrTable.Comment.Split('|');
+                var vTemp1 = vCurrTable.Comment.Split('|');
                 if (vTemp1.Count() < 2)
                     return vCtr;
                 vCtr.TypeConnection = "CLOUD";
                 vCtr.Sql = vTemp1[2];
                 vCtr.CurrCloudName = vTemp1[1];
 
-                string[] vTemp2 = vCurrTable.Name.Split('|');
+                var vTemp2 = vCurrTable.Name.Split('|');
                 vCtr.CurrCloudExTName = vCurrTable.Name;
                 vCtr.TableName = vTemp2[1];
             }

@@ -35,7 +35,7 @@ namespace SqlEngine
                 53 Amazon Dynamodb
                 54 ASE
                 55 ClickHouse
-                56 Ferebird
+                56 FereBird
                 57 GreenPlum
                 58 Google BigQuery
                 59 Hive
@@ -264,18 +264,18 @@ namespace SqlEngine
             var keywordMatches = Regex.Matches(RTBOdbcProp.Text.ToUpper(), keywords);
 
             // getting types/classes from the text 
-            var types = @"\b(Console)\b";
+            const string types = @"\b(Console)\b";
             var typeMatches = Regex.Matches(RTBOdbcProp.Text, types);
 
             // getting comments (inline or multiline)
-            var comments = @"(\/\/.+?$|\/\*.+?\*\/)";
+            const string comments = @"(\/\/.+?$|\/\*.+?\*\/)";
             var commentMatches = Regex.Matches(RTBOdbcProp.Text, comments, RegexOptions.Multiline);
 
             // getting strings
-            var strings = "\".+?\"";
+            const string strings = "\".+?\"";
             var stringMatches = Regex.Matches(RTBOdbcProp.Text, strings);
 
-            // saving the original caret position + forecolor
+            // saving the original caret position + for color
             var originalIndex = RTBOdbcProp.SelectionStart;
             var originalLength = RTBOdbcProp.SelectionLength;
             var originalColor = Color.Black;

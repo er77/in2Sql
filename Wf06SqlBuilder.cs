@@ -32,17 +32,14 @@ namespace SqlEngine
             vConnType = vCurrConnType;
         }
 
-        public string GetLblConnectionName( )
+        private string GetLblConnectionName( )
         {
-           return  this.lblConnectionName.Text;
+           return  lblConnectionName.Text;
         }
 
-        public void TBJoiner_DragEnter(object sender, DragEventArgs e)
+        private void TBJoiner_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.Text)) 
-                e.Effect = DragDropEffects.Copy;
-            else
-                e.Effect = DragDropEffects.None;
+            e.Effect = e.Data.GetDataPresent(DataFormats.Text) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
         private TreeNode vMainTable ;
@@ -51,8 +48,8 @@ namespace SqlEngine
         {
             TBJoiner.Text = @"SELECT \r\n\t 1 cnt \r\n ";
 
-            int i = 0;
-            foreach (TreeNode tn in VTableList)
+            var i = 0;
+            foreach (var tn in VTableList)
             {
                 i = i + 1;
                 foreach (TreeNode tb in tn.Nodes)
@@ -67,8 +64,8 @@ namespace SqlEngine
                     }
             }
             i = 0;
-            string vInnerJoin = "";
-            foreach (TreeNode tn in VTableList)
+            var vInnerJoin = "";
+            foreach (var tn in VTableList)
             {
                 i = i + 1;
                 if (i == 1)
@@ -81,28 +78,29 @@ namespace SqlEngine
                 foreach (TreeNode vCurrColumn in tn.Nodes)
                 {
 
-                    int j = 0;
-                    foreach (TreeNode tl in VTableList)
+                    var j = 0;
+                    foreach (var tl in VTableList)
                     {
                         j = j + 1;
-                        if (i >= j & i != j)
-                            foreach (TreeNode vClm in tl.Nodes)
-                                if (vClm.Text.Equals(vCurrColumn.Text) & (vClm.Text.Equals("Indexes") == false))
+                        if (!(i >= j & i != j)) continue;
+                        
+                        foreach (TreeNode vClm in tl.Nodes)
+                            if (vClm.Text.Equals(vCurrColumn.Text) & (vClm.Text.Equals("Indexes") == false))
+                            {
+                                var vClmnName = vCurrColumn.Text.Split('|');
+                                vClmnName[0] = vClmnName[0].Trim();
+                                if (vClmnName[0].ToUpper().Contains("DATE") | vClmnName[0].ToUpper().Contains("GUID"))
                                 {
-                                    string[] vClmnName = vCurrColumn.Text.Split('|');
-                                    vClmnName[0] = vClmnName[0].Trim();
-                                    if (vClmnName[0].ToUpper().Contains("DATE") | vClmnName[0].ToUpper().Contains("GUID"))
-                                    {
-                                        TBJoiner.Text = TBJoiner.Text + @"\t \t /* and  a" + i + "." + vClmnName[0] + @" =  a" + j + "." + vClmnName[0] + "  */ \r\n";
-                                        vInnerJoin = vInnerJoin + "\t /* and a" + i + "." + vClmnName[0] + " is not null */ \r\n";
-                                    }
-                                    else
-                                    {
-                                        TBJoiner.Text = TBJoiner.Text + @"\t \t and  a" + i + ".\"" + vClmnName[0] + "\" =  a" + j + ".\"" + vClmnName[0] + "\"\r\n";
-                                        vInnerJoin = vInnerJoin + "\t and a" + i + ".\"" + vClmnName[0] + "\" is not null \r\n";
-                                    }
-                                    
+                                    TBJoiner.Text = TBJoiner.Text + @"\t \t /* and  a" + i + "." + vClmnName[0] + @" =  a" + j + "." + vClmnName[0] + "  */ \r\n";
+                                    vInnerJoin = vInnerJoin + "\t /* and a" + i + "." + vClmnName[0] + " is not null */ \r\n";
                                 }
+                                else
+                                {
+                                    TBJoiner.Text = TBJoiner.Text + @"\t \t and  a" + i + ".\"" + vClmnName[0] + "\" =  a" + j + ".\"" + vClmnName[0] + "\"\r\n";
+                                    vInnerJoin = vInnerJoin + "\t and a" + i + ".\"" + vClmnName[0] + "\" is not null \r\n";
+                                }
+                                    
+                            }
                     }
                 }
 
@@ -121,29 +119,29 @@ namespace SqlEngine
         private void SqlColored( )
         {
             // getting keywords/functions
-            string keywords = SSqlLibrary.GetMsSqlReserved();
+            var keywords = SSqlLibrary.GetMsSqlReserved();
 
-            MatchCollection keywordMatches = Regex.Matches(TBJoiner.Text.ToUpper(), keywords);
+            var keywordMatches = Regex.Matches(TBJoiner.Text.ToUpper(), keywords);
 
             // getting types/classes from the text 
-            string types = @"\b(Console)\b";
-            MatchCollection typeMatches = Regex.Matches(TBJoiner.Text, types);
+            const string types = @"\b(Console)\b";
+            var typeMatches = Regex.Matches(TBJoiner.Text, types);
 
             // getting comments (inline or multiline)
-            string comments = @"(\/\/.+?$|\/\*.+?\*\/)";
-            MatchCollection commentMatches = Regex.Matches(TBJoiner.Text, comments, RegexOptions.Multiline);
+            const string comments = @"(\/\/.+?$|\/\*.+?\*\/)";
+            var commentMatches = Regex.Matches(TBJoiner.Text, comments, RegexOptions.Multiline);
 
             // getting strings
-            string strings = "\".+?\"";
-            MatchCollection stringMatches = Regex.Matches(TBJoiner.Text, strings);
+            const string strings = "\".+?\"";
+            var stringMatches = Regex.Matches(TBJoiner.Text, strings);
 
             // saving the original caret position + forecolor
-            int originalIndex = TBJoiner.SelectionStart;
-            int originalLength = TBJoiner.SelectionLength;
-            Color originalColor = Color.Black;
+            var originalIndex = TBJoiner.SelectionStart;
+            var originalLength = TBJoiner.SelectionLength;
+            var originalColor = Color.Black;
 
             // MANDATORY - focuses a label before highlighting (avoids blinking)
-            this.Focus();
+            Focus();
 
             // removes any previous highlighting (so modified words won't remain highlighted)
             TBJoiner.SelectionStart = 0;
@@ -190,33 +188,31 @@ namespace SqlEngine
             TBJoiner.Focus();
         }
 
-        public   void TBJoiner_DragDrop(object sender, DragEventArgs e)
+        private void TBJoiner_DragDrop(object sender, DragEventArgs e)
         {
-            string str = e.Data.GetData(DataFormats.Text).ToString();
+            var str = e.Data.GetData(DataFormats.Text).ToString();
           //  var miSelectNode = in2SqlWF03PanelRigtSqlM.getNode(e.X, e.Y);
             //MessageBox.Show(str);
 
-            TreeNode vtb = wf03PanelRigtSqlM.CurrSqlPanel.findeTable(str, GetLblConnectionName());
-            if ((vtb == null) == false)
+            var vtb = Wf03PanelRightSqlM.CurrSqlPanel.FindeTable(str, GetLblConnectionName());
+            if (vtb == null) return;
+            
+            if (vtb.Nodes.Count < 2)
             {
-                if (vtb.Nodes.Count < 2)
-                {
-                    MessageBox.Show(@"Please expand table columns by clicking on the table name ");
-                    return;
-                }
-
-                VTableList.Add(vtb);
-                if (VTableList.Count == 1)
-                    vMainTable = vtb;
-                TBJoiner.Clear();
-
-                DrawSelect();
-
+                MessageBox.Show(@"Please expand table columns by clicking on the table name ");
+                return;
             }
+
+            VTableList.Add(vtb);
+            if (VTableList.Count == 1)
+                vMainTable = vtb;
+            TBJoiner.Clear();
+
+            DrawSelect();
             //throw new NotImplementedException();
         }
 
-        public void TBJoiner_MouseDown(object sender, MouseEventArgs e)
+        private void TBJoiner_MouseDown(object sender, MouseEventArgs e)
         {
 
         }

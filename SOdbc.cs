@@ -9,14 +9,13 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-
-    class SOdbc
+    internal abstract class SOdbc
     {
         private static int _idtbl;
 
         public struct SqlObjects
         {
-            public String Name;
+            public string Name;
             public int IdTbl;
         }
 
@@ -43,11 +42,11 @@ namespace SqlEngine
 
 
 
-        public static List<OdbcProperties> OdbcPropertiesList = OdbcList();
+        public static readonly List<OdbcProperties> OdbcPropertiesList = OdbcList();
 
-        public static List<ObjectsAndProperties> ObjectsAndPropertiesList = new List<ObjectsAndProperties>();
+        public static readonly List<ObjectsAndProperties> ObjectsAndPropertiesList = new List<ObjectsAndProperties>();
 
-        public static void ChangeOdbcValue(String vOdbcName, OdbcProperties vNewOdbcValue)
+        public static void ChangeOdbcValue(string vOdbcName, OdbcProperties vNewOdbcValue)
         {
             try
             {
@@ -92,7 +91,7 @@ namespace SqlEngine
             try
             {
                 _idtbl = 0;
-                List<OdbcProperties> listOdbcProperties = new List<OdbcProperties>();
+                var listOdbcProperties = new List<OdbcProperties>();
                 listOdbcProperties.AddRange(GetOdbcList(Registry.CurrentUser));
                 listOdbcProperties.AddRange(GetOdbcList(Registry.LocalMachine));
                 return listOdbcProperties;
@@ -105,51 +104,45 @@ namespace SqlEngine
         }
 
 
-
-        public static IEnumerable<OdbcProperties> GetOdbcList(RegistryKey rootKey)
+        private static IEnumerable<OdbcProperties> GetOdbcList(RegistryKey rootKey)
         {
-            RegistryKey regKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\ODBC Data Sources");
-            if (regKey != null)
+            var regKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\ODBC Data Sources");
+            if (regKey == null) yield break;
+            
+            foreach (var name in regKey.GetValueNames())
             {
-                foreach (string name in regKey.GetValueNames())
-                {
 
-                    var vOdbcProperties = new OdbcProperties
-                    {
-                        OdbcName = regKey.GetValue(name, "").ToString()
-                    };
-                    var odbcProperties = vOdbcProperties;
-                    if (odbcProperties.OdbcName.Contains("Microsoft ") == false)
-                    {
-                        try
-                        {
-                            odbcProperties.OdbcName = name;
-                            var vCurrRegKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\" + name);
-                            odbcProperties.Database = SRegistry.GetLocalRegValue(vCurrRegKey, "Database");
-                            odbcProperties.Description = SRegistry.GetLocalRegValue(vCurrRegKey, "Description");
-                            odbcProperties.Driver = SRegistry.GetLocalRegValue(vCurrRegKey, "Driver");
-                            odbcProperties.LastUser = SRegistry.GetLocalRegValue(vCurrRegKey, "LastUser");
-                            odbcProperties.Server = SRegistry.GetLocalRegValue(vCurrRegKey, "Server");
-                            odbcProperties.ConnStatus = 0;
-                            vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-                            odbcProperties.Login = SRegistry.GetLocalRegValue(vCurrRegKey, name + '.' + "Login");
-                            odbcProperties.Password = SRegistry.GetLocalRegValue(vCurrRegKey, name + '.' + "Password");
-                        }
-                        catch (Exception e)
-                        {
-                            STool.ExpHandler(e, "ODBCList");
-                        }
-                        yield return odbcProperties;
-                    }
+                var vOdbcProperties = new OdbcProperties
+                {
+                    OdbcName = regKey.GetValue(name, "").ToString()
+                };
+                var odbcProperties = vOdbcProperties;
+                if (odbcProperties.OdbcName.Contains("Microsoft ")) continue;
+                
+                try
+                {
+                    odbcProperties.OdbcName = name;
+                    var vCurrRegKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\" + name);
+                    odbcProperties.Database = SRegistry.GetLocalRegValue(vCurrRegKey, "Database");
+                    odbcProperties.Description = SRegistry.GetLocalRegValue(vCurrRegKey, "Description");
+                    odbcProperties.Driver = SRegistry.GetLocalRegValue(vCurrRegKey, "Driver");
+                    odbcProperties.LastUser = SRegistry.GetLocalRegValue(vCurrRegKey, "LastUser");
+                    odbcProperties.Server = SRegistry.GetLocalRegValue(vCurrRegKey, "Server");
+                    odbcProperties.ConnStatus = 0;
+                    vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
+                    odbcProperties.Login = SRegistry.GetLocalRegValue(vCurrRegKey, name + '.' + "Login");
+                    odbcProperties.Password = SRegistry.GetLocalRegValue(vCurrRegKey, name + '.' + "Password");
                 }
+                catch (Exception e)
+                {
+                    STool.ExpHandler(e, "ODBCList");
+                }
+                yield return odbcProperties;
             }
         }
 
 
-
-
-
-        public static IEnumerable<String> SqlReadDataValue(string vOdbcName, string queryString = "")
+        private static IEnumerable<String> SqlReadDataValue(string vOdbcName, string queryString = "")
         {
             var currOdbc = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vOdbcName);
 
@@ -177,7 +170,7 @@ namespace SqlEngine
                         conn.Dispose();
                         yield break;
                     }
-                    OdbcDataReader rd = cmnd.ExecuteReader();
+                    var rd = cmnd.ExecuteReader();
                     while (rd.Read())
                     {
                         yield return rd["value"].ToString();//.Split(',').ToList();  ;
@@ -191,7 +184,7 @@ namespace SqlEngine
         public static void CheckOdbcStatus(string vOdbcName)
         {
 
-            var currOdbc = SOdbc.OdbcPropertiesList.Find(item => item.OdbcName == vOdbcName);
+            var currOdbc = OdbcPropertiesList.Find(item => item.OdbcName == vOdbcName);
             try
             {
                 currOdbc.ConnStatus = 0;
@@ -203,7 +196,7 @@ namespace SqlEngine
                     currOdbc.DsnStr = currOdbc.DsnStr + ";Uid=" + currOdbc.Login + ";Pwd=" + currOdbc.Password + ";";
                 }
 
-                using (OdbcConnection conn = new OdbcConnection())
+                using (var conn = new OdbcConnection())
                 {
                     conn.ConnectionString = currOdbc.DsnStr;
                     conn.ConnectionTimeout = 2;
@@ -236,7 +229,7 @@ namespace SqlEngine
                     Name = vCurrView,
                     IdTbl = _idtbl
                 };
-                _idtbl = _idtbl + 1;
+                _idtbl += 1;
                 yield return vView;
             }
         }
@@ -251,7 +244,7 @@ namespace SqlEngine
                     Name = vCurrTable,
                     IdTbl = _idtbl
                 };
-                _idtbl = _idtbl + 1;
+                _idtbl += 1;
                 yield return vTable;
             }
         }
@@ -368,12 +361,12 @@ namespace SqlEngine
         {
             try
             {
-                int i = 0;
-                string dsnConn = SOdbc.GetOdbcProperties(vOdbcName, "DSNStr");
+                var i = 0;
+                var dsnConn = SOdbc.GetOdbcProperties(vOdbcName, "DSNStr");
 
                 if (dsnConn == null | dsnConn == "")
                 {
-                    MessageBox.Show("Please make the connection by expand list on the left pane ", @"sql run event",
+                    MessageBox.Show(@"Please make the connection by expand list on the left pane ", @"sql run event",
                                                                             MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
@@ -387,17 +380,17 @@ namespace SqlEngine
 
                         STool.AddSqlLog(vOdbcName, vSqlCommand);
 
-                        OdbcDataReader rd = cmnd.ExecuteReader();
+                        var rd = cmnd.ExecuteReader();
 
-                        object[] output = new object[rd.FieldCount];
+                        var output = new object[rd.FieldCount];
 
                         using (var textWriter = new StreamWriter(@vCsvFile))
                         {
                             var writer = new CsvWriter(textWriter, CultureInfo.InvariantCulture);
-                            writer.Configuration.Delimiter = ",";
-                            writer.Configuration.ShouldQuote = (field, context) => true;
+                            //writer.Configuration.Delimiter = ",";
+                            //writer.Configuration.ShouldQuote = (field, context) => true;
 
-                            for (int j = 0; j < rd.FieldCount; j++)
+                            for (var j = 0; j < rd.FieldCount; j++)
                             {
                                 output[j] = rd.GetName(j);
                                 writer.WriteField(rd.GetName(j));
@@ -423,7 +416,7 @@ namespace SqlEngine
             catch (Exception e)
             {
                 if (e.HResult != -2147024809) 
-                    STool.ExpHandler(e, "dumpOdbctoCsv");
+                    STool.ExpHandler(e, @"dumpOdbctoCsv");
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace SqlEngine
 {
-    partial class wf03PanelRigtSqlM
+    partial class Wf03PanelRightSqlM
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(wf03PanelRigtSqlM));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wf03PanelRightSqlM));
             this.ODBCImages = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextMenuExcelRoot = new System.Windows.Forms.ContextMenuStrip(this.components);

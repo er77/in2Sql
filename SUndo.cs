@@ -1,31 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SqlEngine
 {
-    class SUndo
+    internal abstract class SUndo
     {
-        public struct SqlActionTableList
+        private struct SqlActionTableList
         {            
             public List<string> UndoList;
             public string TableName;
         }
 
-        private static List<SqlActionTableList> _undoTableLists  = new List<SqlActionTableList>();
-        private static List<SqlActionTableList> _redoTableLists = new List<SqlActionTableList>();
+        private static readonly List<SqlActionTableList> UndoTableLists  = new List<SqlActionTableList>();
+        private static readonly List<SqlActionTableList> RedoTableLists = new List<SqlActionTableList>();
 
 
-        public static List<String>  GetUndoList (string vTableName )
+        public static List<string>  GetUndoList (string vTableName )
         {    
-            var vind = _undoTableLists.FindIndex(item => item.TableName == vTableName);
-               return _undoTableLists[vind].UndoList  ;           
+            var i = UndoTableLists.FindIndex(item => item.TableName == vTableName);
+               return UndoTableLists[i].UndoList  ;           
         }
 
-        private static SqlActionTableList NewUndoRecord (String vTableName, string vSqlCommand)
+        private static SqlActionTableList NewUndoRecord (string vTableName, string vSqlCommand)
         {
             SqlActionTableList actionTableList;
             actionTableList.TableName = vTableName;
-            actionTableList.UndoList = new List<String>
+            actionTableList.UndoList = new List<string>
                 {
                     vSqlCommand
                 };
@@ -35,85 +34,83 @@ namespace SqlEngine
         private static void AddToRedoList (string vTableName,string vSqlCommand )
         { 
 
-            if (_redoTableLists.Count < 0)
+            if (RedoTableLists.Count < 0)
             {       
-                _redoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));                 
+                RedoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));                 
                     return ;
             }
 
-           int  vintRedo = _redoTableLists.FindIndex(item => item.TableName == vTableName);
+            var  vintRedo = RedoTableLists.FindIndex(item => item.TableName == vTableName);
             if (vintRedo < 0 )
             {
-                _redoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
+                RedoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
                 return;
             }
-            _redoTableLists[vintRedo].UndoList.Add(vSqlCommand);           
+            RedoTableLists[vintRedo].UndoList.Add(vSqlCommand);           
         }
 
-        public static void AddToUndoList(String vTableName, string vSqlCommand)
+        public static void AddToUndoList(string vTableName, string vSqlCommand)
         {
 
-            if (_undoTableLists.Count < 0)
+            if (UndoTableLists.Count < 0)
             {
-                _undoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
+                UndoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
                 return;
             }
 
-            int vintRedo = _undoTableLists.FindIndex(item => item.TableName == vTableName);
+            var vintRedo = UndoTableLists.FindIndex(item => item.TableName == vTableName);
             if (vintRedo < 0)
             {
-                _undoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
+                UndoTableLists.Add(NewUndoRecord(vTableName, vSqlCommand));
                 return;
             }
-            _undoTableLists[vintRedo].UndoList.Add(vSqlCommand);
+            UndoTableLists[vintRedo].UndoList.Add(vSqlCommand);
         }
          
 
-        public static string GetLastSqlActionUndo (String vTableName)
+        public static string GetLastSqlActionUndo (string vTableName)
         {
-            string vResult;
             int vintUndo;
 
-            if (_undoTableLists.Count > 0)
+            if (UndoTableLists.Count > 0)
             {
-                vintUndo = _undoTableLists.FindIndex(item => item.TableName == vTableName);
+                vintUndo = UndoTableLists.FindIndex(item => item.TableName == vTableName);
                 if (vintUndo < 0)
                     return null;
             }
             else
                 return null; 
 
-            int vIdLastSql = _undoTableLists[vintUndo].UndoList.Count - 1;
+            var vIdLastSql = UndoTableLists[vintUndo].UndoList.Count - 1;
             if (vIdLastSql < 0 )
                 return null;
 
-            vResult = _undoTableLists[vintUndo].UndoList[vIdLastSql];
-            _undoTableLists[vintUndo].UndoList.RemoveAt(vIdLastSql);
+            var vResult = UndoTableLists[vintUndo].UndoList[vIdLastSql];
+            UndoTableLists[vintUndo].UndoList.RemoveAt(vIdLastSql);
             AddToRedoList(vTableName, vResult);
 
             return vResult;
         }
 
-        public static string GetLastSqlActionRedo(String vTableName)
+        public static string GetLastSqlActionRedo(string vTableName)
         {
-            string vResult;
             int vintRedo;
 
-            if (_redoTableLists.Count > 0)
+            if (RedoTableLists.Count > 0)
             {
-                vintRedo = _redoTableLists.FindIndex(item => item.TableName == vTableName);
+                vintRedo = RedoTableLists.FindIndex(item => item.TableName == vTableName);
                 if (vintRedo < 0)
                     return null;
             }
             else
                 return null;
 
-            int vIdLastSql = _redoTableLists[vintRedo].UndoList.Count-1 ;
+            var vIdLastSql = RedoTableLists[vintRedo].UndoList.Count-1 ;
             if (vIdLastSql < 0)
                 return null;
 
-            vResult = _redoTableLists[vintRedo].UndoList[vIdLastSql];
-            _redoTableLists[vintRedo].UndoList.RemoveAt(vIdLastSql);        
+            var vResult = RedoTableLists[vintRedo].UndoList[vIdLastSql];
+            RedoTableLists[vintRedo].UndoList.RemoveAt(vIdLastSql);        
 
             return vResult;
         }

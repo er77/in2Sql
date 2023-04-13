@@ -6,7 +6,7 @@ using Microsoft.Office.Interop.Excel;
 using System.Data.Odbc;
 namespace SqlEngine
 {
-    class IntSqlVbaEngine
+    internal abstract class IntSqlVbaEngine
     {
         private static bool _isRefresh ;
         // intSqlVBAEngine.isRefresh = true;
@@ -31,7 +31,7 @@ namespace SqlEngine
         }
 
 
-        public static void AddToInsertList(string vDsnName, string vDdl)
+        private static void AddToInsertList(string vDsnName, string vDdl)
         {
 
             if (_vInsertList.Count < 0)
@@ -40,7 +40,7 @@ namespace SqlEngine
                 return;
             }
 
-            int vIntInsetId = _vInsertList.FindIndex(item => item.DsnName == vDsnName);
+            var vIntInsetId = _vInsertList.FindIndex(item => item.DsnName == vDsnName);
             if (vIntInsetId < 0)
             {
                 _vInsertList.Add(NewInsertRecord(vDsnName, vDdl));
@@ -186,7 +186,7 @@ namespace SqlEngine
 
         public static string GetOdbcNameFromObject(String vDsnStr)
         {
-            string[] vConnStr = vDsnStr.Split(';');
+            var vConnStr = vDsnStr.Split(';');
             return vConnStr[1].Replace("DSN=", "");
         }
 
@@ -218,18 +218,17 @@ namespace SqlEngine
             if (vTypeOdbc.ToUpper().Contains("VERTICA"))
             {
                 if (vSql.ToUpper().Contains("LIMIT") == false)
-                    vSql = vSql + Environment.NewLine + "/*`*/ LIMIT " + Ribbon.vRowCount + " /*`*/ ";
+                    vSql = vSql + Environment.NewLine + "/*`*/ LIMIT " + Ribbon.VRowCount + " /*`*/ ";
             }
             else if (vTypeOdbc.ToUpper().Contains("MSSQL"))
             {
-                if (vSql.ToUpper().Contains("TOP") == false)
-                {
-                    vSql = vSql.Replace("select", "SELECT");
-                    vSql = vSql.Replace("Select", "SELECT");
+                if (vSql.ToUpper().Contains("TOP")) return vSql;
+                
+                vSql = vSql.Replace("select", "SELECT");
+                vSql = vSql.Replace("Select", "SELECT");
 
-                    Regex rgx = new Regex("SELECT");
-                    vSql = rgx.Replace(vSql, "SELECT /*`*/ TOP(" + Ribbon.vRowCount + ") /*`*/ ", 1);
-                }
+                var rgx = new Regex("SELECT");
+                vSql = rgx.Replace(vSql, "SELECT /*`*/ TOP(" + Ribbon.VRowCount + ") /*`*/ ", 1);
             }
 
             return vSql;
@@ -315,7 +314,7 @@ namespace SqlEngine
                 if (activeCell.Value == null)
                     if (activeCell.ListObject == null)
                     {
-                        string vSql = PrepareSql(vOdbc, vTableName, vCurrSql);
+                        var vSql = PrepareSql(vOdbc, vTableName, vCurrSql);
 
                         var connections = currWorkBook.Connections.Add(
                                                            Name: "In2Sql|" + vOdbc + "|" + vTableName
@@ -335,58 +334,58 @@ namespace SqlEngine
                         return;
                     }
             }
-           MessageBox.Show(@" Please select empty area  in Excel data grid");
+            MessageBox.Show(@" Please select empty area  in Excel data grid");
         }
 
         private static void CurrExcelApp_SheetChange(object sh, Range vRange)
         {
             var vCurrWorkSheet = SqlEngine.CurrExcelApp.ActiveSheet;
-            if ((_isRefresh == false) & ((vRange.ListObject == null) == false))
-                if (vRange.ListObject.Name.Contains("In2Sql"))
+            
+            if (!((_isRefresh == false) & ((vRange.ListObject == null) == false))) return;
+            
+            if (!vRange.ListObject.Name.Contains("In2Sql")) return;
+            
+            foreach (Range vChangedCell in vRange.Cells)
+            {
+                _isRefresh = true;
+                vChangedCell.Interior.Color = XlRgbColor.rgbLightGoldenrodYellow;//Excel.XlThemeColor.xlThemeColorAccent6;
+                _isRefresh = false;
+
+                var vOdbc = GetOdbcNameFromObject(vChangedCell.ListObject);
+                var vTrgtColumnName = vCurrWorkSheet.Cells(vChangedCell.ListObject.Range.Row, vChangedCell.Column).Value;
+
+                var vSql = "UPDATE " + vChangedCell.ListObject.Comment + Environment.NewLine
+                           + " SET \"" + vTrgtColumnName + "\"" + " =  '" + vChangedCell.Value + "'"
+                           + Environment.NewLine + " WHERE 1=1 ";
+
+                for (var i = 1; i < vChangedCell.ListObject.ListColumns.Count + 1; i++)
                 {
-                    foreach (Range vChangedCell in vRange.Cells)
+                    var vCurrClmName = vChangedCell.ListObject.ListColumns[i].Name;
+
+                    if ((vCurrClmName.Equals(vTrgtColumnName) == false) & (vCurrClmName.ToUpper().Contains("DATE") == false))
                     {
-                        _isRefresh = true;
-                        vChangedCell.Interior.Color = XlRgbColor.rgbLightGoldenrodYellow;//Excel.XlThemeColor.xlThemeColorAccent6;
-                        _isRefresh = false;
-
-                        var vOdbc = GetOdbcNameFromObject(vChangedCell.ListObject);
-                        var vTrgtColumnName = vCurrWorkSheet.Cells(vChangedCell.ListObject.Range.Row, vChangedCell.Column).Value;
-
-                        var vSql = "UPDATE " + vChangedCell.ListObject.Comment + Environment.NewLine
-                                     + " SET \"" + vTrgtColumnName + "\"" + " =  '" + vChangedCell.Value + "'"
-                                     + Environment.NewLine + " WHERE 1=1 ";
-
-                        for (var i = 1; i < vChangedCell.ListObject.ListColumns.Count + 1; i++)
-                        {
-                            var vCurrClmName = vChangedCell.ListObject.ListColumns[i].Name;
-
-                            if ((vCurrClmName.Equals(vTrgtColumnName) == false) & (vCurrClmName.ToUpper().Contains("DATE") == false))
-                            {
-                                vSql = vSql + Environment.NewLine
-                                     + " and \"" + vCurrClmName + "\" = "
-                                     + "'" + vCurrWorkSheet.Cells(vChangedCell.Row, vChangedCell.ListObject.QueryTable.Destination.Column + i - 1).Value + "'";
-                            }
-                        }
-                        AddToInsertList(vOdbc, vSql);
-                        //  System.Windows.Forms.MessageBox.Show(vSql);
+                        vSql = vSql + Environment.NewLine
+                                    + " and \"" + vCurrClmName + "\" = "
+                                    + "'" + vCurrWorkSheet.Cells(vChangedCell.Row, vChangedCell.ListObject.QueryTable.Destination.Column + i - 1).Value + "'";
                     }
-
                 }
+                AddToInsertList(vOdbc, vSql);
+                //  System.Windows.Forms.MessageBox.Show(vSql);
+            }
 
             // throw new NotImplementedException();
         }
 
         public static void UpdateTablesAll()
         {
-            for (int i = 0; i < _vInsertList.Count; i++)
+            for (var i = 0; i < _vInsertList.Count; i++)
                 UpdateTables(_vInsertList[i].DsnName);
         }
 
 
         public static void UpdateTables(string vDns = "")
         {
-            STool.CurrentTableRecords vCtr = STool.GetCurrentSql();
+            var vCtr = STool.GetCurrentSql();
             
             if (vCtr.TypeConnection.Contains("CLOUD"))
             {
@@ -400,7 +399,7 @@ namespace SqlEngine
             if (vId < 0)
                 return;
             var vRecCount = 0;
-            using (OdbcConnection conn = new OdbcConnection(SOdbc.GetOdbcProperties(_vInsertList[vId].DsnName, "DSNStr")))
+            using (var conn = new OdbcConnection(SOdbc.GetOdbcProperties(_vInsertList[vId].DsnName, "DSNStr")))
             {
                 conn.ConnectionTimeout = 5;
                 conn.Open();
@@ -408,20 +407,18 @@ namespace SqlEngine
                 foreach (var vInsert in _vInsertList[vId].SqlUpdate)
                 {
                     vRecCount = vRecCount + 1;
-                    if ((vInsert == "") == false)
-                    {
-                        STool.AddSqlLog(conn.ToString(), vInsert);
-                        using (OdbcCommand cmnd = new OdbcCommand(vInsert, conn))
-                            try
-                            {
-                                _isRefresh = true;
-                                cmnd.ExecuteNonQuery();
-                            }
-                            catch (Exception e)
-                            {
-                                MessageBox.Show(e.Message);
-                            }
-                    }
+                    if (vInsert == "") continue;
+                    STool.AddSqlLog(conn.ToString(), vInsert);
+                    using (var cmnd = new OdbcCommand(vInsert, conn))
+                        try
+                        {
+                            _isRefresh = true;
+                            cmnd.ExecuteNonQuery();
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
                 }
                 _vInsertList[vId].SqlUpdate.RemoveRange(0, _vInsertList[vId].SqlUpdate.Count);
                 DeleteUpdateList(vId);
@@ -449,15 +446,14 @@ namespace SqlEngine
           
             if ((vActivCell.ListObject == null) == false)
             {
-                for (int i = 1; i < vActivCell.ListObject.ListColumns.Count + 1; i++)
+                for (var i = 1; i < vActivCell.ListObject.ListColumns.Count + 1; i++)
                 {
                     var vClmName = vActivCell.ListObject.ListColumns[i].Name;
                     vClmName = vClmName.ToUpper();
-                    if (vClmName.Contains("DATE"))
-                    {
-                        _isRefresh = true;
-                        vActivCell.ListObject.ListColumns[i].Range.NumberFormat = "yyyy.mm.dd hh:mm:ss";
-                    }
+                    if (!vClmName.Contains("DATE")) continue;
+                    
+                    _isRefresh = true;
+                    vActivCell.ListObject.ListColumns[i].Range.NumberFormat = "yyyy.mm.dd hh:mm:ss";
                 }  
                 vActivCell.ListObject.Range.Interior.Color = XlRgbColor.rgbWhite;
                 vActivCell.ListObject.HeaderRowRange.Interior.Color = XlRgbColor.rgbSkyBlue;
@@ -559,7 +555,7 @@ namespace SqlEngine
 
         }
 
-        public static void ObjRefresh(ListObject vCurrObject)
+        private static void ObjRefresh(ListObject vCurrObject)
         {
             _isRefresh = true;
             vCurrObject.QueryTable.AfterRefresh += QueryTable_AfterRefresh;            
@@ -567,7 +563,7 @@ namespace SqlEngine
             vCurrObject.TableStyle = "TableStyleLight13";
         }
 
-        public static void TableRefresh(STool.CurrentTableRecords vCtr, int vIsUndoList = 1)
+        private static void TableRefresh(STool.CurrentTableRecords vCtr, int vIsUndoList = 1)
         {
             var activeCell = SqlEngine.CurrExcelApp.ActiveCell;
 
@@ -581,18 +577,17 @@ namespace SqlEngine
 
             }
 
-            if (vCtr.TypeConnection.Contains("CLOUD"))
-            {
-                SVbaEngineCloud.CreateExTable(
-                                                     vCtr.CurrCloudName
-                                                   , vCtr.TableName
-                                                   , vCtr.Sql
-                                                   , 1
-                                                   , vCtr.CurrCloudExTName);
-                STool.AddSqlLog(vCtr.Sql);
-                if (vIsUndoList == 1)
-                    SUndo.AddToUndoList(vCtr.CurrCloudExTName, vCtr.Sql);
-            }
+            if (!vCtr.TypeConnection.Contains("CLOUD")) return;
+            
+            SVbaEngineCloud.CreateExTable(
+                vCtr.CurrCloudName
+                , vCtr.TableName
+                , vCtr.Sql
+                , 1
+                , vCtr.CurrCloudExTName);
+            STool.AddSqlLog(vCtr.Sql);
+            if (vIsUndoList == 1)
+                SUndo.AddToUndoList(vCtr.CurrCloudExTName, vCtr.Sql);
         }
 
         public static void Undo()
@@ -691,8 +686,8 @@ namespace SqlEngine
                 MessageBox.Show(@" Please, select cell from the table", @" Refresh error");
             }
             catch  { 
-            _isRefresh = false;
-            MessageBox.Show(@" Please, select cell from the table", @" Refresh error");
+                _isRefresh = false;
+                MessageBox.Show(@" Please, select cell from the table", @" Refresh error");
             }
             
         }

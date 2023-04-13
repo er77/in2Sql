@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class Wp02RightTreeTables
+    internal abstract class Wp02RightTreeTables
     {
         private static void InitSQlObjects(ref SOdbc.OdbcProperties vCurrOdbc)
         {
@@ -78,16 +79,16 @@ namespace SqlEngine
         }
 
 
-        public static void SetSqLiteTreeLineSimple(TreeNode nodeToAddTo, string vOdbcName, string vOdbcType = "SQLITE$")
+ /*       public static void SetSqLiteTreeLineSimple(TreeNode nodeToAddTo, string vOdbcName, string vOdbcType = "SQLITE$")
         {
-            TreeNode vNodeDatabase = new TreeNode(vOdbcName, 8, 8);
+            var vNodeDatabase = new TreeNode(vOdbcName, 8, 8);
 
             nodeToAddTo.Nodes.Add(vNodeDatabase);
             vNodeDatabase.Tag = "FLD|" + vOdbcType;
-            TreeNode vNodeTable = new TreeNode(" ", 100, 100); // vNodeTable.Tag = vCurrTable.Name;
+            var vNodeTable = new TreeNode(" ", 100, 100); // vNodeTable.Tag = vCurrTable.Name;
             vNodeDatabase.Nodes.Add(vNodeTable);
         }
-
+*/
         public static void SetOdbcTreeLineComplex(TreeNode nodeToAddTo, string vCurrvListOdbcName, string vCurrOdbcName)
         {
             try
@@ -103,10 +104,10 @@ namespace SqlEngine
 
                 if (vCurrOdbc.ConnStatus < 0)
                 {
-                    TreeNode vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 7, 7);
+                    var vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 7, 7);
                     nodeToAddTo.Nodes.Add(vNodeDatabase);
                     vNodeDatabase.Tag = "ODBC%";
-                    TreeNode vNodeTable = new TreeNode(vCurrOdbc.ConnErrMsg, 99, 99);
+                    var vNodeTable = new TreeNode(vCurrOdbc.ConnErrMsg, 99, 99);
                     vNodeDatabase.Nodes.Add(vNodeTable);
 
                     return;
@@ -120,7 +121,7 @@ namespace SqlEngine
 
                 if (vCurrOdbc.ConnStatus == 1 & (vCurrOdbc.Tables.Count == 0 & vCurrOdbc.Views.Count == 0))
                 {
-                    TreeNode vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 2, 2);
+                    var vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 2, 2);
 
                     nodeToAddTo.Nodes.Add(vNodeDatabase);
                     vNodeDatabase.Tag = "ODBC#";
@@ -128,37 +129,39 @@ namespace SqlEngine
                     return;
                 }
 
-                if (vCurrOdbc.ConnStatus == 1 & (vCurrOdbc.Tables.Count > 0 | vCurrOdbc.Views.Count > 0))
+                if (!(vCurrOdbc.ConnStatus == 1 & (vCurrOdbc.Tables.Count > 0 | vCurrOdbc.Views.Count > 0))) return;
+                
                 {
-                    TreeNode vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 2, 2);
+                    var vNodeDatabase = new TreeNode(vCurrOdbc.OdbcName, 2, 2);
 
                     nodeToAddTo.Nodes.Add(vNodeDatabase);
                     vNodeDatabase.Tag = "ODBC#";
 
                     if (vCurrOdbc.Tables.Count > 0)
                     {
-                        TreeNode vNodeTableFolder = new TreeNode("Tables", 3, 3);
-                        vNodeTableFolder.Tag = vCurrOdbc.OdbcName + "tf";
+                        var vNodeTableFolder = new TreeNode("Tables", 3, 3)
+                        {
+                            Tag = vCurrOdbc.OdbcName + "tf"
+                        };
                         vNodeDatabase.Nodes.Add(vNodeTableFolder);
 
-                        foreach (var vCurrTable in vCurrOdbc.Tables)
+                        foreach (var vNodeTable in vCurrOdbc.Tables.Select(vCurrTable => new TreeNode(vCurrTable.Name, 4, 4)))
                         {
-                            TreeNode vNodeTable = new TreeNode(vCurrTable.Name, 4, 4); // vNodeTable.Tag = vCurrTable.Name;
                             vNodeTableFolder.Nodes.Add(vNodeTable);
                         }
                     }
-
-                    if (vCurrOdbc.Views.Count > 0)
+                    
+                    if (vCurrOdbc.Views.Count <= 0) return;
+                    
+                    var vNodeViewFolder = new TreeNode("Views", 5, 5)
                     {
-                        TreeNode vNodeViewFolder = new TreeNode("Views", 5, 5);
-                        vNodeViewFolder.Tag = vCurrOdbc.OdbcName + "vf";
-                        vNodeDatabase.Nodes.Add(vNodeViewFolder);
+                        Tag = vCurrOdbc.OdbcName + "vf"
+                    };
+                    vNodeDatabase.Nodes.Add(vNodeViewFolder);
 
-                        foreach (var vCurrView in vCurrOdbc.Views)
-                        {
-                            TreeNode vNodeView = new TreeNode(vCurrView.Name, 6, 6); // vNodeTable.Tag = vCurrTable.Name;
-                            vNodeViewFolder.Nodes.Add(vNodeView);
-                        }
+                    foreach (var vNodeView in vCurrOdbc.Views.Select(vCurrView => new TreeNode(vCurrView.Name, 6, 6)))
+                    {
+                        vNodeViewFolder.Nodes.Add(vNodeView);
                     }
                 }
             }
@@ -189,70 +192,81 @@ namespace SqlEngine
                     e.Node.ImageIndex = 7;
                     e.Node.SelectedImageIndex = 7;
                     e.Node.Tag = "ODBC%";
-                    TreeNode vNodeErrRecord = new TreeNode(vCurrOdbc.ConnErrMsg, 99, 99);
+                    var vNodeErrRecord = new TreeNode(vCurrOdbc.ConnErrMsg, 99, 99);
                     e.Node.Nodes.Add(vNodeErrRecord);
                     return;
                 }
 
-                if (vCurrOdbc.ConnStatus == 1)
+                if (vCurrOdbc.ConnStatus != 1) return;
+                
+                e.Node.ImageIndex = 2;
+                e.Node.SelectedImageIndex = 2;
+                e.Node.Tag = "ODBC#";
+                var vNodeTableFolder = new TreeNode("Tables", 3, 3)
                 {
-                    e.Node.ImageIndex = 2;
-                    e.Node.SelectedImageIndex = 2;
-                    e.Node.Tag = "ODBC#";
-                    TreeNode vNodeTableFolder = new TreeNode("Tables", 3, 3);
-                    vNodeTableFolder.Tag = vCurrOdbc.OdbcName + "_tf";
-                    e.Node.Nodes.Add(vNodeTableFolder);
+                    Tag = vCurrOdbc.OdbcName + "_tf"
+                };
+                e.Node.Nodes.Add(vNodeTableFolder);
 
-                    InitSQlObjects(ref vCurrOdbc);
+                InitSQlObjects(ref vCurrOdbc);
 
-                    foreach (var vCurrTable in vCurrOdbc.Tables)
+                foreach (var vCurrTable in vCurrOdbc.Tables)
+                {
+                    var vNodeTable = new TreeNode(vCurrTable.Name, 4, 4)
                     {
-                        TreeNode vNodeTable = new TreeNode(vCurrTable.Name, 4, 4);
-                        vNodeTable.Tag = vCurrOdbc.OdbcName + "|" + vCurrTable.Name + "|$TABLE$";
-                        vNodeTableFolder.Nodes.Add(vNodeTable);
-                        TreeNode vNodeColumnTbl = new TreeNode(" ", 99, 99);
-                        vNodeColumnTbl.Tag = vCurrOdbc.OdbcName + "." + vCurrTable.Name;
-                        vNodeTable.Nodes.Add(vNodeColumnTbl);
-                    }
-
-                    TreeNode vNodeViewFolder = new TreeNode("Views", 5, 5);
-                    vNodeViewFolder.Tag = vCurrOdbc.OdbcName + "_vf";
-                    e.Node.Nodes.Add(vNodeViewFolder);
-
-                    foreach (var vCurrView in vCurrOdbc.Views)
+                        Tag = vCurrOdbc.OdbcName + "|" + vCurrTable.Name + "|$TABLE$"
+                    };
+                    vNodeTableFolder.Nodes.Add(vNodeTable);
+                    var vNodeColumnTbl = new TreeNode(" ", 99, 99)
                     {
-                        TreeNode vNodeView = new TreeNode(vCurrView.Name, 6, 6);
-                        vNodeView.Tag = vCurrOdbc.OdbcName + "." + vNodeView.Name + "|$VIEW$";
-                        vNodeViewFolder.Nodes.Add(vNodeView);
-                        TreeNode vNodeColumnVw = new TreeNode(" ", 99, 99);
-                        vNodeColumnVw.Tag = vCurrOdbc.OdbcName + "." + vNodeView.Name;
-                        vNodeView.Nodes.Add(vNodeColumnVw);
-                    }
+                        Tag = vCurrOdbc.OdbcName + "." + vCurrTable.Name
+                    };
+                    vNodeTable.Nodes.Add(vNodeColumnTbl);
+                }
 
-                    TreeNode vNodeFunctionFolder = new TreeNode("Functions", 10, 10);
-                    vNodeFunctionFolder.Tag = vCurrOdbc.OdbcName + "_fn";
-                    e.Node.Nodes.Add(vNodeFunctionFolder);
+                var vNodeViewFolder = new TreeNode("Views", 5, 5)
+                {
+                    Tag = vCurrOdbc.OdbcName + "_vf"
+                };
+                e.Node.Nodes.Add(vNodeViewFolder);
 
-                    foreach (var vCurrFunc in vCurrOdbc.SqlFunctions)
+                foreach (var vNodeView in vCurrOdbc.Views.Select(vCurrView => new TreeNode(vCurrView.Name, 6, 6)))
+                {
+                    vNodeView.Tag = vCurrOdbc.OdbcName + "." + vNodeView.Name + "|$VIEW$";
+                    vNodeViewFolder.Nodes.Add(vNodeView);
+                    var vNodeColumnVw = new TreeNode(" ", 99, 99)
                     {
-                        TreeNode vNodeView = new TreeNode(vCurrFunc.Name, 9, 9);
-                        vNodeView.Tag = vCurrOdbc.OdbcName + "." + vCurrFunc.Name;
-                        vNodeFunctionFolder.Nodes.Add(vNodeView);
-                    }
+                        Tag = vCurrOdbc.OdbcName + "." + vNodeView.Name
+                    };
+                    vNodeView.Nodes.Add(vNodeColumnVw);
+                }
 
-                    TreeNode vNodeExecFolder = new TreeNode("Procedures", 8, 8);
-                    vNodeExecFolder.Tag = vCurrOdbc.OdbcName + "_pr";
-                    e.Node.Nodes.Add(vNodeExecFolder);
+                var vNodeFunctionFolder = new TreeNode("Functions", 10, 10)
+                {
+                    Tag = vCurrOdbc.OdbcName + "_fn"
+                };
+                e.Node.Nodes.Add(vNodeFunctionFolder);
 
-                    foreach (var vCurrProced in vCurrOdbc.SqlPrograms)
-                    {
-                        var vNodeView = new TreeNode(vCurrProced.Name, 11, 11)
-                        {
-                            Tag = vCurrOdbc.OdbcName + "|" + vCurrProced.Name
-                        };
-                        vNodeExecFolder.Nodes.Add(vNodeView);
-                    }
+                foreach (var vNodeView in vCurrOdbc.SqlFunctions.Select(vCurrFunc => new TreeNode(vCurrFunc.Name, 9, 9)
+                         {
+                             Tag = vCurrOdbc.OdbcName + "." + vCurrFunc.Name
+                         }))
+                {
+                    vNodeFunctionFolder.Nodes.Add(vNodeView);
+                }
 
+                var vNodeExecFolder = new TreeNode("Procedures", 8, 8)
+                {
+                    Tag = vCurrOdbc.OdbcName + "_pr"
+                };
+                e.Node.Nodes.Add(vNodeExecFolder);
+
+                foreach (var vNodeView in vCurrOdbc.SqlPrograms.Select(vCurrProced => new TreeNode(vCurrProced.Name, 11, 11)
+                         {
+                             Tag = vCurrOdbc.OdbcName + "|" + vCurrProced.Name
+                         }))
+                {
+                    vNodeExecFolder.Nodes.Add(vNodeView);
                 }
             }
             catch (Exception er)
@@ -266,7 +280,7 @@ namespace SqlEngine
             try
             {
 
-                String vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
+                var vNodeTag = e.Node.Parent.Parent.Text + '.' + e.Node.Text;
                 var vCurrObjProp = SOdbc.ObjectsAndPropertiesList.Find(item => item.ObjName == vNodeTag);
 
                 if (vCurrObjProp.ObjColumns == null)
@@ -275,39 +289,38 @@ namespace SqlEngine
                     vCurrObjProp = SOdbc.ObjectsAndPropertiesList.Find(item => item.ObjName == vNodeTag);
                 }
 
-                if (vCurrObjProp.ObjColumns != null)
-                    if (vCurrObjProp.ObjColumns.Count > 0)
-                    {
-                        e.Node.Nodes.Clear();
+                if (vCurrObjProp.ObjColumns == null) return;
 
-                        foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
-                        {
-                            TreeNode vNodeColumn = new TreeNode(vCurrColumn, 14, 14);
-                            vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
-                            e.Node.Nodes.Add(vNodeColumn);
-                        }
-                        if (e.Node.Tag.ToString().Contains("$TABLE$"))
-                        {
-                            e.Node.Tag = vNodeTag + ".TABLE";
-                            var vNodeIndexFolder = new TreeNode("Indexes", 12, 12)
-                            {
-                                Tag = vNodeTag + "_idx"
-                            };
-                            e.Node.Nodes.Add(vNodeIndexFolder);
-                            foreach (var vCurrIndx in vCurrObjProp.ObjIndexes)
-                            {
-                                var vNodeIndx = new TreeNode(vCurrIndx, 13, 13)
-                                {
-                                    Tag = vNodeTag + '.' + vCurrIndx + "_idx"
-                                };
-                                vNodeIndexFolder.Nodes.Add(vNodeIndx);
-                            }
-                        }
-                        else
-                        {
-                            e.Node.Tag = vNodeTag + ".VIEW";
-                        }
+                if (vCurrObjProp.ObjColumns.Count <= 0) return;
+                
+                e.Node.Nodes.Clear();
+
+                foreach (var vCurrColumn in vCurrObjProp.ObjColumns)
+                {
+                    var vNodeColumn = new TreeNode(vCurrColumn, 14, 14);
+                    vNodeColumn.Tag = vNodeTag + '.' + vCurrColumn + "_clm";
+                    e.Node.Nodes.Add(vNodeColumn);
+                }
+                if (e.Node.Tag.ToString().Contains("$TABLE$"))
+                {
+                    e.Node.Tag = vNodeTag + ".TABLE";
+                    var vNodeIndexFolder = new TreeNode("Indexes", 12, 12)
+                    {
+                        Tag = vNodeTag + "_idx"
+                    };
+                    e.Node.Nodes.Add(vNodeIndexFolder);
+                    foreach (var vNodeIndx in vCurrObjProp.ObjIndexes.Select(vCurrIndx => new TreeNode(vCurrIndx, 13, 13)
+                             {
+                                 Tag = vNodeTag + '.' + vCurrIndx + "_idx"
+                             }))
+                    {
+                        vNodeIndexFolder.Nodes.Add(vNodeIndx);
                     }
+                }
+                else
+                {
+                    e.Node.Tag = vNodeTag + ".VIEW";
+                }
             }
             catch (Exception er)
             {

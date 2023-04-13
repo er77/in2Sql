@@ -80,7 +80,7 @@ namespace SqlEngine
             sw.Close();
         }
 
-        BackgroundWorker bw  = new BackgroundWorker();  
+        readonly BackgroundWorker bw  = new BackgroundWorker();  
         
         private string GetSql ()
         {
@@ -102,7 +102,7 @@ namespace SqlEngine
             STool.RunGarbageCollector();
 
             SqlDocument.ReadOnly = true;
-            string qstr = GetSql(); 
+            var qstr = GetSql(); 
 
             if (sender.ToString().Contains("New"))
                 SqlDocument.Clear();
@@ -173,17 +173,17 @@ namespace SqlEngine
                 STool.AddSqlLog(odbcName, sqlCommand);
 
                 using
-                        (OdbcConnection conn = new OdbcConnection(odbcProperties))
-                        using (var cmnd = new OdbcDataAdapter(sqlCommand, conn))
+                        (var conn = new OdbcConnection(odbcProperties))
+                        using (var dataAdapter = new OdbcDataAdapter(sqlCommand, conn))
                         {
                             var table = new DataTable();
-                            cmnd.Fill(table);                     
+                            dataAdapter.Fill(table);                     
                             SqlDataResult.DataSource = table;
                         }
             }
             catch (Exception e)
             {
-                if ((e.HResult == -2147024809) == false)
+                if (e.HResult == -2147024809 == false)
                     STool.ExpHandler(e, "OdbcGrid");
             }
         }
@@ -222,7 +222,7 @@ namespace SqlEngine
 
             if (ConnName.Text.Equals("SQL") | ConnName.Text == "")
             {
-                MessageBox.Show(@"Please select Sql connection on the rigth drop-down menu", @"sql run event",
+                MessageBox.Show(@"Please select Sql connection on the right drop-down menu", @"sql run event",
                                                                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -232,13 +232,13 @@ namespace SqlEngine
                 SqlDataResult.SelectAll();
                 SqlDataResult.ClearSelection();
 
-                string[] vTempName = ConnName.Text.Split('|');
-                string vOdbcName = vTempName[0].Trim();
-                if (vTempName.Count() > 1)
-                    if (vTempName[1].ToUpper().Contains("ODBC"))
-                        OdbcGrid(vOdbcName, sqlCommand);
-                    else if (vTempName[1].ToUpper().Contains("CLOUD"))
-                        CloudGrid(vOdbcName, sqlCommand); 
+                var vTempName = ConnName.Text.Split('|');
+                var vOdbcName = vTempName[0].Trim();
+                if (vTempName.Count() <= 1) return;
+                if (vTempName[1].ToUpper().Contains("ODBC"))
+                    OdbcGrid(vOdbcName, sqlCommand);
+                else if (vTempName[1].ToUpper().Contains("CLOUD"))
+                    CloudGrid(vOdbcName, sqlCommand);
             }
             catch (Exception e)
             {
@@ -253,7 +253,7 @@ namespace SqlEngine
 
             if (ConnName.Text.Equals("SQL"))
             {
-                MessageBox.Show(@"Please select Sql connection on the rigth drop-down menu", @"sql run event",
+                MessageBox.Show(@"Please select Sql connection on the right drop-down menu", @"sql run event",
                                                                                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -263,7 +263,7 @@ namespace SqlEngine
                 var vOdbcName = vTempName[0].Trim();
                 qstr = "select * from ( " + qstr + " ) df where 1=1 ";
                 
-                if (vTempName.Count() <= 1) return;
+                if (vTempName.Length <= 1) return;
                 
                 if (vTempName[1].ToUpper().Contains("ODBC"))
                     IntSqlVbaEngine.CreateExTable(ConnName.Text, STool.GetHash(qstr), qstr);

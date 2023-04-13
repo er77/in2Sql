@@ -6,7 +6,7 @@ namespace SqlEngine
 {
     public sealed partial class Wf09CloudCloudConnectionEditor : Form
     {
-        private String vConnType = "CH";
+        private string vConnType = "CH";
 
         public Wf09CloudCloudConnectionEditor(string vEditName="")
         {
@@ -22,22 +22,21 @@ namespace SqlEngine
 
             WF09BTOk.Enabled = false;
             rbClickHouse.Enabled = true;
-            if (vEditName.Length > 2  )              
-            {
-                var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-                tbURL.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Url");
-                tbLogin.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Login");
-                tbPassword.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Password");
-                tbSQL.Text = SSqlLibrary.GetCloudSqlCheck(vEditName);
-                var  vNm = vEditName.Split('.');
-                if (vNm.Length > 1)
-                    tbName.Text = vNm[1];
-            }
+            if (vEditName.Length <= 2) return;
+            
+            var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
+            tbURL.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Url");
+            tbLogin.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Login");
+            tbPassword.Text = SRegistry.GetLocalRegValue(vCurrRegKey, vEditName + ".Password");
+            tbSQL.Text = SSqlLibrary.GetCloudSqlCheck(vEditName);
+            var  vNm = vEditName.Split('.');
+            if (vNm.Length > 1)
+                tbName.Text = vNm[1];
         }
 
         private void WF09BTOk_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void WF09BTCancel_Click(object sender, EventArgs e)

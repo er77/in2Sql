@@ -1,19 +1,19 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
+using Microsoft.Win32;
 
 namespace SqlEngine
 {
-    class SCsv
+    internal abstract class SCsv
     {
 
         public struct CloudObjects
         {
-            public String Name;
+            public string Name;
             public int IdTbl;
         }
 
@@ -21,8 +21,8 @@ namespace SqlEngine
 
         public struct FilesAndProperties
         {
-            public List<String> ObjColumns;
-            public String ObjName;
+            public List<string> ObjColumns;
+            public string ObjName;
         }
 
         public struct FolderProperties
@@ -41,16 +41,16 @@ namespace SqlEngine
             if (FolderPropertiesList != null )
               return FolderPropertiesList[0].Path + "\\";
 
-            return "c:\\Temp\\";
+            return Path.GetTempPath() ;
         }
 
         public static List<FolderProperties> FolderList()
         {
             try
             {
-                List<FolderProperties> listClooudProperties = new List<FolderProperties>();
-                listClooudProperties.AddRange(GetCsvList());
-                return listClooudProperties;
+                var cloudProperties = new List<FolderProperties>();
+                cloudProperties.AddRange(GetCsvList());
+                return cloudProperties;
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace SqlEngine
 
         public static IEnumerable<CloudObjects> GetFileList(string vCurrFolderName)
         {
-            FolderProperties vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);       
+            var vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);       
 
             return GetFiesInFolderList(vCurrFolderN.Path);
 
@@ -69,16 +69,18 @@ namespace SqlEngine
 
         private static IEnumerable<CloudObjects> GetFiesInFolderList(string vFolderPath)
         {
-            DirectoryInfo d = new DirectoryInfo(@vFolderPath);
-            FileInfo[] files = d.GetFiles("*.csv"); 
-            string str = "";
-            foreach (FileInfo file in files)
+            var d = new DirectoryInfo(vFolderPath);
+            var files = d.GetFiles("*.csv"); 
+            var str = "";
+            foreach (var file in files)
             {
                 str = str + ", " + file.Name;
-                CloudObjects vObj = new CloudObjects();
-                vObj.Name = file.Name;
-                vObj.IdTbl = _idtbl;
-                _idtbl = _idtbl + 1;
+                var vObj = new CloudObjects
+                {
+                    Name = file.Name,
+                    IdTbl = _idtbl
+                };
+                _idtbl += 1;
                 yield return vObj;
             } 
         }
@@ -86,19 +88,21 @@ namespace SqlEngine
 
         public static IEnumerable<FilesAndProperties> GetCsvFileColumn(string vCurrFolderName, string vObjName)
         {
-            FolderProperties vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);
+            var vCurrFolderN = FolderPropertiesList.Find(item => item.FolderName == vCurrFolderName);
 
-            FilesAndProperties vObject = new FilesAndProperties();
-            vObject.ObjName = vCurrFolderName + '.' + vObjName;
-            vObject.ObjColumns = new List<string>();
-
-            using (TextFieldParser csvReader = new TextFieldParser( vCurrFolderN.Path + "\\" + vObjName ))
+            var vObject = new FilesAndProperties
             {
-                csvReader.SetDelimiters(new string[] { "," });
+                ObjName = vCurrFolderName + '.' + vObjName,
+                ObjColumns = new List<string>()
+            };
+
+            using (var csvReader = new TextFieldParser( vCurrFolderN.Path + "\\" + vObjName ))
+            {
+                csvReader.SetDelimiters(",");
                 csvReader.HasFieldsEnclosedInQuotes = true;
-                string[] colFields = csvReader.ReadFields();
+                var colFields = csvReader.ReadFields();
                 if (colFields != null)
-                    foreach (string column in colFields)
+                    foreach (var column in colFields)
                     {
                         vObject.ObjColumns.Add(column.Replace('"', ' ').Trim());
                     }
@@ -109,60 +113,57 @@ namespace SqlEngine
         }
 
 
-        public static IEnumerable<FolderProperties> GetCsvList()
+        private static IEnumerable<FolderProperties> GetCsvList()
         {
-            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-            string vPrevName = "";
-            if (vCurrRegKey != null)
+            var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
+            var vPrevName = "";
+            if (vCurrRegKey == null) yield break;
+            var vFolderProp = new FolderProperties();
+
+            foreach (var name in vCurrRegKey.GetValueNames())
             {
-                FolderProperties vFolderProp = new FolderProperties();
-
-                foreach (string name in vCurrRegKey.GetValueNames())
+                if (name.Contains("Csv"))
                 {
-                    if (name.Contains("Csv"))
+                    var vNameDetails = name.Split('.');
+
+                    if (vNameDetails.Length < 2)
                     {
-                        string[] vNameDetails = name.Split('.');
-
-                        if (vNameDetails.Count() < 2)
-                        {
-                            MessageBox.Show(@"Error in reading registry getCsvList ");
-                            yield return new FolderProperties();
-                            break;
-                        }
-                        var vCurrName = vNameDetails[1];
-
-                        if (!vCurrName.Equals(vPrevName))
-                        {
-                            if (vPrevName.Length > 2)
-                                yield return vFolderProp;
-
-                            vFolderProp = new FolderProperties();
-                        }
-
-                        vPrevName = vCurrName;
-
-                        vFolderProp.FolderName = vCurrName; 
-
-                        string vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
-
-                        if (name.Contains("Path"))
-                            vFolderProp.Path = vCurrRegValue;
-
-                        if (vFolderProp.Path != null) 
-                                {
-                                    vPrevName = "";
-                                    yield return vFolderProp;
-                                }
+                        MessageBox.Show(@"Error in reading registry getCsvList ");
+                        yield return new FolderProperties();
+                        break;
                     }
-                    else
+                    var vCurrName = vNameDetails[1];
+
+                    if (!vCurrName.Equals(vPrevName))
                     {
                         if (vPrevName.Length > 2)
-                        {
-                            vPrevName = "";
-                        }
+                            yield return vFolderProp;
+
+                        vFolderProp = new FolderProperties();
                     }
 
+                    vPrevName = vCurrName;
+
+                    vFolderProp.FolderName = vCurrName; 
+
+                    var vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
+
+                    if (name.Contains("Path"))
+                        vFolderProp.Path = vCurrRegValue;
+
+                    if (vFolderProp.Path == null) continue;
+                        
+                    vPrevName = "";
+                    yield return vFolderProp;
                 }
+                else
+                {
+                    if (vPrevName.Length > 2)
+                    {
+                        vPrevName = "";
+                    }
+                }
+
             }
         }
     }

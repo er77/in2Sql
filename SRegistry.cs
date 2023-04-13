@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using System.Text;
 using System.Security.Cryptography;
-using Microsoft.Office.Core;
 
 namespace SqlEngine
 {
@@ -10,13 +9,13 @@ namespace SqlEngine
     {
         private const DataProtectionScope Scope = DataProtectionScope.CurrentUser;
 
-        public static string Encrypt(this string plainText)
+        private static string Encrypt(this string plainText)
         {
             if (plainText == null) return null;
 
             //encrypt data
             var data = Encoding.Unicode.GetBytes(plainText);
-            byte[] encrypted = ProtectedData.Protect(data, null, Scope);
+            var encrypted = ProtectedData.Protect(data, null, Scope);
 
             //return as base64 string
             return Convert.ToBase64String(encrypted);
@@ -27,10 +26,10 @@ namespace SqlEngine
             if (cipher == null) return null;
 
             //parse base64 string
-            byte[] data = Convert.FromBase64String(cipher);
+            var data = Convert.FromBase64String(cipher);
 
             //decrypt data
-            byte[] decrypted = ProtectedData.Unprotect(data, null, Scope);
+            var decrypted = ProtectedData.Unprotect(data, null, Scope);
             return Encoding.Unicode.GetString(decrypted);
         }
 
@@ -44,7 +43,7 @@ namespace SqlEngine
                 if (vCurrRegKey == null)
                     return null;
 
-                if ((vCurrRegKey.GetValue(vValue, null) == null) == false)
+                if (vCurrRegKey.GetValue(vValue, null) == null == false)
                 {
                     vGetLocalRegValue = vCurrRegKey.GetValue(vValue).ToString(); 
                 }
@@ -62,7 +61,7 @@ namespace SqlEngine
 
         public static void SetLocalValue(string vOdbcName, string vParameter, string vValue)
         {
-            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql", true);
+            var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql", true);
             try
             {
                 if (vCurrRegKey == null)
@@ -71,46 +70,21 @@ namespace SqlEngine
                 if (vParameter.Contains("Password"))
                     vValue = Encrypt(vValue);
 
-                if (vCurrRegKey != null)
-                {
-                    vCurrRegKey.SetValue(vOdbcName + '.' + vParameter, vValue);
-
-                    vCurrRegKey.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                STool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
-            }
-        }
-        
-            
-
-  /*      public static void schedulueDeleteFile(string vFileName )
-        {
-            RegistryKey vCurrRegKey = Registry.LocalMachine.OpenSubKey(@"CurrentControlSet\Control\Session Manager", true);
-            try
-            {
-                if (vCurrRegKey == null)
-                    vCurrRegKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\in2sql");
-
-                if (vParameter.Contains("Password"))
-                    vValue = Encrypt(vValue);
-
+                if (vCurrRegKey == null) return;
+                
                 vCurrRegKey.SetValue(vOdbcName + '.' + vParameter, vValue);
 
                 vCurrRegKey.Close();
             }
             catch (Exception e)
             {
-                In2SqlSvcTool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
+                STool.ExpHandler(e, "in2SQLRegistry.etLocalValue");
             }
         }
-*/
 
         public static void DelLocalValue(string vOdbcName )
         {
-            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql\", true);
+            var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql\", true);
             try
             {
                 if (vCurrRegKey == null)

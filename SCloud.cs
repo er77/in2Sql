@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace SqlEngine
 {
-    class SCloud
+    internal abstract class SCloud
     {
 
         public struct CloudObjects
         {
-            public String Name;
+            public string Name;
             public int IdTbl;
         }
 
@@ -19,10 +19,12 @@ namespace SqlEngine
 
         public struct ObjectsAndProperties
         {
-            public List<String> ObjColumns;
-            public List<String> ObjIndexes;
+            public List<string> ObjColumns;
+            public List<string> ObjIndexes;
           //  public List<String> objDependencies;
-            public String ObjName;
+            public string ObjName;
+
+            public static List<ObjectsAndProperties> VCloudObjProp = new List<ObjectsAndProperties>();
         }
 
         public struct CloudProperties
@@ -37,15 +39,15 @@ namespace SqlEngine
 
         public static List<CloudProperties> CloudPropertiesList = CloudList();
 
-        public static List<ObjectsAndProperties> CloudObjectsAndPropertiesList = new List<ObjectsAndProperties>();
+        public static readonly List<ObjectsAndProperties> CloudObjectsAndPropertiesList = new List<ObjectsAndProperties>();
 
         public static List<CloudProperties> CloudList()
         {
             try
             {                
-                List<CloudProperties> listClooudProperties = new List<CloudProperties>();               
-                listClooudProperties.AddRange(GetCloudList());
-                return listClooudProperties;
+                var cloudPropertiesList = new List<CloudProperties>();               
+                cloudPropertiesList.AddRange(GetCloudList());
+                return cloudPropertiesList;
             }
             catch (Exception e)
             {
@@ -56,7 +58,7 @@ namespace SqlEngine
 
         public static string prepareCloudQuery_int(string url, string vCurrSql , string vLogin, string vPassword)
         {
-            string vResult = url;
+            var vResult = url;
             vResult = vResult.Replace("%SQL%", vCurrSql);
             vResult = vResult.Replace("%LOGIN%", vLogin);
             vResult = vResult.Replace("%PASSWORD%", vPassword);
@@ -69,7 +71,7 @@ namespace SqlEngine
             if (vCurrSql == null | vCloudName == null | vCurrSql == "" | vCloudName == "")
                 return "";
 
-            CloudProperties vCurrCloud = SCloud.CloudPropertiesList.Find(item => item.CloudName == vCloudName);
+            var vCurrCloud = SCloud.CloudPropertiesList.Find(item => item.CloudName == vCloudName);
 
             if (vCurrCloud.CloudName == null)
                 return "";
@@ -103,17 +105,16 @@ namespace SqlEngine
 
         public static string GetCloudType(string vCurrCloudName)
         {
-            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
+            var vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
             return vCurrCloud.CloudType;
         }
 
  
         public static IEnumerable<CloudObjects> GetCloudTableList(string vCurrCloudName)
             {
-            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
-            string sqlUrl;
+            var vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
 
-            sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlTable(vCurrCloud.CloudType));
+            var sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlTable(vCurrCloud.CloudType));
 
              return GetCloudObjectList(sqlUrl);
                
@@ -121,15 +122,14 @@ namespace SqlEngine
 
         public static IEnumerable<CloudObjects> GetCloudViewList(string vCurrCloudName)
         {
-            CloudProperties vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
-            string sqlUrl;
-            sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlView(vCurrCloud.CloudType));
+            var vCurrCloud = CloudPropertiesList.Find(item => item.CloudName == vCurrCloudName);
+            var sqlUrl = PrepareCloudQuery(vCurrCloudName, SSqlLibrary.GetCloudSqlView(vCurrCloud.CloudType));
             return GetCloudObjectList(sqlUrl);
         }
 
         private static IEnumerable<CloudObjects> GetCloudObjectList(string sqlUrl)
         {
-            var vObjects = new List<String>();
+            var vObjects = new List<string>();
             vObjects.AddRange(STool.HttpGetArray(sqlUrl));
             var i = 0;
             foreach (var vCurrObj in vObjects)
@@ -158,11 +158,13 @@ namespace SqlEngine
             sqlUrl = sqlUrl.Replace("%TNAME%", vTb1[1]);
             sqlUrl = sqlUrl.Replace("%TOWNER%", vTb1[0]);           
              
-            var vObject = new ObjectsAndProperties();
-            vObject.ObjName = vCurrCloudName + '.' + vObjName;
-            vObject.ObjColumns = new List<string>(); 
+            var vObject = new ObjectsAndProperties
+            {
+                ObjName = vCurrCloudName + '.' + vObjName,
+                ObjColumns = new List<string>()
+            };
 
-            var vObjects = new List<String>();
+            var vObjects = new List<string>();
             vObjects.AddRange(STool.HttpGetArray(sqlUrl));
             var i = 0;
             foreach (var vCurrObj in vObjects)
@@ -176,70 +178,69 @@ namespace SqlEngine
             yield return vObject;
 
         }
-         
 
-        public static IEnumerable<CloudProperties> GetCloudList()
+
+        private static IEnumerable<CloudProperties> GetCloudList()
         {
-            RegistryKey vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-            string vPrevName = "";
-            if (vCurrRegKey != null)
+            var vCurrRegKey = Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
+            var vPrevName = "";
+            if (vCurrRegKey == null) yield break;
+            var vCloudProperties= new CloudProperties();  
+
+            foreach (var name in vCurrRegKey.GetValueNames())
             {
-                CloudProperties vCloudProperties= new CloudProperties();  
-
-                foreach (var name in vCurrRegKey.GetValueNames())
+                if (name.Contains("Cloud"))
                 {
-                    if (name.Contains("Cloud"))
+                    var vNameDetails = name.Split('.');
+
+                    if (vNameDetails.Length < 2)
                     {
-                        string[] vNameDetails = name.Split('.');
-
-                        if (vNameDetails.Count() < 2)
-                        {
-                            MessageBox.Show(@"Error in reading registry getCloudList ");
-                            yield return new CloudProperties();
-                            break;
-                        }
-                       var vCurrName = vNameDetails[1];
-
-                        if (!vCurrName.Equals(vPrevName))
-                        {
-                            if (vPrevName.Length > 2)
-                                yield return vCloudProperties;
-
-                            vCloudProperties = new CloudProperties();
-                        }
-
-                        vPrevName = vCurrName;
-
-                        vCloudProperties.CloudName = vCurrName;
-                        vCloudProperties.CloudType = vNameDetails[0];
-
-                        string vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
-
-                        if (name.Contains("Url"))
-                            vCloudProperties.Url = vCurrRegValue;
-
-                        if (name.Contains("Password"))
-                            vCloudProperties.Password = vCurrRegValue;
-
-                        if (name.Contains("Login"))
-                            vCloudProperties.Login = vCurrRegValue;
-
-                        if (vCloudProperties.Url != null )  
-                            if (vCloudProperties.Password != null) 
-                                if (vCloudProperties.Login.Length  > 0 )
-                                {
-                                  vPrevName = "";
-                                    yield return vCloudProperties;
-                                 }
+                        MessageBox.Show(@"Error in reading registry getCloudList ");
+                        yield return new CloudProperties();
+                        break;
                     }
-                    else { 
-                        if (vPrevName.Length > 2 )
-                        {
-                            vPrevName = "";                           
-                        }
+                    var vCurrName = vNameDetails[1];
+
+                    if (!vCurrName.Equals(vPrevName))
+                    {
+                        if (vPrevName.Length > 2)
+                            yield return vCloudProperties;
+
+                        vCloudProperties = new CloudProperties();
                     }
-               
+
+                    vPrevName = vCurrName;
+
+                    vCloudProperties.CloudName = vCurrName;
+                    vCloudProperties.CloudType = vNameDetails[0];
+
+                    var vCurrRegValue = SRegistry.GetLocalRegValue(vCurrRegKey, name);
+
+                    if (name.Contains("Url"))
+                        vCloudProperties.Url = vCurrRegValue;
+
+                    if (name.Contains("Password"))
+                        vCloudProperties.Password = vCurrRegValue;
+
+                    if (name.Contains("Login"))
+                        vCloudProperties.Login = vCurrRegValue;
+
+                    if (vCloudProperties.Url == null) continue;
+
+                    if (vCloudProperties.Password == null) continue;
+
+                    if (vCloudProperties.Login.Length <= 0) continue;
+                    
+                    vPrevName = "";
+                    yield return vCloudProperties;
                 }
+                else { 
+                    if (vPrevName.Length > 2 )
+                    {
+                        vPrevName = "";                           
+                    }
+                }
+               
             }
         }
     }

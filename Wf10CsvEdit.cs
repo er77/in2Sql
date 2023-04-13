@@ -53,17 +53,14 @@ namespace SqlEngine
 
         private void button1_Click(object sender, EventArgs e)  // delete
         {
-            if (vCurrConnection.Length > 2)
-            {
-                SRegistry.DelLocalValue("Csv." + vCurrConnection);
-                vCurrConnection = "";
+            if (vCurrConnection.Length <= 2) return;
+            
+            SRegistry.DelLocalValue("Csv." + vCurrConnection);
+            vCurrConnection = "";
 
-                CsvName.Text = ""; 
-                CsvPath.Text = "";
-                RefreshList();
-
-
-            }
+            CsvName.Text = ""; 
+            CsvPath.Text = "";
+            RefreshList();
         }
 
         private void CMBoxConnection_SelectedIndexChanged(object sender, EventArgs e)

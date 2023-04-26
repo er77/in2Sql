@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+  <ribbon>
+    <tabs>
+       <tab idMso="TabTableToolsDesignExcel" visible="false"  />  
+      <!-- erasyuk@gmail.com   Free Under BSD license   
+      https://www.vi-tek.cz/imagemso/
+      -->       
+      
+      <tab id="SqlEngine" label="in2Sql"   visible="true"  keytip="YQA" >
+        <group id="grp_Main0" label="v0.6(beta)"   >
+          <button id="ExecConnManager" label="Object Explorer"  onAction="ExecMenuButton"  imageMso="ObjectsGroup"  size = "large"   enabled="1"   />
+          <button id="ODBCManager"    label="Manager"  onAction="ExecMenuButton" imageMso="ObjectsUngroup"     enabled="1"  />
+          <button id="OdbcProp"    	label="Properties"    	onAction="ExecMenuButton"     imageMso="ApplyMasterPage1"  enabled="1"     />
+          
+          <button id="BackOutl"    label="Outline"  onAction="ExecMenuButton" imageMso="ObjectSendToBack"     enabled="1"  />
+          
+          
+          <separator id="grp_Main02"/>
+          <button id="SqlEdit" label="Sql Engine"	onAction="ExecMenuButton" imageMso="AdpViewSqlPane"   size = "large"   enabled="1" />             
+          <editBox id="SetRowCount" label="Result Limit"  onChange="SetRowCount" sizeString="WWW" showLabel="true"   imageMso="MailMergeDocument" getText="getRowCount"  enabled="1" />
+          <button id="EditQuery" label="Edit Query" onAction="ExecMenuButton" imageMso="FormControlEditBox"       enabled="1" />
+         
+        </group>
+
+        <group id="grp_Adhoc" label="Adhoc "   >
+          <button id="RemoveOnly"   label="Remove Only"		onAction="ExecMenuButton" imageMso="TableRowsDelete"    enabled="1" />
+          <button id="KeepOnly"     label="Keep Only"		onAction="ExecMenuButton" imageMso="PageBreakInsertOrRemove"   enabled="1"  />
+          
+          <separator id="grp_Adhoc00"/>
+          <button id="Undo" label="undo"   onAction="ExecMenuButton"   imageMso="Undo"   enabled="1" />
+           <button id="Redo" label="redo"   onAction="ExecMenuButton"   imageMso="Redo" enabled="1" />          
+          
+          <separator id="grp_Adhoc01"/>
+          <button id="PivotExcel" label="Table to Pivot" onAction="ExecMenuButton" imageMso="PivotTableReport" size="large" enabled="1" /> 
+          
+          <separator id="grp_Adhoc02"/>
+          
+           <button id="Retrieve" label="Refresh"    onAction="ExecMenuButton"  imageMso="ObjectsRegroup"  size = "large"  enabled="1"/>
+          <button id="SqlHistory"   label="Execution Log"  onAction="ExecMenuButton"   imageMso="AfterInsert"  enabled="1"     />
+           <button id="RetrieveAll" label="Refresh All"    onAction="ExecMenuButton"  imageMso="CircularReferences"  enabled="1"  />
+          
+
+          <!--button id="RowLimit" label="Row Limit"	onAction="ExecMenuButton" imageMso="MailMergeDocument"   DataRefreshAll /-->          
+        </group>         
+
+        <group id="grp_AdditionalService"   label="Service"     > 
+           
+           <button id="UpdateData" label="Update Sql grid"   imageMso="DatabaseMoveToSharePoint" onAction="ExecMenuButton"  size = "large"  enabled="1"  />
+          <button id="Options"      label="Table Sql Options"		onAction="ExecMenuButton"     imageMso="PageMenu"  enabled="1" />
+         
+          <button id="UpdateDataAll" label="Update All Grids"   imageMso="AdpManageIndexes" onAction="ExecMenuButton"    enabled="1"  />
+          <separator id="grp_AdditionalService01"/>
+          <button id="PowerPivotMM"      label="Power Pivot Model Manag."		onAction="ExecMenuButton"     imageMso="PrintPreviewShrinkOnePage" size="large"  enabled="1" />
+
+          <button id="TableProp"   	label="Table Properties"    onAction="ExecMenuButton"     imageMso="SignatureLineInsert" enabled="1" />          
+
+          <button id="About"    	  label="About"    	    onAction="ExecMenuButton"     imageMso="AccessFormWizard"   enabled="1"    />
+        </group>
+
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
+
+<!--
+
+   <button id="EventLog"    	label="Event Log"    	onAction="ExecMenuButton"     imageMso="ApplyMasterPage1"  enabled="1"     />   
+   
+   
+  <button id="Attributes"   label="Attribute"	onAction="ExecMenuButton"   imageMso="AdpDiagramAddRelatedTables"    />
+  <button id="ZoomIn"  label="Zoom In"	onAction="ExecMenuButton" imageMso="OutlineGroup"   />
+  <button id="ZoomOut" label="Zoom Out"	onAction="ExecMenuButton" imageMso="OutlineUngroup"    />
+  
+   <button id="FreezePanes"  label="Freeze"        onAction="ExecMenuButton"     imageMso="FreezePanes"    enabled="1" />
+          <button id="AutoFilter"   label="Filter"        onAction="ExecMenuButton"     imageMso="AutoFilterClassic"   enabled="1"  />
+          
+          <group id="grp_RData" label="Report and Calc   "    >
+
+          <button id="CalculationPlanning"	label="Calculation Rules"   onAction="ExecMenuButton"  imageMso="PivotTableOlapTools"  size="large"  enabled="0" />
+          <button id="CalculationForms"		label="Rules on Form"		onAction="ExecMenuButton" imageMso="PivotTableOlapTools"  enabled="0" />
+          <button id="QueryDesigner"		label="Query"		onAction="ExecMenuButton" imageMso="BusinessFormWizard"   enabled="0"  />
+
+        </group>
+  
+            <button id="b_CopySheet" label="Copy Sheet"   			onAction="ExecMenuButton" imageMso="Copy"    enabled="0" />
+          <button id="b_HypMenuVFunctionBuilder" label="HSV.Func"   onAction="ExecMenuButton" imageMso="FunctionLookup" enabled="0"    /
+       
+         
+
+          <separator id="grp_Refresh02"/>
+          <button id="setAliasTable" label="Change Alias"   onAction="ExecMenuButton"  imageMso="FormControlEditBox" size="large"        />
+
+          <dropDown id="mn_Supr" label=" Hide:"   getSelectedItemID="GetSelectedItemID" onAction="ExecDropDown" sizeString="WWWWW"   >
+            <item id="mn_Supr2" label="#Missing Rows"/>
+            <item id="mn_Supr1" label="#Missing Block"/>
+            <item id="mn_Supr6" label="Show All"/>
+          </dropDown>
+
+          <dropDown id="mn_Zoom" label="Zoom:"   getSelectedItemID="GetSelectedItemID" onAction="ExecDropDown" sizeString="WWWWW"   >
+            <item id="mn_Zoom0" label="Bottom level"/>
+            <item id="mn_Zoom1" label="Next level"/>
+            <item id="mn_Zoom2" label="All level"/>
+          </dropDown>
+
+          <separator id="grp_Options01a"/>
+
+          <dropDown id="mn_Selection" label=" Selection: "  getSelectedItemID="GetSelectedItemID" onAction="ExecDropDown" sizeString="WWWW"   >
+            <item id="mn_Selection0" label="Include"/>
+            <item id="mn_Selection1" label="Exclude"/>
+          </dropDown>
+
+          <dropDown id="mn_Intend" label="     Indent: "   getSelectedItemID="GetSelectedItemID" onAction="ExecDropDown" sizeString="WWWW"    >
+            <item id="mn_Intend0" label="None"/>
+            <item id="mn_Intend2" label="Totals"/>
+            <item id="mn_Intend1" label="Sub Items"/>
+          </dropDown>
+
+  <button id="RightTaskPane"   	label="Show SQL Editor"  	onAction="ExecMenuButton"   imageMso="SizeToGridOutlook"      />
+  
+    <menu id="m_CellInfo" label="Cell Properties"   imageMso="FileCompactAndRepairDatabase"  >
+            <button id="CellInfoComments"          label="Comments"            onAction="ExecMenuButton"	imageMso="ControlTitle" />
+            <button id="CellInfoSupportingDetail"  label="Supporting Detail"   onAction="ExecMenuButton"	imageMso="TextBoxInsert" />
+            <button id="CellInfoAttachmnet"        label="Attachment"          onAction="ExecMenuButton"	imageMso="ReviewAcceptChange"    />
+            <button id="CellInfoHistory"           label="Cell History"        onAction="ExecMenuButton"	imageMso="HeaderFooterPageNumberInsert"    />
+          </menu>
+          
+  
+        </group>
+
+-->

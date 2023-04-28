@@ -249,7 +249,15 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="Engines\sLibrary.cs" />
+    <Compile Include="Library\LibOracle.cs" />
+    <Compile Include="Library\LibMsSql.cs" />
+    <Compile Include="Library\LibDb2.cs" />
+    <Compile Include="Library\LibMySql.cs" />
+    <Compile Include="Library\LibPgSql.cs" />
+    <Compile Include="Library\LibCH.cs" />
+    <Compile Include="Library\LibSnowFlake.cs" />
+    <Compile Include="Library\LibVertica.cs" />
+    <Compile Include="Library\SqlLib.cs" />
     <Compile Include="Engines\sRegistry.cs" />
     <Compile Include="Ribbon.cs" />
     <Compile Include="Views\wp01RightTreeCloud.cs" />

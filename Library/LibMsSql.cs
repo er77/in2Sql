@@ -34,7 +34,7 @@
             return @"SELECT 
                            Column_Name + ' | '+ Data_type value 
                         FROM INFORMATION_SCHEMA.COLUMNS
-                        WHERE TABLE_SCHEMA +'.'+ TABLE_NAME = N'%TNAME%'  ";
+                        WHERE TABLE_SCHEMA +'.'+ TABLE_NAME = REPLACE(REPLACE(N'%TNAME%','[','') ,']','') ";
         }
 
         public static string getMsSqlIndexes()
@@ -54,7 +54,7 @@
                         WHERE 
                             1=1 
 	                        and ind.name  is not null 
-                           and d.name + '.' +t.name  in ('%TNAME%')  
+                           and d.name + '.' +t.name  in (REPLACE(REPLACE(N'%TNAME%','[','') ,']','') )  
 							group by  ind.name
 
                       union all 
@@ -66,7 +66,7 @@
                           INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ku
                             ON ku.CONSTRAINT_NAME = c.UNIQUE_CONSTRAINT_NAME
 	                    where 1=1 
-	                     and c.CONSTRAINT_SCHEMA + '.' +cu.TABLE_NAME   in ('%TNAME%')
+	                     and c.CONSTRAINT_SCHEMA + '.' +cu.TABLE_NAME   in (REPLACE(REPLACE(N'%TNAME%','[','') ,']','') )
                      order by 1  
                         ";
         } 

@@ -16,7 +16,7 @@ namespace SqlEngine
   
         public static string setSqlLimit(string vCloudType, string vCurrSql)
         {
-            string vSql = intSqlVBAEngine.RemoveSqlLimit(vCurrSql);
+            string vSql = VbaTools.RemoveSqlLimit(vCurrSql);
               
             if (vCloudType.Contains("CloudCH"))
             {
@@ -127,11 +127,11 @@ namespace SqlEngine
                 xlTable.Comment = "CLOUD|" + vCurrCloudName + "|" + vCurrSql;
 
                 xlTable.TableStyle = "TableStyleLight13";
-                intSqlVBAEngine.GetSelectedTab();
+                VbaTools.GetSelectedTab();
 
                 SqlEngine.currExcelApp.ScreenUpdating = true;
 
-                intSqlVBAEngine.GetSelectedTab();
+                VbaTools.GetSelectedTab();
                 return;
             }          
                 

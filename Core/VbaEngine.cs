@@ -13,9 +13,10 @@ using Microsoft.Office.Interop.Excel;
 using System.Data.Odbc;
 using System.Windows.Forms.VisualStyles;
 
+using static SqlEngine.VbaTools;
 namespace SqlEngine
 {
-    class intSqlVBAEngine
+    class VbaEngine
     {
 
         public static bool isRefresh = false;
@@ -176,7 +177,15 @@ namespace SqlEngine
 
         public static string getOdbcNameFromCell()
         {
-            return getOdbcNameFromObject(SqlEngine.currExcelApp.ActiveCell.ListObject.QueryTable.Connection);
+            
+            try
+            {
+                return getOdbcNameFromObject(SqlEngine.currExcelApp.ActiveCell.ListObject.QueryTable.Connection);
+            }
+            catch
+            {
+                return null;
+            }
 
         }
 
@@ -204,20 +213,8 @@ namespace SqlEngine
         //createPowerQuery
 
 
-        public static string RemoveBetween(string s, char begin, char end)
-        {
-            Regex regex = new Regex(string.Format("\\{0}.*?\\{1}", begin, end));
-            return regex.Replace(s, string.Empty);
-        }
 
-        public static string RemoveSqlLimit(string vCurrSql)
-        {
-            string vSql = RemoveBetween(vCurrSql, '`', '`');
-            vSql = vSql.Replace("/**/", "");
-            vSql = vSql.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
 
-            return vSql;
-        }
 
         public static string setSqlLimit(string vODBC, string vCurrSql)
         {
@@ -498,9 +495,7 @@ namespace SqlEngine
                                 + " \t and " + vCurrWorkSheet.Cells(vActivCell.ListObject.Range.Row, vActivCell.Column).Value
                                 + "= '" + vActivCell.Value + "'";
 
-                tableRefresh(vCTR);
-
-                //  SqlEngine.currExcelApp.SendKeys("%YQA%");
+                tableRefresh(vCTR); 
                 return;
             }
             GetSelectedTab();
@@ -738,82 +733,12 @@ namespace SqlEngine
             
         }
 
-        public static void RibbonPivotExcel()
-        {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
-            if (vActivCell.ListObject == null)
-            {
-                MessageBox.Show(" Please, select cell from the table", " Refresh error");
-                return;
-            }
+     
 
-            sTool.CurrentTableRecords vCTR = sTool.getCurrentSql();
-
-            if (vCTR.TypeConnection.Contains("ODBC"))
-            {
-                string vSql = RemoveSqlLimit(vActivCell.ListObject.QueryTable.CommandText);
-                createPivotTable(getOdbcNameFromCell(), sTool.GetHash(vSql), vSql);
-            }
-
-            if (vCTR.TypeConnection.Contains("CLOUD"))
-            {
-                SqlEngine.currExcelApp.SendKeys("%NVT");
-            }
-
-        
-
-            GetSelectedTab();
-
-        }
-
-        public static void runTableProperties()
-        {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
-            // SqlEngine.currExcelApp.CommandBars.ExecuteMso("EditQuery");
-            if ((vActivCell.ListObject == null) == false)
-            {
-                SqlEngine.currExcelApp.ScreenUpdating = false;
-
-                SqlEngine.currExcelApp.SendKeys("%A%P%S");
-                SqlEngine.currExcelApp.SendKeys("+");
-                SqlEngine.currExcelApp.CommandBars.ReleaseFocus();
-
-                SqlEngine.currExcelApp.ScreenUpdating = true;
-            }
-            else
-                MessageBox.Show(" Please, select  the external table", " Refresh error");
-
-            GetSelectedTab();
-        }
-
-        public static void runSqlProperties()
-        {
-            var vActivCell = SqlEngine.currExcelApp.ActiveCell;
-            // SqlEngine.currExcelApp.CommandBars.ExecuteMso("EditQuery");
-            if ((vActivCell.ListObject == null) == false)
-                SqlEngine.currExcelApp.SendKeys("%j%f%o");
-            else
-                MessageBox.Show(" Please, select  the external table", " Refresh error");
-
-            GetSelectedTab();
-        }
+  
+ 
          
-        public static void runPowerPivotM()
-        {
-            SqlEngine.currExcelApp.SendKeys("%a%d%m");
-                  GetSelectedTab();
-        }
-
-        public static void GetSelectedTab ()
-        {
-            SqlEngine.currExcelApp.ScreenUpdating = false;
-             SqlEngine.currExcelApp.SendKeys("%Y%Q%A");
-             SqlEngine.currExcelApp.SendKeys("%");
-             SqlEngine.currExcelApp.CommandBars.ReleaseFocus();//CommandBars.ReleaseFocus 
-             
-            SqlEngine.currExcelApp.ScreenUpdating = true;
-        }
-        //
+     
 
     
 

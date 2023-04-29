@@ -249,6 +249,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Core\VbaTools.cs" />
     <Compile Include="Library\LibOracle.cs" />
     <Compile Include="Library\LibMsSql.cs" />
     <Compile Include="Library\LibDb2.cs" />
@@ -297,7 +298,7 @@
     <Compile Include="Views\wf05SqlEngine.Designer.cs">
       <DependentUpon>wf05SqlEngine.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\sVba.cs" />
+    <Compile Include="Core\VbaEngine.cs" />
     <Compile Include="Views\wf06SqlBuilder.cs">
       <SubType>Form</SubType>
     </Compile>

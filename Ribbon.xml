@@ -53,7 +53,7 @@
           <separator id="grp_AdditionalService01"/>
           <button id="PowerPivotMM"      label="Power Pivot Model Manag."		onAction="ExecMenuButton"     imageMso="PrintPreviewShrinkOnePage" size="large"  enabled="1" />
 
-          <button id="TableProp"   	label="Table Properties"    onAction="ExecMenuButton"     imageMso="SignatureLineInsert" enabled="1" />          
+              
 
           <button id="About"    	  label="About"    	    onAction="ExecMenuButton"     imageMso="AccessFormWizard"   enabled="1"    />
         </group>
@@ -66,7 +66,7 @@
 <!--
 
    <button id="EventLog"    	label="Event Log"    	onAction="ExecMenuButton"     imageMso="ApplyMasterPage1"  enabled="1"     />   
-   
+    <button id="TableProp"   	label="Table Properties"    onAction="ExecMenuButton"     imageMso="SignatureLineInsert" enabled="1" />     
    
   <button id="Attributes"   label="Attribute"	onAction="ExecMenuButton"   imageMso="AdpDiagramAddRelatedTables"    />
   <button id="ZoomIn"  label="Zoom In"	onAction="ExecMenuButton" imageMso="OutlineGroup"   />

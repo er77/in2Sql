@@ -117,30 +117,35 @@ namespace SqlEngine
             {
                 foreach (string name in regKey.GetValueNames())
                 {
-
-                    OdbcProperties vOdbcProperties = new OdbcProperties();
-                    vOdbcProperties.OdbcName = regKey.GetValue(name, "").ToString();
-                    if (vOdbcProperties.OdbcName.Contains("Microsoft ") == false)
+                    if (name.Contains("in2sql") )
                     {
-                        try
+
+                        OdbcProperties vOdbcProperties = new OdbcProperties();
+                        vOdbcProperties.OdbcName = regKey.GetValue(name, "").ToString();
+
+                        //MessageBox.Show(name, " Refresh error");
+                        if (vOdbcProperties.OdbcName.Contains("Microsoft ") == false)
                         {
-                            vOdbcProperties.OdbcName = name;
-                            RegistryKey vCurrRegKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\" + name);
-                            vOdbcProperties.Database = sRegistry.getLocalRegValue(vCurrRegKey, "Database");
-                            vOdbcProperties.Description = sRegistry.getLocalRegValue(vCurrRegKey, "Description");
-                            vOdbcProperties.Driver = sRegistry.getLocalRegValue(vCurrRegKey, "Driver");
-                            vOdbcProperties.LastUser = sRegistry.getLocalRegValue(vCurrRegKey, "LastUser");
-                            vOdbcProperties.Server = sRegistry.getLocalRegValue(vCurrRegKey, "Server");
-                            vOdbcProperties.ConnStatus = 0;
-                            vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
-                            vOdbcProperties.Login = sRegistry.getLocalRegValue(vCurrRegKey, name + '.' + "Login");
-                            vOdbcProperties.Password = sRegistry.getLocalRegValue(vCurrRegKey, name + '.' + "Password");
+                            try
+                            {
+                                vOdbcProperties.OdbcName = name;
+                                RegistryKey vCurrRegKey = rootKey.OpenSubKey(@"Software\ODBC\ODBC.INI\" + name);
+                                vOdbcProperties.Database = sRegistry.getLocalRegValue(vCurrRegKey, "Database");
+                                vOdbcProperties.Description = sRegistry.getLocalRegValue(vCurrRegKey, "Description");
+                                vOdbcProperties.Driver = sRegistry.getLocalRegValue(vCurrRegKey, "Driver");
+                                vOdbcProperties.LastUser = sRegistry.getLocalRegValue(vCurrRegKey, "LastUser");
+                                vOdbcProperties.Server = sRegistry.getLocalRegValue(vCurrRegKey, "Server");
+                                vOdbcProperties.ConnStatus = 0;
+                                vCurrRegKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"Software\in2sql");
+                                vOdbcProperties.Login = sRegistry.getLocalRegValue(vCurrRegKey, name + '.' + "Login");
+                                vOdbcProperties.Password = sRegistry.getLocalRegValue(vCurrRegKey, name + '.' + "Password");
+                            }
+                            catch (Exception e)
+                            {
+                                sTool.ExpHandler(e, "ODBCList");
+                            }
+                            yield return vOdbcProperties;
                         }
-                        catch (Exception e)
-                        {
-                            sTool.ExpHandler(e, "ODBCList");
-                        }
-                        yield return vOdbcProperties;
                     }
                 }
             }

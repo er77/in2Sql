@@ -36,9 +36,9 @@
           
           <separator id="grp_Adhoc02"/>
           
-           <button id="Retrieve" label="Refresh"    onAction="ExecMenuButton"  imageMso="ObjectsRegroup"  size = "large"  enabled="1"/>
-          <button id="SqlHistory"   label="Execution Log"  onAction="ExecMenuButton"   imageMso="AfterInsert"  enabled="1"     />
-           <button id="RetrieveAll" label="Refresh All"    onAction="ExecMenuButton"  imageMso="CircularReferences"  enabled="1"  />
+           <button id="Retrieve" label="Refresh"    onAction="ExecMenuButton"  imageMso="ObjectsRegroup"  size = "large"  enabled="0"/>
+          <button id="SqlHistory"   label="Execution Log"  onAction="ExecMenuButton"   imageMso="AfterInsert"  enabled="0"     />
+           <button id="RetrieveAll" label="Refresh All"    onAction="ExecMenuButton"  imageMso="CircularReferences"  enabled="0"  />
           
 
           <!--button id="RowLimit" label="Row Limit"	onAction="ExecMenuButton" imageMso="MailMergeDocument"   DataRefreshAll /-->          
@@ -46,10 +46,10 @@
 
         <group id="grp_AdditionalService"   label="Service"     > 
            
-           <button id="UpdateData" label="Update Sql grid"   imageMso="DatabaseMoveToSharePoint" onAction="ExecMenuButton"  size = "large"  enabled="1"  />
-          <button id="Options"      label="Table Sql Options"		onAction="ExecMenuButton"     imageMso="PageMenu"  enabled="1" />
+           <button id="UpdateData" label="Update Sql grid"   imageMso="DatabaseMoveToSharePoint" onAction="ExecMenuButton"  size = "large"  enabled="0"  />
+          <button id="Options"      label="Table Sql Options"		onAction="ExecMenuButton"     imageMso="PageMenu"  enabled="0" />
          
-          <button id="UpdateDataAll" label="Update All Grids"   imageMso="AdpManageIndexes" onAction="ExecMenuButton"    enabled="1"  />
+          <button id="UpdateDataAll" label="Update All Grids"   imageMso="AdpManageIndexes" onAction="ExecMenuButton"    enabled="0"  />
           <separator id="grp_AdditionalService01"/>
           <button id="PowerPivotMM"      label="Power Pivot Model Manag."		onAction="ExecMenuButton"     imageMso="PrintPreviewShrinkOnePage" size="large"  enabled="1" />
 
